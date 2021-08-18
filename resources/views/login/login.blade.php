@@ -93,7 +93,7 @@ License: You must have a valid license purchased only from themeforest(the above
 				<div class="kt-grid__item kt-grid__item--order-tablet-and-mobile-2 kt-grid kt-grid--hor kt-login__aside" style="background-image: url(./assets/media/escuela/login.jpg);">
 					<div class="kt-grid__item">
 						<a href="#" class="kt-login__logo">
-							<img src="./assets/media/escuela/escuela-espana-228x300.png" width="30%" height="30%">
+							<img src="{{asset('assets/media/escuela/escuela-espana-228x300.png')}}" width="30%" height="30%">
 						</a>
 					</div>
 					<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver">
