@@ -30,53 +30,53 @@ License: You must have a valid license purchased only from themeforest(the above
 
 
 	<!--begin::Page Custom Styles(used by this page) -->
-	<link href="./assets/css/demo1/pages/login/login-1.css" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/css/demo1/pages/login/login-1.css')}}" rel="stylesheet" type="text/css" />
 	<!--end::Page Custom Styles -->
 
 	<!--begin::Global Theme Styles(used by all pages) -->
-	<link href="./assets/vendors/global/vendors.bundle.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/css/demo1/style.bundle.css" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/global/vendors.bundle.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/css/demo1/style.bundle.css')}}" rel="stylesheet" type="text/css" />
 	<!--end::Global Theme Styles -->
 
 	<!--begin::Layout Skins(used by all pages) -->
 
-	<link href="./assets/css/demo1/skins/header/base/light.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/css/demo1/skins/header/menu/light.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/css/demo1/skins/brand/dark.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/css/demo1/skins/aside/dark.css" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/css/demo1/skins/header/base/light.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/css/demo1/skins/header/menu/light.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/css/demo1/skins/brand/dark.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/css/demo1/skins/aside/dark.css')}}" rel="stylesheet" type="text/css" />
 	<!--end::Layout Skins -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
-	<link href="./assets/vendors/general/tether/dist/css/tether.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/bootstrap-datetime-picker/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/bootstrap-timepicker/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/select2/dist/css/select2.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/ion-rangeslider/css/ion.rangeSlider.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/nouislider/distribute/nouislider.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/owl.carousel/dist/assets/owl.carousel.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/owl.carousel/dist/assets/owl.theme.default.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/dropzone/dist/dropzone.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/quill/dist/quill.snow.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/summernote/dist/summernote.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/bootstrap-markdown/css/bootstrap-markdown.min.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/animate.css/animate.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/toastr/build/toastr.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/dual-listbox/dist/dual-listbox.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/morris.js/morris.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/sweetalert2/dist/sweetalert2.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/socicon/css/socicon.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/custom/vendors/line-awesome/css/line-awesome.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/custom/vendors/flaticon/flaticon.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/custom/vendors/flaticon2/flaticon.css" rel="stylesheet" type="text/css" />
-	<link href="./assets/vendors/general/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/tether/dist/css/tether.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/bootstrap-datetime-picker/css/bootstrap-datetimepicker.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/bootstrap-timepicker/css/bootstrap-timepicker.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/bootstrap-daterangepicker/daterangepicker.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/bootstrap-select/dist/css/bootstrap-select.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/select2/dist/css/select2.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/ion-rangeslider/css/ion.rangeSlider.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/nouislider/distribute/nouislider.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/owl.carousel/dist/assets/owl.carousel.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/owl.carousel/dist/assets/owl.theme.default.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/dropzone/dist/dropzone.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/quill/dist/quill.snow.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/@yaireo/tagify/dist/tagify.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/summernote/dist/summernote.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/bootstrap-markdown/css/bootstrap-markdown.min.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/animate.css/animate.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/toastr/build/toastr.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/dual-listbox/dist/dual-listbox.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/morris.js/morris.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/sweetalert2/dist/sweetalert2.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/socicon/css/socicon.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/custom/vendors/line-awesome/css/line-awesome.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/custom/vendors/flaticon/flaticon.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/custom/vendors/flaticon2/flaticon.css')}}" rel="stylesheet" type="text/css" />
+	<link href="{{asset('assets/vendors/general/@fortawesome/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css" />
 
-	<link rel="shortcut icon" href="./assets/media/escuela/icon.png" />
+	<link rel="shortcut icon" href="{{asset('assets/media/escuela/icon.png')}}" />
 </head>
 <!-- end::Head -->
 
@@ -90,7 +90,7 @@ License: You must have a valid license purchased only from themeforest(the above
 		<div class="kt-grid kt-grid--hor kt-grid--root  kt-login kt-login--v1" id="kt_login">
 			<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--desktop kt-grid--ver-desktop kt-grid--hor-tablet-and-mobile">
 				<!--begin::Aside-->
-				<div class="kt-grid__item kt-grid__item--order-tablet-and-mobile-2 kt-grid kt-grid--hor kt-login__aside" style="background-image: url(./assets/media/escuela/login.jpg);">
+				<div class="kt-grid__item kt-grid__item--order-tablet-and-mobile-2 kt-grid kt-grid--hor kt-login__aside" style="background-image: url({{asset('assets/media/escuela/login.jpg')}});">
 					<div class="kt-grid__item">
 						<a href="#" class="kt-login__logo">
 							<img src="{{asset('assets/media/escuela/escuela-espana-228x300.png')}}" width="30%" height="30%">
@@ -323,25 +323,25 @@ License: You must have a valid license purchased only from themeforest(the above
 	<!-- end::Global Config -->
 
 	<!--begin::Global Theme Bundle(used by all pages) -->
-	<script src="./assets/vendors/global/vendors.bundle.js" type="text/javascript"></script>
-	<script src="./assets/js/demo1/scripts.bundle.js" type="text/javascript"></script>
+	<script src="{{asset('assets/vendors/global/vendors.bundle.js')}}" type="text/javascript"></script>
+	<script src="{{asset('assets/js/demo1/scripts.bundle.js')}}" type="text/javascript"></script>
 	<!--end::Global Theme Bundle -->
 
 
 	<!--begin::Page Scripts(used by this page) -->
-	<script src="./assets/js/demo1/pages/login/login-1.js" type="text/javascript"></script>
+	<script src="{{asset('assets/js/demo1/pages/login/login-1.js')}}" type="text/javascript"></script>
 	<!--end::Page Scripts -->
-	<script src="./assets/vendors/general/jquery/dist/jquery.js" type="text/javascript"></script>
-	<script src="./assets/vendors/general/popper.js/dist/umd/popper.js" type="text/javascript"></script>
-	<script src="./assets/vendors/general/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="./assets/vendors/general/js-cookie/src/js.cookie.js" type="text/javascript"></script>
-	<script src="./assets/vendors/general/moment/min/moment.min.js" type="text/javascript"></script>
-	<script src="./assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js" type="text/javascript"></script>
-	<script src="./assets/vendors/general/perfect-scrollbar/dist/perfect-scrollbar.js" type="text/javascript"></script>
-	<script src="./assets/vendors/general/sticky-js/dist/sticky.min.js" type="text/javascript"></script>
-	<script src="./assets/vendors/general/wnumb/wNumb.js" type="text/javascript"></script>
+	<script src="{{asset('assets/vendors/general/jquery/dist/jquery.js')}}" type="text/javascript"></script>
+	<script src="{{asset('assets/vendors/general/popper.js/dist/umd/popper.js')}}" type="text/javascript"></script>
+	<script src="{{asset('assets/vendors/general/bootstrap/dist/js/bootstrap.min.js')}}" type="text/javascript"></script>
+	<script src="{{asset('assets/vendors/general/js-cookie/src/js.cookie.js')}}" type="text/javascript"></script>
+	<script src="{{asset('assets/vendors/general/moment/min/moment.min.js')}}" type="text/javascript"></script>
+	<script src="{{asset('assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js')}}" type="text/javascript"></script>
+	<script src="{{asset('assets/vendors/general/perfect-scrollbar/dist/perfect-scrollbar.js')}}" type="text/javascript"></script>
+	<script src="{{asset('assets/vendors/general/sticky-js/dist/sticky.min.js')}}" type="text/javascript"></script>
+	<script src="{{asset('assets/vendors/general/wnumb/wNumb.js')}}" type="text/javascript"></script>
 
-	<script src="./assets/js/demo1/scripts.bundle.js" type="text/javascript"></script>
+	<script src="{{asset('assets/js/demo1/scripts.bundle.js')}}" type="text/javascript"></script>
 </body>
 <!-- end::Body -->
 

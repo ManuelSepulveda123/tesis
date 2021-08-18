@@ -2,11 +2,7 @@
 
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<style>
-    .xd {
-        background-color: pink;
-    }
-</style>
+
 @endsection
 
 @section('head')
@@ -295,9 +291,9 @@
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<script src="./assets/js/demo1/scripts.bundle.js" type="text/javascript"></script>
+<script src="{{asset('assets/js/demo1/scripts.bundle.js')}}" type="text/javascript"></script>
 
-<script src="./assets/js/demo1/pages/custom/user/edit-user.js" type="text/javascript"></script>
+<script src="{{asset('assets/js/demo1/pages/custom/user/edit-user.js')}}" type="text/javascript"></script>
 <!-- <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
 <script>
     $(document).ready(function() {

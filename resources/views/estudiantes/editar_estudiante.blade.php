@@ -317,9 +317,9 @@
 		});
 	});
 </script>
-<script src="./assets/js/demo1/scripts.bundle.js" type="text/javascript"></script>
+<script src="{{asset('assets/js/demo1/scripts.bundle.js')}}" type="text/javascript"></script>
 
-<script src="./assets/js/demo1/pages/custom/user/edit-user.js" type="text/javascript"></script>
+<script src="{{asset('assets/js/demo1/pages/custom/user/edit-user.js')}}" type="text/javascript"></script>
 <script>
 	$('div.alert').not('.alert-important').delay(5000).fadeOut(350);
 </script>

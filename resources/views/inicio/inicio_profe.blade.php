@@ -54,7 +54,7 @@ Inicio | Escuela Chile España
 <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
-
+<script src="{{asset('assets/js/demo1/pages/dashboard.js')}}" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
         $('#cursos').DataTable({

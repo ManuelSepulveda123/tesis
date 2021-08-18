@@ -6,11 +6,6 @@ Editar Curso | Escuela Chile España
 
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<style>
-    .xd {
-        background-color: pink;
-    }
-</style>
 @endsection
 
 @section('head')
@@ -228,9 +223,4 @@ Editar Curso | Escuela Chile España
     $('#tabla_cursos').addClass('kt-menu__item--active');
 </script>
 
-<script>
-    $(document).ready(function() {
-
-    });
-</script>
 @endsection

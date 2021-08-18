@@ -122,7 +122,7 @@ class AjaxController extends Controller
             $html = $html.' <div class="kt-widget__item" style="margin-left:1%">
                                 <div class="kt-avatar kt-avatar--outline kt-avatar--circle-" id="kt_user_edit_avatar">
 
-                                    <div class="kt-avatar__holder" style="background-image: url(&quot;'. $profesor->foto.'&quot;);"></div>
+                                    <div class="kt-avatar__holder" style="background-image: url(&quot;'.asset($profesor->foto).'&quot;);"></div>
                                 </div>
                                 <div class="kt-widget__info">
                                     <div class="kt-widget__section">
@@ -142,7 +142,7 @@ class AjaxController extends Controller
             $html=$html.'<div class="kt-widget__item" style="margin-left:1%">
             <div class="kt-avatar kt-avatar--outline kt-avatar--circle-" id="kt_user_edit_avatar">
 
-                <div class="kt-avatar__holder" style="background-image: url(&quot;'.$profesor->foto.'&quot;);"></div>
+                <div class="kt-avatar__holder" style="background-image: url(&quot;'.asset($profesor->foto).'&quot;);"></div>
 
             </div>
             <div class="kt-widget__info">

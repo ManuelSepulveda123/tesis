@@ -160,5 +160,5 @@
     });
     $('#tareas').addClass('kt-menu__item--open');
 </script>
-<script src="./assets/js/demo1/scripts.bundle.js" type="text/javascript"></script>
+<script src="{{asset('assets/js/demo1/scripts.bundle.js')}}" type="text/javascript"></script>
 @endsection

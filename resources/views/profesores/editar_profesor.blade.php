@@ -69,7 +69,7 @@ Editar Profesor | Escuela Chile España
 											<div class="col-lg-9 col-xl-6">
 												<div class="kt-avatar kt-avatar--outline kt-avatar--circle-" id="kt_user_edit_avatar">
 													{!!$errors->first('foto', '<small style="color:red">:message</small>')!!}
-													<div class="kt-avatar__holder" style="background-image: url(&quot;{{$profesor->foto}}&quot;);"></div>
+													<div class="kt-avatar__holder" style="background-image: url(&quot;{{asset($profesor->foto)}}&quot;);"></div>
 													<label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
 														<i class="fa fa-pen"></i>
 														<input type="file" name="foto" accept=".png, .jpg, .jpeg">
@@ -330,9 +330,9 @@ Editar Profesor | Escuela Chile España
 		});
 	});
 </script>
-<script src="./assets/js/demo1/scripts.bundle.js" type="text/javascript"></script>
+<script src="{{asset('assets/js/demo1/scripts.bundle.js')}}" type="text/javascript"></script>
 
-<script src="./assets/js/demo1/pages/custom/user/edit-user.js" type="text/javascript"></script>
+<script src="{{asset('assets/js/demo1/pages/custom/user/edit-user.js')}}" type="text/javascript"></script>
 <script>
 	$('div.alert').not('.alert-important').delay(5000).fadeOut(350);
 	$('#administrador_nav').addClass('kt-menu__item--open');

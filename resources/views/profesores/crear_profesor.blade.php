@@ -57,7 +57,7 @@ Crear Profesor | Escuela Chile España
                                             <div class="col-lg-9 col-xl-6">
                                                 <div class="kt-avatar kt-avatar--outline kt-avatar--circle-" id="kt_user_edit_avatar">
                                                     {!!$errors->first('foto', '<small style="color:red">:message</small>')!!}
-                                                    <div class="kt-avatar__holder" style="background-image: url(&quot;/storage/fotos_profesores/default.jpg&quot;);"></div>
+                                                    <div class="kt-avatar__holder" style="background-image: url(&quot;{{asset('storage/fotos_profesores/default.jpg')}}&quot;);"></div>
                                                     <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
                                                         <i class="fa fa-pen"></i>
                                                         <input type="file" name="foto" accept=".png, .jpg, .jpeg">
@@ -236,9 +236,9 @@ Crear Profesor | Escuela Chile España
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<script src="./assets/js/demo1/scripts.bundle.js" type="text/javascript"></script>
+<script src="{{asset('assets/js/demo1/scripts.bundle.js')}}" type="text/javascript"></script>
 
-<script src="./assets/js/demo1/pages/custom/user/edit-user.js" type="text/javascript"></script>
+<script src="{{asset('assets/js/demo1/pages/custom/user/edit-user.js')}}" type="text/javascript"></script>
 <!-- <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
 <script>
     $(document).ready(function() {
