@@ -76,7 +76,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	<link href="{{asset('assets/vendors/custom/vendors/flaticon2/flaticon.css')}}" rel="stylesheet" type="text/css" />
 	<link href="{{asset('assets/vendors/general/@fortawesome/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css" />
 
-	<link rel="shortcut icon" href="{{asset('assets/media/escuela/icon.png')}}" />
+	<link rel="shortcut icon" href="{{URL::asset('assets/media/escuela/icon.png')}}" />
 </head>
 <!-- end::Head -->
 
