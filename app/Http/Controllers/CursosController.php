@@ -43,22 +43,25 @@ class CursosController extends Controller
         $ayudantes = DB::table('users')
             ->select('id', 'nombre', 'apellido_p', 'apellido_m')->where('id_tipo_usuario', 3)->get();
 
-        $ayudantes_sin_curso = [];
-        foreach ($ayudantes as $item) {
-            $flag = true;
-            foreach ($profesores_curso as $indexData) {
-                if ($indexData->id_profesor == $item->id)
-                    $flag = false;
-            }
-            if ($flag)
-                array_push($ayudantes_sin_curso, $item);
-        }
+        $materias = DB::table('materias')->get();
 
-        return view('cursos.crear_curso', compact('profesores', 'ayudantes', 'ayudantes_sin_curso', 'profes_sin_curso'));
+        return view('cursos.crear_curso', compact('profesores', 'ayudantes', 'materias', 'profes_sin_curso'));
     }
 
     public function curso_store(Request $request)
     {
+
+        $materias = [];
+        $cont = 0;
+        foreach ($request->request as $item) {
+
+
+            if ($cont > 5) {
+                array_push($materias, $item);
+            }
+
+            $cont++;
+        }
 
         if ($request->ano_curso == null) {
             throw ValidationException::withMessages([
@@ -91,20 +94,41 @@ class CursosController extends Controller
         ]);
         $id_curso = DB::table('cursos')->select('id_curso')->get();
         $id_curso = MAX(end($id_curso));
+
+        if ($request->jefe == -1) {
+            DB::table('profesores-cursos')->insert([
+                'id_profesor' => 1,
+                'id_curso' => $id_curso->id_curso,
+            ]);
+        }
         //PROFE JEFE
-        DB::table('profesores-cursos')->insert([
-            'id_profesor' => $request->jefe,
-            'id_curso' => $id_curso->id_curso,
-        ]);
+        if ($request->jefe != -1) {
+            DB::table('profesores-cursos')->insert([
+                'id_profesor' => $request->jefe,
+                'id_curso' => $id_curso->id_curso,
+            ]);
+        }
+
         //PROFE AYUDANTE
-        DB::table('profesores-cursos')->insert([
-            'id_profesor' => $request->ayudante,
-            'id_curso' => $id_curso->id_curso,
-        ]);
-        //CREAR CARPETAS DEL CURSO
-        $url = public_path() . '/cursos' . '/' . $request->ano_curso . '/' . $request->curso;
+        if ($request->ayudante != -1) {
+            DB::table('profesores-cursos')->insert([
+                'id_profesor' => $request->ayudante,
+                'id_curso' => $id_curso->id_curso,
+            ]);
+        }
+
+        //CURSOS MATERIAS
+
+        foreach ($materias as $materia) {
+            DB::table('cursos-materias')->insert([
+                'id_curso' => $id_curso->id_curso,
+                'id_materia' => $materia
+            ]);
+        }
+        
+       /*  $url = public_path() . '/cursos' . '/' . $request->ano_curso . '/' . $request->curso;
         File::makeDirectory($url, 077, true, true);
-        //Sub carpetas del curso
+        
         $url = public_path() . '/cursos' . '/' . $request->ano_curso . '/' . $request->curso . '/profesor/tareas';
         File::makeDirectory($url, 077, true, true);
         $url = public_path() . '/cursos' . '/' . $request->ano_curso . '/' . $request->curso . '/profesor/planificaciones';
@@ -114,9 +138,9 @@ class CursosController extends Controller
         $url = public_path() . '/cursos' . '/' . $request->ano_curso . '/' . $request->curso . '/estudiantes/tareas';
         File::makeDirectory($url, 077, true, true);
         $url = public_path() . '/cursos' . '/' . $request->ano_curso . '/' . $request->curso . '/estudiantes/evaluaciones';
-        File::makeDirectory($url, 077, true, true);
-        flash('Curso creado exitosamente')->success();
-        return redirect()->route('cursos_crear');
+        File::makeDirectory($url, 077, true, true); */
+        flash('Curso creado exitosamente: '.$request->curso)->success();
+        return redirect()->route('cursos');
     }
 
     public function curso_edit(Request $request, $id)
@@ -127,48 +151,130 @@ class CursosController extends Controller
             ->join('users', 'users.id', '=', 'profesores-cursos.id_profesor')->where("profesores-cursos.id_curso", $id)->where("users.id_tipo_usuario", 2)->first();
         $ayudante = DB::table('profesores-cursos')->select('users.id', 'users.nombre', 'users.apellido_p', 'users.apellido_m')
             ->join('users', 'users.id', '=', 'profesores-cursos.id_profesor')->where("profesores-cursos.id_curso", $id)->where("users.id_tipo_usuario", 3)->first();
+        $aux1 = 0;
+        $aux2 = 0;
+        if ($jefe == null) {
+            $jefe = 1;
+            $aux1 = 1;
+        }
+        if ($ayudante == null) {
+            $ayudante = 1;
+            $aux2 = 1;
+        }
 
         $profesores = DB::table('users')
             ->select('id', 'nombre', 'apellido_p', 'apellido_m')->where('id_tipo_usuario', 2)->get();
 
-
         $profesores_curso = DB::table('profesores-cursos')->get();
 
-
-
-        $profes_sin_curso = [];
-        foreach ($profesores as $item) {
-            $flag = true;
-            foreach ($profesores_curso as $indexData) {
-                if ($indexData->id_profesor == $item->id)
-                    $flag = false;
+        if($aux1 == 1){
+            $profes_sin_curso = [];
+            foreach ($profesores as $item) {
+                $flag = true;
+                foreach ($profesores_curso as $indexData) {
+                    if ($indexData->id_profesor == $item->id)
+                        $flag = false;
+                }
+                if ($flag)
+                    array_push($profes_sin_curso, $item);
             }
-            if ($flag)
-                array_push($profes_sin_curso, $item);
+
+            $profesores = $profes_sin_curso;
         }
 
-        array_push($profes_sin_curso, $jefe);
-        $profesores = $profes_sin_curso;
+
+        if ($aux1 != 1) {
+            $profes_sin_curso = [];
+            foreach ($profesores as $item) {
+                $flag = true;
+                foreach ($profesores_curso as $indexData) {
+                    if ($indexData->id_profesor == $item->id)
+                        $flag = false;
+                }
+                if ($flag)
+                    array_push($profes_sin_curso, $item);
+            }
+
+            array_push($profes_sin_curso, $jefe);
+            $profesores = $profes_sin_curso;
+        }
         $ayudantes = DB::table('users')
             ->select('id', 'nombre', 'apellido_p', 'apellido_m')->where('id_tipo_usuario', 3)->get();
 
-        $ayudantes_sin_curso = [];
-        foreach ($ayudantes as $item) {
-            $flag = true;
-            foreach ($profesores_curso as $indexData) {
-                if ($indexData->id_profesor == $item->id)
-                    $flag = false;
-            }
-            if ($flag)
-                array_push($ayudantes_sin_curso, $item);
-        }
-        array_push($ayudantes_sin_curso, $ayudante);
-        $ayudantes = $ayudantes_sin_curso;
-        return view('cursos.editar_curso', compact('curso', 'jefe', 'ayudante', 'profesores','ayudantes'));
+
+        return view('cursos.editar_curso', compact('curso', 'jefe', 'ayudante', 'profesores', 'ayudantes', 'aux1', 'aux2'));
     }
 
     public function curso_update(Request $request, $id)
     {
+
+
+        $materias = [];
+        $cont = 0;
+        foreach ($request->request as $item) {
+            if ($cont > 5) {
+                array_push($materias, $item);
+            }
+            $cont++;
+        }
+
+        if ($request->ano_curso == null) {
+            throw ValidationException::withMessages([
+                'ano_curso' => "Seleccione año*",
+            ]);
+        }
+
+        if ($request->jefe == null || $request->ayudante == null) {
+            throw ValidationException::withMessages([
+                'profesor' => "Seleccione profesores*",
+            ]);
+        }
+        request()->validate([
+            'curso' => 'required|string',
+        ]);
+
+        $query = DB::table('cursos')->where('ano_curso', $request->ano_curso)->where('curso', 'curso')->first();
+
+        if ($query != null) {
+            flash('Ya existe un curso con ese nombre en ese año')->error();
+            return redirect()->route('cursos_crear');
+        }
+
+        DB::table('cursos')->where("id_curso", "=", $id)->update([
+            'ano_curso' => $request->ano_curso,
+            'curso' => $request->curso,
+
+        ]);
+        DB::table('profesores-cursos')->where('id_curso', $id)->delete();
+        if ($request->jefe == -1) {
+            DB::table('profesores-cursos')->insert([
+                'id_profesor' => 1,
+                'id_curso' => $id,
+            ]);
+        }
+        if ($request->jefe != -1) {
+            DB::table('profesores-cursos')->insert([
+                'id_profesor' => $request->jefe,
+                'id_curso' => $id,
+            ]);
+        }
+        //PROFE AYUDANTE
+        if ($request->ayudante != -1) {
+            DB::table('profesores-cursos')->insert([
+                'id_profesor' => $request->ayudante,
+                'id_curso' => $id,
+            ]);
+        }
+        DB::table('cursos-materias')->where('id_curso', $id)->delete();
+
+        foreach ($materias as $materia) {
+            DB::table('cursos-materias')->insert([
+                'id_curso' => $id,
+                'id_materia' => $materia
+            ]);
+        }
+        flash('Curso editado exitosamente')->success();
+        return redirect()->route('cursos_editar', $id);
         dd($request->request, $id);
     }
 

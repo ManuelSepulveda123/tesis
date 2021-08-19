@@ -66,6 +66,7 @@ Route::post('eliminar/materia/{id}/curso','App\Http\Controllers\MateriasControll
 Route::get('datatable/list/profesores','App\Http\Controllers\DatatableController@tabla_profesores')->name('tabla.profesores')->middleware('admin');
 Route::get('datatable/list/cursos','App\Http\Controllers\DatatableController@tabla_cursos')->name('tabla.cursos')->middleware('admin');
 Route::get('datatable/list/materias','App\Http\Controllers\DatatableController@tabla_materias')->name('tabla.materias')->middleware('admin');
+Route::get('datatable/materias_agregar','App\Http\Controllers\DatatableController@tabla_materias_agregar')->name('tabla.materias.agregar')->middleware('admin');
 Route::get('datatable/materias/curso/{id}/','App\Http\Controllers\DatatableController@tabla_materias_curso')->name('tabla.materias.curso')->middleware('auth');
 Route::get('datatable/no_materias/curso/{id}/','App\Http\Controllers\DatatableController@tabla_NO_materias_curso')->name('tabla.materias.faltantes.curso')->middleware('admin');
 

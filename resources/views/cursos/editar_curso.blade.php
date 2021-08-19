@@ -6,6 +6,10 @@ Editar Curso | Escuela Chile España
 
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css">
 @endsection
 
 @section('head')
@@ -29,6 +33,14 @@ Editar Curso | Escuela Chile España
 @section('content')
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="kt-portlet kt-portlet--tabs">
+
+        <div class="kt-portlet__head">
+            <div class="kt-portlet__head-label">
+                <h3 class="kt-portlet__head-title">
+                    Datos del curso
+                </h3>
+            </div>
+        </div>
 
         <div class="kt-portlet__body">
             @include('flash::message')
@@ -96,6 +108,14 @@ Editar Curso | Escuela Chile España
                                                 {!!$errors->first('profesor', '<small style="color:red">:message</small>')!!}
                                                 <select class="form-control" name="jefe">
                                                     <option value="0" selected disabled>Seleccione profesor</option>
+                                                    @if($aux1 == 1)
+                                                    <option value="-1" selected >Sin profesor a cargo</option>
+                                                    @foreach($profesores as $profesor)
+                                                    <option value="{{$profesor->id}}">{{$profesor->nombre}} {{$profesor->apellido_p}} {{$profesor->apellido_m}}</option>
+                                                    @endforeach
+                                                    @endif
+                                                    @if($aux1 != 1)
+                                                    <option value="-1" >Sin profesor a cargo</option>
                                                     @foreach($profesores as $profesor)
                                                     @if($jefe->id == $profesor->id)
                                                     <option value="{{$profesor->id}}" selected>{{$profesor->nombre}} {{$profesor->apellido_p}} {{$profesor->apellido_m}}</option>
@@ -103,6 +123,7 @@ Editar Curso | Escuela Chile España
                                                     <option value="{{$profesor->id}}">{{$profesor->nombre}} {{$profesor->apellido_p}} {{$profesor->apellido_m}}</option>
                                                     @endif
                                                     @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                         </div>
@@ -112,6 +133,14 @@ Editar Curso | Escuela Chile España
                                             <div class="col-lg-9 col-xl-6">
                                                 <select class="form-control" name="ayudante">
                                                     <option value="0" selected disabled>Seleccione profesor</option>
+                                                    @if($aux2 == 1)
+                                                    <option value="-1" selected >Sin profesor a coeducador</option>
+                                                    @foreach($ayudantes as $profesor)
+                                                    <option value="{{$profesor->id}}">{{$profesor->nombre}} {{$profesor->apellido_p}} {{$profesor->apellido_m}}</option>
+                                                    @endforeach
+                                                    @endif
+                                                    @if($aux2 != 1)
+                                                    <option value="-1">Sin profesor a coeducador</option>
                                                     @foreach($ayudantes as $profesor)
                                                     @if($ayudante->id == $profesor->id )
                                                     <option value="{{$profesor->id}}" selected>{{$profesor->nombre}} {{$profesor->apellido_p}} {{$profesor->apellido_m}}</option>
@@ -119,8 +148,29 @@ Editar Curso | Escuela Chile España
                                                     <option value="{{$profesor->id}}">{{$profesor->nombre}} {{$profesor->apellido_p}} {{$profesor->apellido_m}} </option>
                                                     @endif
                                                     @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-lg-9 col-xl-6">
+                                                <h3 class="kt-section__title kt-section__title-sm">Materias:</h3>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+
+                                            <table id="materias" class="table table-striped table-bordered" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre materia</th>
+                                                        <th>Activar</th>
+                                                    </tr>
+                                                </thead>
+
+                                            </table>
+
                                         </div>
 
                                         <div class="d-flex justify-content-between pt-10 mt-15" style="margin:20px">
@@ -134,24 +184,7 @@ Editar Curso | Escuela Chile España
                                             <div class="mr-2" style="margin-top:50px"></div>
 
 
-                                            <div class="row">
-                                                
-                                                <div class="col-lg-9 col-xl-6">
-                                                    <h3 class="kt-section__title kt-section__title-sm">Materias:</h3>
-                                                </div>
-                                            </div>
-                                            <div class="form-group ">
-                                                
-                                                    <table id="materias" class="table table-striped table-bordered" style="width:100%">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Nombre materia</th>
-                                                            </tr>
-                                                        </thead>
 
-                                                    </table>
-                                             
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -198,7 +231,9 @@ Editar Curso | Escuela Chile España
         $('#materias').DataTable({
             "ajax": "{{route('tabla.materias.curso',$curso->id_curso)}}",
             "columns": [{
-                    data: 'materia'
+                    data: 'action2'
+                }, {
+                    data: 'action'
                 },
 
 
@@ -221,6 +256,7 @@ Editar Curso | Escuela Chile España
     });
     $('#administrador_nav').addClass('kt-menu__item--open');
     $('#tabla_cursos').addClass('kt-menu__item--active');
+    $('div.alert').not('.alert-important').delay(5000).fadeOut(350);
 </script>
 
 @endsection

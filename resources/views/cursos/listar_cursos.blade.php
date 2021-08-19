@@ -14,7 +14,7 @@ Lista Cursos | Escuela Chile España
 <div class="kt-container  kt-container--fluid ">
     <div class="kt-subheader__main">
         <h3 class="kt-subheader__title">
-            Lista de Cursos
+            Cursos
         </h3>
     </div>
 </div>
@@ -24,15 +24,24 @@ Lista Cursos | Escuela Chile España
 @section('content')
 <div class="kt-portlet kt-portlet--mobile">
 
-    <div class="d-flex justify-content-between  pt-10 mt-15">
-        <div class="mr-2"></div>
-        <div>
-            <a href="{{route('cursos_crear')}}" type="submit" class="btn btn-warning font-weight-bolder px-9 py-4" style="margin:20px">Agregar Curso</a>
+
+
+    <div class="kt-portlet__head">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">
+                Lista de Cursos
+            </h3>
         </div>
     </div>
 
     <div class="kt-portlet__body">
         @include('flash::message')
+        <div class="d-flex justify-content-between  pt-10 mt-15">
+            <div class="mr-2"></div>
+            <div>
+                <a href="{{route('cursos_crear')}}" type="submit" class="btn btn-warning font-weight-bolder px-9 py-4" style="margin:20px">Agregar Curso</a>
+            </div>
+        </div>
         <table id="example" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
@@ -130,6 +139,7 @@ Lista Cursos | Escuela Chile España
     });
     $('#administrador_nav').addClass('kt-menu__item--open');
     $('#tabla_cursos').addClass('kt-menu__item--active');
+    $('div.alert').not('.alert-important').delay(5000).fadeOut(350);
 </script>
 
 @endsection

@@ -234,8 +234,16 @@ class DatatableController extends Controller
             ->join('profesores-cursos', "profesores-cursos.id_curso", "=", "cursos.id_curso")
             ->join('users', 'users.id', '=', 'profesores-cursos.id_profesor')
             ->select('cursos.id_curso', 'cursos.curso', 'cursos.ano_curso', 'users.id', 'users.nombre', 'users.apellido_p', 'users.apellido_m', 'users.email')
-            ->where("users.id_tipo_usuario", 2)
+            ->where("users.id_tipo_usuario",2)->orWhere("users.id_tipo_usuario",1)
             ->get();
+        $cursos_sin_profes = DB::table('cursos')
+        ->join('profesores-cursos', "profesores-cursos.id_curso", "=", "cursos.id_curso")
+        ->join('users', 'users.id', '=', 'profesores-cursos.id_profesor')
+        ->select('cursos.id_curso', 'cursos.curso', 'cursos.ano_curso', 'users.id', 'users.nombre', 'users.apellido_p', 'users.apellido_m', 'users.email')
+        ->where("users.id_tipo_usuario", 1)
+        ->get();
+
+      
         foreach ($cursos as $curso) {
             $curso->ano_curso = \Carbon\Carbon::parse($curso->ano_curso)->format('Y');
         }
@@ -277,17 +285,41 @@ class DatatableController extends Controller
 
     public function tabla_materias_curso($id)
     {
+        $materias = DB::table('materias')->get();
 
-        $materias = DB::table('cursos-materias')->join("materias", "materias.id_materia", "=", "cursos-materias.id_materia")
-            ->select('cursos-materias.id_curso', 'cursos-materias.id_materia', 'materias.materia')
-            ->where("cursos-materias.id_curso", $id)
-            ->get();
+        unset($materias[0]);
 
-        return datatables()->of($materias)->addColumn('action', function ($materias) {
-            /* route('materia_curso', ['id_curso' => $materias->id_curso, 'id_materia' => $materias->id_materia]); */
+        $x = [];
 
-            $url = route('clase_crear', ['id_materia' => $materias->id_materia, 'id_curso' => $materias->id_curso]);
-            return '<a href="' . $url . '" class="btn btn-dark"><i class="fa fa-edit"></i></a></button>';
+        foreach ($materias as $materia) {
+
+
+            array_push($x, [$materia, $id]);
+        }
+
+
+        return datatables()->of($x)->addColumn('action', function ($materia) {
+
+
+            $materias_curso = DB::table('cursos-materias')->join("materias", "materias.id_materia", "=", "cursos-materias.id_materia")
+                ->select('cursos-materias.id_curso', 'cursos-materias.id_materia', 'materias.materia')
+                ->where("cursos-materias.id_curso", $materia[1])
+                ->get();
+           
+            foreach ($materias_curso as $item) {
+                
+                if ($item->id_materia == $materia[0]->id_materia) {
+                    return '<label class="kt-checkbox kt-checkbox--single kt-checkbox--success" style="align-items: center;">
+            <input type="checkbox" id="' . $materia[0]->id_materia . '" name="' . $materia[0]->materia . '" value="' . $materia[0]->id_materia . '"style="align-items: center;"checked>
+            <span></span></label>';
+                }
+            }
+
+            return '<label class="kt-checkbox kt-checkbox--single kt-checkbox--success" style="align-items: center;">
+            <input type="checkbox" id="' . $materia[0]->id_materia . '" name="' . $materia[0]->materia . '" value="' . $materia[0]->id_materia . '"style="align-items: center;">
+            <span></span></label>';
+        })->addColumn('action2', function ($materia) {
+            return $materia[0]->materia;
         })->toJson();
     }
 
@@ -464,7 +496,7 @@ class DatatableController extends Controller
                                         <h4 ><b>Nueva Tarea<b></h4>
 
 
-                                        <form action="'.$url.'" method="post" enctype="multipart/form-data">
+                                        <form action="' . $url . '" method="post" enctype="multipart/form-data">
                                             ' . $token . '
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Titulo</label>
@@ -507,41 +539,52 @@ class DatatableController extends Controller
 
     public function tabla_tareas_curso($id)
     {
-        $tareas = DB::table('archivos')->join('materias','materias.id_materia','=','archivos.id_materia')->where('id_curso', $id)->where('id_tipo_archivo', 2)->get();
-        
+        $tareas = DB::table('archivos')->join('materias', 'materias.id_materia', '=', 'archivos.id_materia')->where('id_curso', $id)->where('id_tipo_archivo', 2)->get();
+
         return datatables()->of($tareas)->addColumn('action', function ($tarea) {
-            $nombre = DB::table('tareas')->select('nombre_tarea')->where('id_archivo',$tarea->id_archivo)->first(); 
-            
+            $nombre = DB::table('tareas')->select('nombre_tarea')->where('id_archivo', $tarea->id_archivo)->first();
+
             $nombre = $nombre->nombre_tarea;
             return $nombre;
-        
         })->addColumn('action2', function ($tarea) {
-            $fecha = DB::table('tareas')->select('fecha_fin')->where('id_archivo',$tarea->id_archivo)->first(); 
-            
+            $fecha = DB::table('tareas')->select('fecha_fin')->where('id_archivo', $tarea->id_archivo)->first();
+
             return $fecha->fecha_fin;
         })
-        ->addColumn('action3', function ($tarea) {
+            ->addColumn('action3', function ($tarea) {
 
-            $ruta = route('tarea_curso',$tarea->id_archivo);
-            return '<a href="'.$ruta.'" class="btn btn-dark"><i class="flaticon-eye" style="aling-icon:center"></i></a>';
-        })->rawColumns(['action2' => 'action2', 'action' => 'action','action3' => 'action3'])->toJson();
+                $ruta = route('tarea_curso', $tarea->id_archivo);
+                return '<a href="' . $ruta . '" class="btn btn-dark"><i class="flaticon-eye" style="aling-icon:center"></i></a>';
+            })->rawColumns(['action2' => 'action2', 'action' => 'action', 'action3' => 'action3'])->toJson();
     }
 
-    public function tabla_tareas_estudiantes($id_tarea){
+    public function tabla_tareas_estudiantes($id_tarea)
+    {
 
-        $tareas = DB::table('tareas')->join('users','users.id','=','tareas.id_estudiante')->where('id_archivo',$id_tarea)->get();
-        
+        $tareas = DB::table('tareas')->join('users', 'users.id', '=', 'tareas.id_estudiante')->where('id_archivo', $id_tarea)->get();
+
         return datatables()->of($tareas)->addColumn('action', function ($tarea) {
-            $tarea_estudiante = DB::table('archivos')->where('id_tarea',$tarea->id_archivo)->where('id_user',$tarea->id)->first();
-            
-            if($tarea_estudiante != null)
-                $ruta = route('tarea_descargar',$tarea_estudiante->id_archivo);
-            if($tarea->estado == 1)
-                return '<a href="'.$ruta.'" class="btn btn-warning"><i class="flaticon-download" style="aling-icon:center"></i></a>';
+            $tarea_estudiante = DB::table('archivos')->where('id_tarea', $tarea->id_archivo)->where('id_user', $tarea->id)->first();
+
+            if ($tarea_estudiante != null)
+                $ruta = route('tarea_descargar', $tarea_estudiante->id_archivo);
+            if ($tarea->estado == 1)
+                return '<a href="' . $ruta . '" class="btn btn-warning"><i class="flaticon-download" style="aling-icon:center"></i></a>';
 
             return 'Nulo';
-        
         })->toJson();
-        
+    }
+
+    public function tabla_materias_agregar()
+    {
+        $materias = DB::table('materias')->get();
+        unset($materias[0]);
+      
+        return datatables()->of($materias)->addColumn('action', function ($materia) {
+
+            return '<label class="kt-checkbox kt-checkbox--single kt-checkbox--success" style="align-items: center;">
+            <input type="checkbox" id="' . $materia->id_materia . '" name="' . $materia->materia . '" value="' . $materia->id_materia . '"style="align-items: center;">
+            <span></span></label>';
+        })->toJson();
     }
 }
