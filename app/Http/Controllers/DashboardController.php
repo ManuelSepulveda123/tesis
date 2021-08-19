@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+
 class DashboardController extends Controller
 {
     //
@@ -17,11 +18,34 @@ class DashboardController extends Controller
         if ($tipo_user == 1) {
             $dato = "SOY ADMIN";
 
-            $profesores = count(DB::table('users')->where('id_tipo_usuario',2)->get());
-            $ayudantes = count(DB::table('users')->where('id_tipo_usuario',3)->get());
-            $estudiantes = count(DB::table('users')->where('id_tipo_usuario',4)->get());
+            $profesores = count(DB::table('users')->where('id_tipo_usuario', 2)->get());
+            $ayudantes = count(DB::table('users')->where('id_tipo_usuario', 3)->get());
+            $estudiantes = count(DB::table('users')->where('id_tipo_usuario', 4)->get());
+
+            $cursos = DB::table('cursos')->get();
+
+            $nombres = [];
+
+            foreach ($cursos as $curso) {
+
+                array_push($nombres, $curso->curso);
+            }
+
+            $archivosaux = DB::table('archivos')->get();
+
+            $archivos = [];
             
-            return view('inicio.inicio_admin', compact('dato','profesores','ayudantes','estudiantes'));
+            foreach($cursos as $curso){
+                $cont = 0;
+                foreach($archivosaux as $item){
+                    if($curso->id_curso == $item->id_curso){
+                        $cont =$cont+1;
+                    }
+                }
+                array_push($archivos, $cont);
+            }
+
+            return view('inicio.inicio_admin', compact('dato', 'profesores', 'ayudantes', 'estudiantes', 'cursos', 'nombres','archivos'));
         } elseif ($tipo_user == 2 || $tipo_user == 3) {
 
             $dato = "SOY UN PROFE";
@@ -76,7 +100,7 @@ class DashboardController extends Controller
         $materias = DB::table('materias')->get();
         $clases = DB::table('clases')->where('id_curso', $curso->id_curso)->where('fecha_clase', '>=', $fecha)->where('hora_fin', '>=', $hora)->get();
 
-        return view('profesores.cursos.clases_curso', compact('curso', 'clases','materias'));
+        return view('profesores.cursos.clases_curso', compact('curso', 'clases', 'materias'));
     }
 
     public function materia_curso(Request $request, $id_curso, $id_materia)
@@ -98,17 +122,18 @@ class DashboardController extends Controller
         return view('profesores.equipo_docente');
     }
 
-    public function tareas_curso($id){
+    public function tareas_curso($id)
+    {
 
         $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
         return view('profesores.cursos.tareas_curso', compact('curso'));
     }
 
-    public function tarea_curso($id_tarea){
+    public function tarea_curso($id_tarea)
+    {
 
-        $tarea = DB::table('archivos')->join('tareas','tareas.id_archivo','=','archivos.id_archivo')->where('archivos.id_archivo',$id_tarea)->first();
-        $curso = DB::table('cursos')->where('id_curso',$tarea->id_curso)->first();
-        return view('profesores.cursos.tarea_curso', compact('tarea','curso'));
-        
+        $tarea = DB::table('archivos')->join('tareas', 'tareas.id_archivo', '=', 'archivos.id_archivo')->where('archivos.id_archivo', $id_tarea)->first();
+        $curso = DB::table('cursos')->where('id_curso', $tarea->id_curso)->first();
+        return view('profesores.cursos.tarea_curso', compact('tarea', 'curso'));
     }
 }
