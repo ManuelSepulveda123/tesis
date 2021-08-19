@@ -76,7 +76,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	<link href="{{asset('assets/vendors/custom/vendors/flaticon2/flaticon.css')}}" rel="stylesheet" type="text/css" />
 	<link href="{{asset('assets/vendors/general/@fortawesome/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css" />
 
-	<link rel="shortcut icon" href="{{URL::asset('assets/media/escuela/icon.png')}}" />
+	<link rel="shortcut icon" href="{{URL::asset('assets/media/Escuela/icon.png')}}" />
 </head>
 <!-- end::Head -->
 
@@ -90,10 +90,10 @@ License: You must have a valid license purchased only from themeforest(the above
 		<div class="kt-grid kt-grid--hor kt-grid--root  kt-login kt-login--v1" id="kt_login">
 			<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--desktop kt-grid--ver-desktop kt-grid--hor-tablet-and-mobile">
 				<!--begin::Aside-->
-				<div class="kt-grid__item kt-grid__item--order-tablet-and-mobile-2 kt-grid kt-grid--hor kt-login__aside" style="background-image: url({{asset('assets/media/escuela/login.jpg')}});">
+				<div class="kt-grid__item kt-grid__item--order-tablet-and-mobile-2 kt-grid kt-grid--hor kt-login__aside" style="background-image: url({{asset('assets/media/Escuela/login.jpg')}});">
 					<div class="kt-grid__item">
 						<a href="#" class="kt-login__logo">
-							<img src="{{asset('assets/media/escuela/escuela-espana-228x300.png')}}" width="30%" height="30%">
+							<img src="{{asset('assets/media/Escuela/escuela-espana-228x300.png')}}" width="30%" height="30%">
 						</a>
 					</div>
 					<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver">
