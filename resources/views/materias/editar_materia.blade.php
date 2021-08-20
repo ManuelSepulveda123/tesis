@@ -1,12 +1,11 @@
 @extends('layout.layout')
 
+@section('titulo')
+Editar Materia | Escuela Chile España
+@endsection
+
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<style>
-	.xd {
-		background-color: pink;
-	}
-</style>
 @endsection
 
 @section('head')
@@ -30,7 +29,15 @@
 
 @section('content')
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+	
 	<div class="kt-portlet kt-portlet--tabs">
+	<div class="kt-portlet__head">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">
+				Dato Materia
+			</h3>
+		</div>
+	</div>
 		<div class="kt-portlet__body">
 			@include('flash::message')
 			<form action="{{route('materias_update',$materia->id_materia)}}" method="post" enctype="multipart/form-data">
@@ -68,8 +75,8 @@
 										<div class="form-group row">
 											<label class="col-xl-3 col-lg-3 col-form-label">Cursos</label>
 											<div class="col-lg-9 col-xl-6">
-												<select class="form-control js-example-basic-multiple"  name="cursos[]" multiple="multiple">
-													<option value="0"  disabled>Seleccione profesor</option>
+												<select class="form-control js-example-basic-multiple" name="cursos[]" multiple="multiple">
+													<option value="0" disabled>Seleccione profesor</option>
 													@foreach($cursos as $curso)
 													<option value="{{$curso->id_curso}}">{{$curso->curso}}</option>
 													@endforeach
@@ -110,6 +117,9 @@
 <script>
 	$(document).ready(function() {
 		$('.js-example-basic-multiple').select2();
+		$('#administrador_nav').addClass('kt-menu__item--open');
+		$('#tabla_materias').addClass('kt-menu__item--active');
+		$('div.alert').not('.alert-important').delay(5000).fadeOut(350);
 	});
 </script>
 

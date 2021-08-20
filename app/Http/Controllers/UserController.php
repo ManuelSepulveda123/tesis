@@ -194,4 +194,19 @@ class UserController extends Controller
 
         return view('users.perfil_usuario', compact('usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante'));
     }
+
+    public function admin_contras(Request $request, $id)
+    {
+        request()->validate([
+            'nueva_password' => 'required',
+        ]);
+        
+        DB::table('users')->where('id',$id)->update([
+            'password' => Hash::make($request->nueva_password)
+        ]);
+
+        flash('Contraseña actualizada con exito')->success();
+        return redirect()->route('estudiantes_editar', $id);
+        
+    }
 }

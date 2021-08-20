@@ -47,6 +47,14 @@ Editar Profesor | Escuela Chile España
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
 	<div class="kt-portlet kt-portlet--tabs">
 
+		<div class="kt-portlet__head">
+			<div class="kt-portlet__head-label">
+				<h3 class="kt-portlet__head-title">
+					Datos del Profesor
+				</h3>
+			</div>
+		</div>
+
 		<div class="kt-portlet__body">
 			@include('flash::message')
 			<form action="{{route('profesor_update',$profesor->id)}}" method="post" enctype="multipart/form-data">

@@ -20,6 +20,7 @@ class DatatableController extends Controller
     {
 
         $tipo_user = Auth::user()->id_tipo_usuario;
+
         if ($tipo_user == 2 || $tipo_user == 3) {
             $id = Auth::user()->id;
             $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
@@ -212,17 +213,17 @@ class DatatableController extends Controller
                 ->make(true);
         }
 
-        $estudiantes = DB::table('users')->where('id_tipo_usuario', 4)->get();
+        $estudiantes = DB::table('users')->join('estudiantes-cursos','estudiantes-cursos.id_estudiante','=','users.id')->join('cursos','cursos.id_curso','=','estudiantes-cursos.id_curso')->where('id_tipo_usuario', 4)->get();
 
-        return datatables()->of($estudiantes)->addColumn('action', function ($curso) {
-            $url = route('cursos_editar', $curso->id_curso);
+        return datatables()->of($estudiantes)->addColumn('action', function ($estudiante) {
+            $url = route('estudiantes_editar',$estudiante->id);
             return '<a href="' . $url . '" class="btn btn-dark"><i class="fa fa-edit"></i></a></button>';
         })
-            ->addColumn('action2', function ($curso) {
+            ->addColumn('action2', function ($estudiante) {
                 $token =  csrf_field();
-                $url = route('delet_cursos', $curso->id_curso);
-                return ' <form action="' . $url . '" method="post"  class="delete">  ' . $token . ' <input type="hidden" name="id_curso"  value=' .  $curso->id_curso . '>
-                        <td><button type="submit" value="Eliminar"  class="btn btn-danger" onclick="return confirm(`¿Está seguro que desea eliminar ' .  $curso->curso  . '?`);" /><i class="fa fa-trash"></i></td>
+                $url = "#";
+                return ' <form action="' . $url . '" method="post"  class="delete">  ' . $token . ' <input type="hidden" name="id_curso"  value=' .  $estudiante->id . '>
+                        <td><button type="submit" value="Eliminar"  class="btn btn-danger" onclick="return confirm(`¿Está seguro que desea eliminar ' .  $estudiante->nombre  . '?`);" /><i class="fa fa-trash"></i></td>
                         </form>';
             })->rawColumns(['action2' => 'action2', 'action' => 'action'])
             ->make(true);
@@ -279,7 +280,14 @@ class DatatableController extends Controller
             <td><button type="submit" value="Eliminar"  class="btn btn-danger" onclick="return confirm(`¿Está seguro que desea eliminar ' .  $materias->materia  . '?, se eliminaran todos los archivos asignados`);" /><i class="fa fa-trash"></i></td>
             </form>
             ';
-            })->rawColumns(['action2' => 'action2', 'action' => 'action'])
+            }) ->addColumn('action3', function ($materias) {
+                if($materias->laboral == 0){
+                    return 'Basico';
+                }else{
+                    return 'Laboral';
+                }
+                    
+            })->rawColumns(['action2' => 'action2', 'action' => 'action','action3' =>'action3'])
             ->make(true);
     }
 

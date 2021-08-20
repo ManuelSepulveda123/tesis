@@ -35,9 +35,15 @@ Route::get('profesor/{id}/editar', 'App\Http\Controllers\ProfesoresController@pr
 Route::post('profesor/update/{id}', 'App\Http\Controllers\ProfesoresController@profesor_update')->name('profesor_update')->middleware('admin');
 
 //ESTUDIANTES-CRUD
-Route::get('list/estudiantes','App\Http\Controllers\EstudianteController@lista_estudiantes')->name('lista_estudiantes')->middleware('auth');
+Route::get('list/estudiantes','App\Http\Controllers\EstudianteController@list_estudiantes')->name('estudiantes')->middleware('admin');
+Route::get('lista/estudiantes','App\Http\Controllers\EstudianteController@lista_estudiantes')->name('lista_estudiantes')->middleware('auth');
 Route::get('estudiantes/crear','App\Http\Controllers\EstudianteController@estudiante_crear')->name('estudiantes_crear')->middleware('admin');
 Route::post('estudiantes/store','App\Http\Controllers\EstudianteController@estudiante_store')->name('estudiantes_store')->middleware('admin');
+Route::get('estudiante/{id}/editar','App\Http\Controllers\EstudianteController@estudiante_editar')->name('estudiantes_editar')->middleware('admin');
+Route::post('estudiantes/{id}/update','App\Http\Controllers\EstudianteController@estudiante_update')->name('estudiantes_update')->middleware('admin');
+
+//Cambiar-contra-admin
+Route::post('password/{id}/editar','App\Http\Controllers\UserController@admin_contras')->name('password_update')->middleware('admin');
 
 //CURSOS-CRUD
 Route::get('list/cursos','App\Http\Controllers\CursosController@lista_cursos')->name('cursos')->middleware('admin');

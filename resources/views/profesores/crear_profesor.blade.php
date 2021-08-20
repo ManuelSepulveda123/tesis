@@ -37,6 +37,14 @@ Crear Profesor | Escuela Chile España
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="kt-portlet kt-portlet--tabs">
 
+        <div class="kt-portlet__head">
+            <div class="kt-portlet__head-label">
+                <h3 class="kt-portlet__head-title">
+                    Datos del Profesor
+                </h3>
+            </div>
+        </div>
+
         <div class="kt-portlet__body">
             <form action="{{route('profesores_store')}}" method="post" enctype="multipart/form-data">
                 @csrf
@@ -243,6 +251,7 @@ Crear Profesor | Escuela Chile España
 <script>
     $(document).ready(function() {
 
+        $('div.alert').not('.alert-important').delay(5000).fadeOut(350);
         $('#administrador_nav').addClass('kt-menu__item--open');
         $('#tabla_profesores').addClass('kt-menu__item--active');
 

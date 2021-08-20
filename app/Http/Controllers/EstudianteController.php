@@ -11,13 +11,18 @@ use Illuminate\Support\Facades\Auth;
 
 class EstudianteController extends Controller
 {
-    //
+    //LASTA DEL CURSO
     public function lista_estudiantes()
     {
-        $id= Auth::user()->id;
+        $id = Auth::user()->id;
 
-        $curso = DB::table('profesores-cursos')->join('cursos','cursos.id_curso','=','profesores-cursos.id_curso')->where('id_profesor',$id)->first();
-        return view('estudiantes.listar_estudiantes',compact('curso'));
+        $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+        return view('estudiantes.listar_estudiantes_curso', compact('curso'));
+    }
+    //LISTA DE TODOS LOS ESTUDIANTES
+    public function list_estudiantes()
+    {
+        return view('estudiantes.listar_estudiantes');
     }
 
     public function estudiante_crear()
@@ -30,7 +35,7 @@ class EstudianteController extends Controller
 
     public function estudiante_store(Request $request)
     {
-        
+
 
         request()->validate([
             'nombre' => 'required|string',
@@ -201,14 +206,117 @@ class EstudianteController extends Controller
         return redirect()->route('estudiantes_crear');
     }
 
-    public function estudiante_materia($id,$id_materia){
+    public function estudiante_editar($id)
+    {
 
-        $curso = DB::table('estudiantes-cursos')->where('estudiantes-cursos.id_estudiante',$id)->join('cursos','cursos.id_curso','=','estudiantes-cursos.id_curso')->first();
-        $materias_estudiante = DB::table('cursos-materias')->join('materias','materias.id_materia','=','cursos-materias.id_materia')
-                                    ->where('id_curso',$curso->id_curso)->get();
-        
-        $materia = DB::table('materias')->where('id_materia',$id_materia)->first();
-        $tareas_pendientes = DB::table('tareas')->join('archivos','archivos.id_archivo','=','tareas.id_archivo')->where('id_estudiante',$id)->where('estado',0)->where('id_materia',$id_materia)->get(); 
-        return view('estudiantes.materias.estudiante_materia',compact('id','materias_estudiante','id_materia','materia','curso','tareas_pendientes'));
+        $estudiante = DB::table('users')->where('id', $id)->first();
+
+        $regiones = DB::table('regiones')->select('id', 'region')->get();
+        $comunas = DB::table('comunas')->select('id', 'comuna')->where('provincia_id', $estudiante->id_provincia)->get();
+        $provincias = DB::table('provincias')->select('id', 'provincia')->where('region_id', $estudiante->id_region)->get();
+
+        $cursos = DB::table('cursos')->get();
+        $curso_estudiante = DB::table('cursos')->join('estudiantes-cursos', 'estudiantes-cursos.id_curso', '=', 'cursos.id_curso')->where('id_estudiante', $id)->first();
+
+        $diagnostico_estudiante = DB::table('estudiantes')->where('estudiantes.id', $id)->first();
+        $diagnosticos = DB::table('diagnosticos')->get();
+
+        $apoderado = DB::table('users')->where('id', $diagnostico_estudiante->id_apoderado)->first();
+        return view('estudiantes.editar_estudiante', compact('estudiante', 'regiones', 'comunas', 'provincias', 'cursos', 'curso_estudiante', 'diagnosticos', 'diagnostico_estudiante', 'apoderado'));
+    }
+
+    public function estudiante_update(Request $request, $id)
+    {
+
+        request()->validate([
+            'nombre' => 'required|string',
+            'apellido_p' => 'required|string',
+            'apellido_m' => 'required|string',
+            'rut' => 'required|min:11|max:12|',
+            'telefono' => 'required',
+            'email' => 'required|email',
+            'fecha_nacimiento' => 'required|date',
+            'direccion' => 'required|string',
+        ]);
+
+        if ($request->region == null || $request->comuna == null || $request->provincia == null) {
+            if ($request->curso == null) {
+                throw ValidationException::withMessages([
+                    'curso' => "Seleccione un curso*",
+                    'region_provincia_comuna' => "Seleccione una dirección valida*"
+                ]);
+            }
+            throw ValidationException::withMessages([
+                'region_provincia_comuna' => "Seleccione una dirección valida*"
+            ]);
+        }
+
+        if ($request->curso == null) {
+            throw ValidationException::withMessages([
+                'curso' => "Seleccione un curso*"
+            ]);
+        }
+
+        $user = DB::table('users')->where('id', $id)->first();
+
+        $query = DB::table('users')->where([['rut', $request->rut], ['id', '<>', $id]])->get();
+
+        if ($user->rut != $request->rut) {
+            if (count($query) == 1) {
+                throw ValidationException::withMessages([
+                    'rut' => "El rut del estudiante es identico a otro estudiante*",
+                ]);
+            }
+        }
+
+        DB::table('users')->where("id", "=", $id)->update([
+            'nombre' => $request->nombre,
+            'apellido_p' => $request->apellido_p,
+            'apellido_m' => $request->apellido_m,
+            'rut' => $request->rut,
+            'telefono' => $request->telefono,
+            'email' => $request->email,
+            'fecha_nacimiento' => $request->fecha_nacimiento,
+            'direccion' => $request->direccion,
+            'id_region' => $request->region,
+            'id_comuna' => $request->comuna,
+            'id_provincia' => $request->provincia,
+            'fecha_update' => date_format(date_create(), 'Y-m-d'),
+        ]);
+
+        DB::table('estudiantes-cursos')->where("id_estudiante", $id)->update([
+            'id_curso' => $request->curso
+        ]);
+
+        if ($request->diagnostico != 0) {
+            DB::table('estudiantes')->where('id', $id)->update([
+
+                'id_diagnostico' => $request->diagnostico,
+                'otro' => $request->otro
+            ]);
+            flash('Datos guardados correctamente')->success();
+            return redirect()->route('estudiantes_editar', $id);
+        }
+
+        DB::table('estudiantes')->where('id', $id)->update([
+
+            'id_diagnostico' => null,
+            'otro' => $request->otro
+        ]);
+
+        flash('Datos guardados correctamente')->success();
+        return redirect()->route('estudiantes_editar', $id);
+    }
+
+    public function estudiante_materia($id, $id_materia)
+    {
+
+        $curso = DB::table('estudiantes-cursos')->where('estudiantes-cursos.id_estudiante', $id)->join('cursos', 'cursos.id_curso', '=', 'estudiantes-cursos.id_curso')->first();
+        $materias_estudiante = DB::table('cursos-materias')->join('materias', 'materias.id_materia', '=', 'cursos-materias.id_materia')
+            ->where('id_curso', $curso->id_curso)->get();
+
+        $materia = DB::table('materias')->where('id_materia', $id_materia)->first();
+        $tareas_pendientes = DB::table('tareas')->join('archivos', 'archivos.id_archivo', '=', 'tareas.id_archivo')->where('id_estudiante', $id)->where('estado', 0)->where('id_materia', $id_materia)->get();
+        return view('estudiantes.materias.estudiante_materia', compact('id', 'materias_estudiante', 'id_materia', 'materia', 'curso', 'tareas_pendientes'));
     }
 }

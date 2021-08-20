@@ -173,8 +173,8 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <ul class="kt-menu__subnav">
                                         <li id="tabla_cursos"class="kt-menu__item" aria-haspopup="true"><a href="{{route('cursos')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Cursos</span></a></li>
                                         <li id="tabla_profesores" class="kt-menu__item " aria-haspopup="true"><a href="{{route('profesores')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Profesores</span></a></li>
-                                        <li class="kt-menu__item " aria-haspopup="true"><a href="demo1/custom/apps/user/add-user.html" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Estudiantes</span></a></li>
-                                        <li class="kt-menu__item " aria-haspopup="true"><a href="{{route('materias')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Materias</span></a></li>
+                                        <li id="tabla_estudiantes"class="kt-menu__item " aria-haspopup="true"><a href="{{route('estudiantes')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Estudiantes</span></a></li>
+                                        <li id="tabla_materias"class="kt-menu__item " aria-haspopup="true"><a href="{{route('materias')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Materias</span></a></li>
                                     </ul>
                                 </div>
                             </li>

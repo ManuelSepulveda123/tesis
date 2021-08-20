@@ -1,5 +1,7 @@
 @extends('layout.layout')
-
+@section('titulo')
+Crear Estudiantes | Escuela Chile España
+@endsection
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
@@ -29,8 +31,16 @@
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="kt-portlet kt-portlet--tabs">
 
+        <div class="kt-portlet__head">
+            <div class="kt-portlet__head-label">
+                <h3 class="kt-portlet__head-title">
+                    Datos del Estudiante
+                </h3>
+            </div>
+        </div>
+
         <div class="kt-portlet__body">
-        @include('flash::message')
+            @include('flash::message')
             <form action="{{route('estudiantes_store')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="tab-content">
@@ -297,7 +307,9 @@
 <!-- <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
 <script>
     $(document).ready(function() {
-
+        $('div.alert').not('.alert-important').delay(5000).fadeOut(350);
+        $('#administrador_nav').addClass('kt-menu__item--open');
+        $('#tabla_estudiantes').addClass('kt-menu__item--active');
         document.getElementById("rut").oninput = function isValidRUT(rut) {
             var rut = document.getElementById("rut");
             console.log(rut.value);
