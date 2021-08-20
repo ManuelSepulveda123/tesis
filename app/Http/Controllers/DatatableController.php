@@ -213,10 +213,10 @@ class DatatableController extends Controller
                 ->make(true);
         }
 
-        $estudiantes = DB::table('users')->join('estudiantes-cursos','estudiantes-cursos.id_estudiante','=','users.id')->join('cursos','cursos.id_curso','=','estudiantes-cursos.id_curso')->where('id_tipo_usuario', 4)->get();
+        $estudiantes = DB::table('users')->join('estudiantes-cursos', 'estudiantes-cursos.id_estudiante', '=', 'users.id')->join('cursos', 'cursos.id_curso', '=', 'estudiantes-cursos.id_curso')->where('id_tipo_usuario', 4)->get();
 
         return datatables()->of($estudiantes)->addColumn('action', function ($estudiante) {
-            $url = route('estudiantes_editar',$estudiante->id);
+            $url = route('estudiantes_editar', $estudiante->id);
             return '<a href="' . $url . '" class="btn btn-dark"><i class="fa fa-edit"></i></a></button>';
         })
             ->addColumn('action2', function ($estudiante) {
@@ -235,16 +235,16 @@ class DatatableController extends Controller
             ->join('profesores-cursos', "profesores-cursos.id_curso", "=", "cursos.id_curso")
             ->join('users', 'users.id', '=', 'profesores-cursos.id_profesor')
             ->select('cursos.id_curso', 'cursos.curso', 'cursos.ano_curso', 'users.id', 'users.nombre', 'users.apellido_p', 'users.apellido_m', 'users.email')
-            ->where("users.id_tipo_usuario",2)->orWhere("users.id_tipo_usuario",1)
+            ->where("users.id_tipo_usuario", 2)->orWhere("users.id_tipo_usuario", 1)
             ->get();
         $cursos_sin_profes = DB::table('cursos')
-        ->join('profesores-cursos', "profesores-cursos.id_curso", "=", "cursos.id_curso")
-        ->join('users', 'users.id', '=', 'profesores-cursos.id_profesor')
-        ->select('cursos.id_curso', 'cursos.curso', 'cursos.ano_curso', 'users.id', 'users.nombre', 'users.apellido_p', 'users.apellido_m', 'users.email')
-        ->where("users.id_tipo_usuario", 1)
-        ->get();
+            ->join('profesores-cursos', "profesores-cursos.id_curso", "=", "cursos.id_curso")
+            ->join('users', 'users.id', '=', 'profesores-cursos.id_profesor')
+            ->select('cursos.id_curso', 'cursos.curso', 'cursos.ano_curso', 'users.id', 'users.nombre', 'users.apellido_p', 'users.apellido_m', 'users.email')
+            ->where("users.id_tipo_usuario", 1)
+            ->get();
 
-      
+
         foreach ($cursos as $curso) {
             $curso->ano_curso = \Carbon\Carbon::parse($curso->ano_curso)->format('Y');
         }
@@ -280,14 +280,13 @@ class DatatableController extends Controller
             <td><button type="submit" value="Eliminar"  class="btn btn-danger" onclick="return confirm(`¿Está seguro que desea eliminar ' .  $materias->materia  . '?, se eliminaran todos los archivos asignados`);" /><i class="fa fa-trash"></i></td>
             </form>
             ';
-            }) ->addColumn('action3', function ($materias) {
-                if($materias->laboral == 0){
+            })->addColumn('action3', function ($materias) {
+                if ($materias->laboral == 0) {
                     return 'Basico';
-                }else{
+                } else {
                     return 'Laboral';
                 }
-                    
-            })->rawColumns(['action2' => 'action2', 'action' => 'action','action3' =>'action3'])
+            })->rawColumns(['action2' => 'action2', 'action' => 'action', 'action3' => 'action3'])
             ->make(true);
     }
 
@@ -313,9 +312,9 @@ class DatatableController extends Controller
                 ->select('cursos-materias.id_curso', 'cursos-materias.id_materia', 'materias.materia')
                 ->where("cursos-materias.id_curso", $materia[1])
                 ->get();
-           
+
             foreach ($materias_curso as $item) {
-                
+
                 if ($item->id_materia == $materia[0]->id_materia) {
                     return '<label class="kt-checkbox kt-checkbox--single kt-checkbox--success" style="align-items: center;">
             <input type="checkbox" id="' . $materia[0]->id_materia . '" name="' . $materia[0]->materia . '" value="' . $materia[0]->id_materia . '"style="align-items: center;"checked>
@@ -587,12 +586,157 @@ class DatatableController extends Controller
     {
         $materias = DB::table('materias')->get();
         unset($materias[0]);
-      
+
         return datatables()->of($materias)->addColumn('action', function ($materia) {
 
             return '<label class="kt-checkbox kt-checkbox--single kt-checkbox--success" style="align-items: center;">
             <input type="checkbox" id="' . $materia->id_materia . '" name="' . $materia->materia . '" value="' . $materia->id_materia . '"style="align-items: center;">
             <span></span></label>';
         })->toJson();
+    }
+
+    public function tabla_tareas_curso_especifico($id_curso, $id_materia)
+    {
+      
+        $tareas = DB::table('archivos')->where('id_curso', $id_curso)->where('id_materia', $id_materia)->where('id_tipo_archivo', 2)->get();
+        return datatables()->of($tareas)->addColumn('action', function ($tarea) {
+            $nombre = DB::table('tareas')->select('nombre_tarea')->where('id_archivo', $tarea->id_archivo)->first();
+
+            $nombre = $nombre->nombre_tarea;
+            return $nombre;
+        })->addColumn('action2', function ($tarea) {
+            $fecha = DB::table('tareas')->select('fecha_fin')->where('id_archivo', $tarea->id_archivo)->first();
+
+            return $fecha->fecha_fin;
+        })
+            ->addColumn('action3', function ($tarea) {
+
+                $ruta = route('tarea_curso', $tarea->id_archivo);
+                return '<a href="' . $ruta . '" class="btn btn-dark"><i class="flaticon-eye" style="aling-icon:center"></i></a>';
+            })->rawColumns(['action2' => 'action2', 'action' => 'action', 'action3' => 'action3'])->toJson();
+    }
+
+    public function tabla_cursos_clases($id){
+
+        $materias = DB::table('cursos-materias')->join('materias','materias.id_materia','=','cursos-materias.id_materia')->where('id_curso',$id)->get();
+        return datatables()->of($materias)->addColumn('action', function ($materia) {
+            $token =  csrf_field();
+            $ruta = route('clase_store',['id_materia' => $materia->id_materia, 'id_curso' => $materia->id_curso]);
+           
+            return '<a href="#" data-toggle="modal" data-target="#materia_' . $materia->id_materia . '" class="btn btn-dark">+</a>
+            <div class="modal " id="materia_'.$materia->id_materia.'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Nueva Clase | '.$materia->materia.'</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form action="'.$ruta.'" method="post" enctype="multipart/form-data">
+                                '.$token.'
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="kt_user_edit_tab_1" role="tabpanel">
+                                        <div class="kt-form kt-form--label-right">
+                                            <div class="kt-form__body">
+                                            <div class="kt-section kt-section--first">
+                                            <div class="kt-section__body">
+                                                <div class="row">
+                                                    <label class="col-xl-3"></label>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                        <h3 class="kt-section__title kt-section__title-sm">Agendar Clase:</h3>
+                                                    </div>
+                                                </div>
+    
+                                                <input type="hidden" name ="redirect" value="1">
+                                                <div class="form-group form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">fecha</label>
+                                                    <div class="col-lg-9 col-xl-3">
+                                                        
+                                                        <input class="form-control" type="date" value="" name="fecha">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-xl-3"></label>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                        <h3 class="kt-section__title kt-section__title-sm">Horario:</h3>
+                                                    </div>
+                                                </div>
+    
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">Inicio</label>
+                                                    <div class="col-lg-2 col-xl-2">
+                                                        
+                                                        <input class="form-control" type="time" value="" name="hora_inicio">
+                                                    </div>
+                                                </div>
+    
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">Fin</label>
+                                                    <div class="col-lg-2 col-xl-2">
+                                                        
+                                                        <input class="form-control" type="time" value="" name="hora_fin">
+                                                    </div>
+                                                </div>
+    
+                                                <div class="row">
+                                                    <label class="col-xl-3"></label>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                        <h3 class="kt-section__title kt-section__title-sm">Información:</h3>
+                                                    </div>
+                                                </div>
+    
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">Link</label>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                       
+                                                        <input class="form-control" type="text" value="" name="link">
+                                                    </div>
+                                                </div>
+    
+                                                <!-- <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">contraseña</label>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                        
+                                                        <input class="form-control" type="text" value="" name="password">
+                                                    </div>
+                                                </div> -->
+    
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">Detalle</label>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                       
+                                                        <textarea class="form-control" name="detalle" rows="6" cols="50" style="resize: none"></textarea>
+                                                    </div>
+                                                </div>
+    
+    
+                                                <div class="d-flex justify-content-between  pt-10 mt-15" style="margin:20px">
+                                                    <div class="mr-2"></div>
+                                                    <div>
+                                                        <button type="submit" class="btn btn-success font-weight-bolder px-9 py-4" style="margin:20px">Crear clase</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>';})->toJson();
     }
 }

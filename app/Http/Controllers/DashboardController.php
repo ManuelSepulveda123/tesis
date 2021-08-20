@@ -32,24 +32,68 @@ class DashboardController extends Controller
             }
 
             $archivosaux = DB::table('archivos')->get();
-
+           
             $archivos = [];
-            
-            foreach($cursos as $curso){
+
+            foreach ($cursos as $curso) {
                 $cont = 0;
-                foreach($archivosaux as $item){
-                    if($curso->id_curso == $item->id_curso){
-                        $cont =$cont+1;
+                foreach ($archivosaux as $item) {
+                    ;
+                    if ($curso->id_curso == $item->id_curso) {
+                        $cont = $cont + 1;
                     }
                 }
                 array_push($archivos, $cont);
             }
+            
 
-            return view('inicio.inicio_admin', compact('dato', 'profesores', 'ayudantes', 'estudiantes', 'cursos', 'nombres','archivos'));
+            return view('inicio.inicio_admin', compact('dato', 'profesores', 'ayudantes', 'estudiantes', 'cursos', 'nombres', 'archivos'));
         } elseif ($tipo_user == 2 || $tipo_user == 3) {
 
-            $dato = "SOY UN PROFE";
             $id = Auth::user()->id;
+
+            $profesor = DB::table('users')->where('id', $id)->first();
+            $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->get();
+
+            $aux = DB::table('profesores-materias')->where('id_profesor', $id)->first();
+            $aux = $aux->id_materia;
+            $flag = 0;
+            //PROFE ESPECIFICO DE UNA MATERIA
+            if ($aux != 1) {
+
+                $cursos_materia = DB::table('cursos-materias')->join('cursos', 'cursos.id_curso', '=', 'cursos-materias.id_curso')->where('id_materia', $aux)->get();
+
+                if (count($cursos) == 0) {
+                    $flag = 1;
+                    return view('inicio.inicio_profe', compact('cursos', 'cursos_materia', 'aux', 'flag'));
+                }
+
+                $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+                return view('inicio.inicio_profe', compact('cursos', 'cursos_materia', 'aux', 'flag'));
+            }
+            //PROFE JEFE
+            if ($profesor->id_tipo_usuario == 2) {
+
+                if (count($cursos) == 0) {
+                    $flag = 1;
+                    return view('inicio.inicio_profe', compact('cursos', 'aux', 'flag'));
+                }
+                $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+                return view('inicio.inicio_profe', compact('cursos','aux','flag'));
+            }
+            //PROFE AYUDANTE
+            
+            if ($profesor->id_tipo_usuario == 3) {
+                if (count($cursos) == 0) {
+                    $flag = 1;
+                    return view('inicio.inicio_profe', compact('cursos', 'aux', 'flag'));
+                }
+             
+              
+                return view('inicio.inicio_profe', compact('cursos','aux','flag'));
+                
+            }
+            dd($cursos);
 
             $query = DB::table('profesores-materias')->where('id_profesor', $id)->first();
             if ($query->id_materia > 1) {
@@ -92,13 +136,54 @@ class DashboardController extends Controller
 
     public function curso_profesor(Request $request, $id)
     {
+        $id = Auth::user()->id;
         date_default_timezone_set('America/Santiago');
         $fecha = date_format(date_create(), 'Y-m-d');
         $hora = date_format(date_create(), 'G:i:s');
         $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
-
         $materias = DB::table('materias')->get();
         $clases = DB::table('clases')->where('id_curso', $curso->id_curso)->where('fecha_clase', '>=', $fecha)->where('hora_fin', '>=', $hora)->get();
+
+        $profesor = DB::table('users')->where('id', $id)->first();
+        $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->get();
+
+        $aux = DB::table('profesores-materias')->where('id_profesor', $id)->first();
+        $aux = $aux->id_materia;
+        $flag = 0;
+        //PROFE ESPECIFICO DE UNA MATERIA
+        if ($aux != 1) {
+
+            $cursos_materia = DB::table('cursos-materias')->join('cursos', 'cursos.id_curso', '=', 'cursos-materias.id_curso')->where('id_materia', $aux)->get();
+
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('profesores.cursos.clases_curso', compact('cursos', 'cursos_materia', 'aux', 'flag','clases','materias','curso'));
+            }
+
+            $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+            return view('profesores.cursos.clases_curso', compact('cursos', 'cursos_materia', 'aux', 'flag','clases','materias','curso'));
+        }
+        if ($profesor->id_tipo_usuario == 2) {
+
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('profesores.cursos.clases_curso', compact('cursos',  'aux', 'flag','clases','materias','curso'));
+            }
+            $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+            return view('profesores.cursos.clases_curso', compact('cursos', 'aux', 'flag','clases','materias','curso'));
+        }
+        if ($profesor->id_tipo_usuario == 3) {
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('profesores.cursos.clases_curso', compact('cursos', 'aux', 'flag','clases','materias','curso'));
+            }
+         
+          
+            return view('profesores.cursos.clases_curso', compact('cursos', 'aux', 'flag','clases','materias','curso'));
+            
+        }
+
+
 
         return view('profesores.cursos.clases_curso', compact('curso', 'clases', 'materias'));
     }
@@ -124,16 +209,149 @@ class DashboardController extends Controller
 
     public function tareas_curso($id)
     {
-
+        $id = Auth::user()->id;
         $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+        
+        $profesor = DB::table('users')->where('id', $id)->first();
+        $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->get();
+
+        $aux = DB::table('profesores-materias')->where('id_profesor', $id)->first();
+        $aux = $aux->id_materia;
+        $flag = 0;
+        //PROFE ESPECIFICO DE UNA MATERIA
+        if ($aux != 1) {
+
+            $cursos_materia = DB::table('cursos-materias')->join('cursos', 'cursos.id_curso', '=', 'cursos-materias.id_curso')->where('id_materia', $aux)->get();
+
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('profesores.cursos.tareas_curso', compact('cursos', 'cursos_materia', 'aux', 'flag','curso'));
+            }
+
+            $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+            return view('profesores.cursos.tareas_curso', compact('cursos', 'cursos_materia', 'aux', 'flag','curso'));
+        }
+
+        if ($profesor->id_tipo_usuario == 2) {
+
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('profesores.cursos.tareas_curso', compact('cursos',  'aux', 'flag','curso'));
+            }
+            $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+            return view('profesores.cursos.tareas_curso', compact('cursos', 'aux', 'flag','curso'));
+        }
+        if ($profesor->id_tipo_usuario == 3) {
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('profesores.cursos.tareas_curso', compact('cursos', 'aux', 'flag','curso'));
+            }
+         
+          
+            return view('profesores.cursos.tareas_curso', compact('cursos', 'aux', 'flag','curso'));
+            
+        }
         return view('profesores.cursos.tareas_curso', compact('curso'));
     }
 
     public function tarea_curso($id_tarea)
     {
-
+        $id = Auth::user()->id;
         $tarea = DB::table('archivos')->join('tareas', 'tareas.id_archivo', '=', 'archivos.id_archivo')->where('archivos.id_archivo', $id_tarea)->first();
         $curso = DB::table('cursos')->where('id_curso', $tarea->id_curso)->first();
+
+        
+        $profesor = DB::table('users')->where('id', $id)->first();
+        $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->get();
+
+        $aux = DB::table('profesores-materias')->where('id_profesor', $id)->first();
+        $aux = $aux->id_materia;
+        $flag = 0;
+        //PROFE ESPECIFICO DE UNA MATERIA
+        if ($aux != 1) {
+
+            $cursos_materia = DB::table('cursos-materias')->join('cursos', 'cursos.id_curso', '=', 'cursos-materias.id_curso')->where('id_materia', $aux)->get();
+
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('profesores.cursos.tarea_curso', compact('cursos', 'cursos_materia', 'aux', 'flag','curso','tarea'));
+            }
+
+            $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+            return view('profesores.cursos.tarea_curso', compact('cursos', 'cursos_materia', 'aux', 'flag','curso','tarea'));
+        }
+        if ($profesor->id_tipo_usuario == 2) {
+
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('profesores.cursos.tarea_curso', compact('cursos',  'aux', 'flag','curso','tarea'));
+            }
+            $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+            return view('profesores.cursos.tarea_curso', compact('cursos', 'aux', 'flag','curso','tarea'));
+        }
+        if ($profesor->id_tipo_usuario == 3) {
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('profesores.cursos.tarea_curso', compact('cursos', 'aux', 'flag','curso','tarea'));
+            }
+         
+          
+            return view('profesores.cursos.tarea_curso', compact('cursos', 'aux', 'flag','curso','tarea'));
+            
+        }
+        
+
         return view('profesores.cursos.tarea_curso', compact('tarea', 'curso'));
+    }
+
+    public function clases_materia_especifica($id_curso, $id_materia)
+    {
+        $id = Auth::user()->id;
+        $materia_1 = DB::table('materias')->where('id_materia', $id_materia)->first();
+        $curso_1 = DB::table('cursos')->where('id_curso', $id_curso)->first();
+        $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->get();
+        $cursos_materia = DB::table('cursos-materias')->join('cursos', 'cursos.id_curso', '=', 'cursos-materias.id_curso')->where('id_materia', $id_materia)->get();
+
+        $clases = DB::table('clases')->where('id_curso', $id_curso)->where('id_materia', $id_materia)->get();
+        $aux = 0;
+
+        $flag = 0;
+
+        $profe = DB::table('profesores-materias')->where('id_profesor', $id)->first();
+        if ($materia_1->id_materia != $profe->id_materia) {
+            return redirect()->route('inicio');
+        }
+
+        if (count($cursos) == 0) {
+            $flag = 1;
+            return view('profesores.especificos.clases_especifica', compact('materia_1', 'curso_1', 'cursos_materia', 'aux', 'flag', 'cursos', 'clases'));
+        }
+        $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+        return view('profesores.especificos.clases_especifica', compact('materia_1', 'curso_1', 'cursos_materia', 'aux', 'flag', 'cursos', 'clases'));
+    }
+
+    public function tareas_materia_especifica($id_curso, $id_materia)
+    {
+        $id = Auth::user()->id;
+        $materia_1 = DB::table('materias')->where('id_materia', $id_materia)->first();
+        $curso_1 = DB::table('cursos')->where('id_curso', $id_curso)->first();
+        $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->get();
+        $cursos_materia = DB::table('cursos-materias')->join('cursos', 'cursos.id_curso', '=', 'cursos-materias.id_curso')->where('id_materia', $id_materia)->get();
+
+        $aux = 0;
+
+        $flag = 0;
+
+        $profe = DB::table('profesores-materias')->where('id_profesor', $id)->first();
+        if ($materia_1->id_materia != $profe->id_materia) {
+            return redirect()->route('inicio');
+        }
+
+        if (count($cursos) == 0) {
+            $flag = 1;
+            return view('profesores.especificos.tarea_especifica', compact('materia_1', 'curso_1', 'cursos_materia', 'aux', 'flag', 'cursos'));
+        }
+        $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+        return view('profesores.especificos.tarea_especifica', compact('materia_1', 'curso_1', 'cursos_materia', 'aux', 'flag', 'cursos'));
     }
 }

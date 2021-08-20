@@ -37,14 +37,20 @@ Clases | Escuela Chile España
                 </div>
 
                 <div class="kt-portlet__body">
+                    @include('flash::message')
                     <?php $cont = 1; ?>
                     @foreach($clases as $clase)
                     <div class="">
 
                         @foreach($materias as $materia)
                         @if($materia->id_materia == $clase->id_materia)
-                        <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">{{$materia->materia}} {{$cont}}</h5>
+                        @if($clase->detalle != null)
+                        <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">{{$materia->materia}} {{$cont}}: "{{$clase->detalle}}"</h5>
+                        @else
+                        <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">{{$materia->materia}} {{$cont}}: "Sin detalle"</h5>
+                        @endif
                         
+
                         @endif
                         @endforeach
                     </div>
@@ -60,7 +66,7 @@ Clases | Escuela Chile España
                     </div>
                     <?php $cont++; ?>
                     <div class="border-bottom" style="margin-bottom:10px"></div>
-                    
+
                     @endforeach
                 </div>
 
@@ -111,7 +117,7 @@ Clases | Escuela Chile España
 <script>
     $(document).ready(function() {
         $('#materias').DataTable({
-            "ajax": "{{route('tabla.materias.curso',$curso->id_curso)}}",
+            "ajax": "{{route('tabla.materias.curso.clases',$curso->id_curso)}}",
             "columns": [{
                     data: 'materia'
                 },

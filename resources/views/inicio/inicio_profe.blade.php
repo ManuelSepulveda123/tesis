@@ -5,7 +5,7 @@ Inicio | Escuela Chile España
 @section('css')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet" type="text/css" />
 <link href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" >
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css">
 @endsection
 
 @section('head')
@@ -31,6 +31,18 @@ Inicio | Escuela Chile España
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="kt-portlet kt-portlet--tabs">
 
+        @if($aux != 1)
+        <div class="kt-portlet__head">
+            <div class="kt-portlet__head-label">
+                <h3 class="kt-portlet__head-title">
+                    Inicio
+                </h3>
+            </div>
+        </div>
+        <div class="kt-portlet__body">
+            Profesor de materia especifica
+        </div>
+        @endif
 
         @if(isset($cursos_jefe))
         <div class="kt-portlet__head">
@@ -58,29 +70,34 @@ Inicio | Escuela Chile España
 <script>
     $(document).ready(function() {
         $('#cursos').DataTable({
-            "ajax":"{{route('tabla.cursos_profesor')}}",
-            "columns":[
-                {data: 'ano_curso'},
-                {data: 'curso'},
-                {data: 'action'},
-         
+            "ajax": "{{route('tabla.cursos_profesor')}}",
+            "columns": [{
+                    data: 'ano_curso'
+                },
+                {
+                    data: 'curso'
+                },
+                {
+                    data: 'action'
+                },
+
             ],
             responsive: true,
             autoWidth: false,
             "language": {
-            "lengthMenu": "Mostrar _MENU_ registros por página",
-            "zeroRecords": "Nada encontrado - disculpa",
-            "info": "Página _PAGE_ de _PAGES_",
-            "infoEmpty": "No hay registros disponibles",
-            "infoFiltered": "(filtrado de _MAX_ registros totales)",
-            "search": "Buscar",
-            "paginate":{
-                "next": "Siguiente",
-                "previous": "Anterior"
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "Nada encontrado - disculpa",
+                "info": "Página _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                "search": "Buscar",
+                "paginate": {
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
             }
-        }
         });
-    } );
+    });
 </script>
 
 <script>

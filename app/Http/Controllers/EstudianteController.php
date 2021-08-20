@@ -15,8 +15,46 @@ class EstudianteController extends Controller
     public function lista_estudiantes()
     {
         $id = Auth::user()->id;
-
         $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+
+        $profesor = DB::table('users')->where('id', $id)->first();
+        $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->get();
+
+        $aux = DB::table('profesores-materias')->where('id_profesor', $id)->first();
+        $aux = $aux->id_materia;
+        $flag = 0;
+        //PROFE ESPECIFICO DE UNA MATERIA
+        if ($aux != 1) {
+
+            $cursos_materia = DB::table('cursos-materias')->join('cursos', 'cursos.id_curso', '=', 'cursos-materias.id_curso')->where('id_materia', $aux)->get();
+
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('estudiantes.listar_estudiantes_curso', compact('cursos', 'cursos_materia', 'aux', 'flag','curso'));
+            }
+
+            $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+            return view('estudiantes.listar_estudiantes_curso', compact('cursos', 'cursos_materia', 'aux', 'flag','curso'));
+        }
+        if ($profesor->id_tipo_usuario == 2) {
+
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('estudiantes.listar_estudiantes_curso', compact('cursos',  'aux', 'flag','curso'));
+            }
+            $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+            return view('estudiantes.listar_estudiantes_curso', compact('cursos', 'aux', 'flag','curso'));
+        }
+        if ($profesor->id_tipo_usuario == 3) {
+
+            if (count($cursos) == 0) {
+                $flag = 1;
+                return view('estudiantes.listar_estudiantes_curso', compact('cursos',  'aux', 'flag','curso'));
+            }
+          
+            return view('estudiantes.listar_estudiantes_curso', compact('cursos', 'aux', 'flag','curso'));
+        }
+        
         return view('estudiantes.listar_estudiantes_curso', compact('curso'));
     }
     //LISTA DE TODOS LOS ESTUDIANTES

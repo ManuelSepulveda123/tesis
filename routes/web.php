@@ -86,7 +86,9 @@ Route::get('datatable/profesor/cursos/','App\Http\Controllers\DatatableControlle
 
 Route::get('datatable/estudiante/tareas_pendientes/','App\Http\Controllers\DatatableController@tabla_estudiantes_tareas_p')->name('tabla.estudiantes_tareas_p')->middleware('auth');
 Route::get('datatable/estudiante/tareas_entregadas/','App\Http\Controllers\DatatableController@tabla_estudiantes_tareas')->name('tabla.estudiantes_tareas')->middleware('auth');
+Route::get('datatable/curso_clases/{id}','App\Http\Controllers\DatatableController@tabla_cursos_clases')->name('tabla.materias.curso.clases')->middleware('auth');
 
+Route::get('datatable/{id_curso}/materia_especifica/{id_materia}','App\Http\Controllers\DatatableController@tabla_tareas_curso_especifico')->name('tabla.materia.tareas')->middleware('auth');
 
 //Region-Provincia-Comuna
 Route::post('provincia','App\Http\Controllers\ProvinciaController@region_provincias')->name('region.provincia');
@@ -129,3 +131,8 @@ Route::get('estudiante/{id}/materia/{id_materia}','App\Http\Controllers\Estudian
 
 //Perfil usuario
 Route::get('usuario/{id}','App\Http\Controllers\UserController@perfil_usuario')->name('perfil_usuario')->middleware('auth');
+
+//Cursos materia especifica
+//MIDLEWARE PROFESOR ESPECIFICO (HACER)
+Route::get('clases/{id_curso}/materia/{id_materia}','App\Http\Controllers\DashboardController@clases_materia_especifica')->name('clases_materia_especifica')->middleware('profesor');
+Route::get('tareas/{id_curso}/materia/{id_materia}','App\Http\Controllers\DashboardController@tareas_materia_especifica')->name('tareas_materia_especifica')->middleware('profesor');

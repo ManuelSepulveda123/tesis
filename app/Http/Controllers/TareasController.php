@@ -25,12 +25,12 @@ class TareasController extends Controller
         $id_profesor = Auth::user()->id;
         if($request->nombre == null || $request->fecha_fin == null || $request->tarea == null){
             flash('Todos los campos son requeridos')->error();
-            return redirect()->route('tarea_curso',$id_profesor);
+            return redirect()->back();
         }
         $fecha = date_format(date_create(), 'Y-m-d');
         if($fecha > $request->fecha_fin){
             flash('La fecha de plazo es invalida')->error();
-            return redirect()->route('tarea_curso',$id_profesor);
+            return redirect()->back();
         }
         $id_profesor = Auth::user()->id;
         
@@ -76,7 +76,7 @@ class TareasController extends Controller
         }
 
         flash('Tarea agregada exitosamente')->success();
-        return redirect()->route('tarea_curso',$id_profesor);
+        return redirect()->back();
     }
 
     public function descargar_tarea($id)
@@ -105,7 +105,7 @@ class TareasController extends Controller
 
     public function tareas_estudiante($id)
     {
-
+        
         $curso = DB::table('estudiantes-cursos')->join('cursos', 'cursos.id_curso', '=', 'estudiantes-cursos.id_curso')->where('id_estudiante', $id)->first();
         $materias_estudiante = DB::table('cursos-materias')->join('materias', 'materias.id_materia', '=', 'cursos-materias.id_materia')
             ->where('id_curso', $curso->id_curso)->get();

@@ -97,4 +97,9 @@ Crear Materia | Escuela Chile España
 
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+	$('#administrador_nav').addClass('kt-menu__item--open');
+	$('#tabla_materias').addClass('kt-menu__item--active');
+	$('div.alert').not('.alert-important').delay(5000).fadeOut(350);
+</script>
 @endsection
