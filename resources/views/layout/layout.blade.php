@@ -168,7 +168,17 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <h4 class="kt-menu__section-text">Administrador</h4>
                                 <i class="kt-menu__section-icon flaticon-more-v2"></i>
                             </li>
-                            <li id="administrador_nav" class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-web"></i><span class="kt-menu__link-text">Tablas</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
+                            <li id="administrador2_nav" class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-web"></i><span class="kt-menu__link-text">Escuela</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
+                                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
+                                    <ul class="kt-menu__subnav">
+                                        <li id="tabla_cursos2" class="kt-menu__item" aria-haspopup="true"><a href="{{route('cursos_escuela')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Cursos</span></a></li>
+                                        <li id="tabla_profesores" class="kt-menu__item " aria-haspopup="true"><a href="{{route('profesores')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Tareas</span></a></li>
+                                        <li id="tabla_estudiantes" class="kt-menu__item " aria-haspopup="true"><a href="{{route('estudiantes')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Clases</span></a></li>
+                                        <li id="tabla_materias" class="kt-menu__item " aria-haspopup="true"><a href="{{route('materias')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Planificaciones</span></a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li id="administrador_nav" class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-web"></i><span class="kt-menu__link-text">Gestionar</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
                                 <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
                                     <ul class="kt-menu__subnav">
                                         <li id="tabla_cursos" class="kt-menu__item" aria-haspopup="true"><a href="{{route('cursos')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Cursos</span></a></li>
@@ -178,6 +188,8 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </ul>
                                 </div>
                             </li>
+                            
+
                             @elseif(auth()->user()->id_tipo_usuario == 2 || auth()->user()->id_tipo_usuario == 3 )
                             <li class="kt-menu__section ">
                                 <h4 class="kt-menu__section-text">Profesores</h4>

@@ -77,7 +77,7 @@ Route::get('datatable/materias/curso/{id}/','App\Http\Controllers\DatatableContr
 Route::get('datatable/no_materias/curso/{id}/','App\Http\Controllers\DatatableController@tabla_NO_materias_curso')->name('tabla.materias.faltantes.curso')->middleware('admin');
 
 Route::get('datatable/profesores/tareas/{id}','App\Http\Controllers\DatatableController@tabla_materias_tareas')->name('tabla.materias.tareas')->middleware('auth');
-Route::get('datatable/tareas/curso/{id}','App\Http\Controllers\DatatableController@tabla_tareas_curso')->name('tabla.tareas.curso')->middleware('profesor');
+Route::get('datatable/tareas/curso/{id}','App\Http\Controllers\DatatableController@tabla_tareas_curso')->name('tabla.tareas.curso')->middleware('auth');
 Route::get('datatable/tareas_estudiantes/{id_tarea}','App\Http\Controllers\DatatableController@tabla_tareas_estudiantes')->name('tabla.tareas.estudiantes')->middleware('profesor');
 
 Route::get('datatable/list/estudiantes','App\Http\Controllers\DatatableController@tabla_estudiantes')->name('tabla.estudiantes')->middleware('auth');
@@ -136,3 +136,13 @@ Route::get('usuario/{id}','App\Http\Controllers\UserController@perfil_usuario')-
 //MIDLEWARE PROFESOR ESPECIFICO (HACER)
 Route::get('clases/{id_curso}/materia/{id_materia}','App\Http\Controllers\DashboardController@clases_materia_especifica')->name('clases_materia_especifica')->middleware('profesor');
 Route::get('tareas/{id_curso}/materia/{id_materia}','App\Http\Controllers\DashboardController@tareas_materia_especifica')->name('tareas_materia_especifica')->middleware('profesor');
+
+//Escuela
+//cursos
+Route::get('lista/cursos','App\Http\Controllers\DashboardController@cursos_escuela')->name('cursos_escuela')->middleware('auth');
+Route::get('tabla/cursos/escuela','App\Http\Controllers\DatatableController@cursos_escuela')->name('tabla.cursos.escuela')->middleware('auth');
+Route::get('cursos/{id}','App\Http\Controllers\DashboardController@ver_curso')->name('ver_cursos')->middleware('auth');
+
+//clases
+Route::get('labla/clases/{id}','App\Http\Controllers\DatatableController@tabla_clases')->name('tabla.clases')->middleware('auth');
+

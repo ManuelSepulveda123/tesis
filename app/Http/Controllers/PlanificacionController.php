@@ -94,8 +94,9 @@ class PlanificacionController extends Controller
     
     public function descargar_planificacion($id)
     {
-
+        
         $file = DB::table('archivos')->where('id_archivo', $id)->first();
+     
         $file->ruta_archivo = str_replace('public', 'storage', $file->ruta_archivo);
         $pathtoFile = public_path() . '/' . $file->ruta_archivo;
 

@@ -422,7 +422,20 @@ class DatatableController extends Controller
         return datatables()->of($estudiantes)
             ->addColumn('action', function ($estudiante) {
                 $name_url = route('planificacion_estudiante', $estudiante->id);
-                return '<a href="' . $name_url  . '" class="btn btn-dark"><i class="fa fa-edit"></i></a></button>';
+                $id = Auth::user()->id;
+                if($id == 2 || $id ==3)
+                    return '<a href="' . $name_url  . '" class="btn btn-dark"><i class="fa fa-edit"></i></a></button>';
+                else{
+                    $plani = DB::table('planificaciones')->where('id_estudiante',$estudiante->id)->first();
+                    $name_url = route('planificacion_descargar',$plani->id_archivo);
+                   
+                
+                    if($plani != null)
+                        return '<a href="' . $name_url  . '" class="btn btn-warning"><i class="fa flaticon-download"></i></a></button>';
+                    else    
+                        return 'No tiene';
+                }
+
             })->rawColumns(['action' => 'action'])
             ->toJson();
     }
@@ -738,5 +751,44 @@ class DatatableController extends Controller
                 </div>
 
             </div>';})->toJson();
+    }
+
+    public function cursos_escuela(){
+
+        $cursos = DB::table('cursos')->join('profesores-cursos','profesores-cursos.id_curso','=','cursos.id_curso')
+        ->join('users','users.id','=','profesores-cursos.id_profesor')->where('id_tipo_usuario',2)->get();
+        
+        foreach ($cursos as $curso) {
+            $curso->ano_curso = \Carbon\Carbon::parse($curso->ano_curso)->format('Y');
+        }
+        return datatables()->of($cursos)->addColumn('action1', function ($curso) {
+            $nombre = $curso->nombre.' '.$curso->apellido_p.' '.$curso->apellido_m;
+            
+            return $nombre;
+        })->addColumn('action2', function ($curso){
+            $ruta = Route('ver_cursos',$curso->id_curso);
+            return '<a href="'.$ruta.'" class="btn btn-dark">ver</a>';
+        })->rawColumns(['action2' => 'action2', 'action1' => 'action1', ])->toJson();
+        
+    }
+
+    public function tabla_clases($id){
+        $clases = DB::table('clases')->where('id_clase',$id);
+
+        return datatables()->of($clases)->addColumn('action1', function ($clase) {
+            date_default_timezone_set('America/Santiago');
+            $clase->hora_inicio = \Carbon\Carbon::parse($clase->hora_inicio)->format('h:i');
+            $clase->hora_inicio = \Carbon\Carbon::parse($clase->hora_fin)->format('h:i');
+            $horario = $clase->hora_inicio.'-'.$clase->hora_fin;
+            return $horario;
+        })->addColumn('action2', function ($clase){
+            date_default_timezone_set('America/Santiago');
+            $fecha = date_format(date_create(), 'Y-m-d');
+            if($clase->fechaclase>=$fecha)
+                return '<a href="'.$clase->link.'"  target="_blank" class="btn btn-dark">Entrar</a>';
+            else
+                'No se puede entrar';
+        })->rawColumns(['action2' => 'action2', 'action1' => 'action1', ])->toJson();
+
     }
 }

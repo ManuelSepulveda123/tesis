@@ -79,7 +79,7 @@ Crear Materia | Escuela Chile España
 										<div class="d-flex justify-content-between border-top pt-10 mt-15" style="margin:20px">
 											<div class="mr-2"></div>
 											<div>
-												<button type="submit" class="btn btn-success font-weight-bolder px-9 py-4" style="margin:20px">Guardar Curso</button>
+												<button type="submit" class="btn btn-success font-weight-bolder px-9 py-4" style="margin:20px">Crear materia</button>
 											</div>
 										</div>
 									</div>

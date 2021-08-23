@@ -354,4 +354,21 @@ class DashboardController extends Controller
         $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
         return view('profesores.especificos.tarea_especifica', compact('materia_1', 'curso_1', 'cursos_materia', 'aux', 'flag', 'cursos'));
     }
+
+    public function cursos_escuela(){
+
+        return view('escuela.cursos');
+    }
+
+    public function ver_curso($id){
+
+        $curso = DB::table('cursos')->join('profesores-cursos','profesores-cursos.id_curso','=','cursos.id_curso')
+        ->join('users','users.id','=','profesores-cursos.id_profesor')->where('id_tipo_usuario',2)->where('cursos.id_curso',$id)->first();
+        $curso->ano_curso = \Carbon\Carbon::parse($curso->ano_curso)->format('Y');
+
+        $ayudante = DB::table('cursos')->join('profesores-cursos','profesores-cursos.id_curso','=','cursos.id_curso')
+        ->join('users','users.id','=','profesores-cursos.id_profesor')->where('id_tipo_usuario',3)->where('cursos.id_curso',$id)->first();
+        
+        return view('escuela.perfil_curso',compact('curso','ayudante'));
+    }
 }
