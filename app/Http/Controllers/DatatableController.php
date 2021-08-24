@@ -784,10 +784,11 @@ class DatatableController extends Controller
         })->addColumn('action2', function ($clase){
             date_default_timezone_set('America/Santiago');
             $fecha = date_format(date_create(), 'Y-m-d');
-            if($clase->fechaclase>=$fecha)
+            
+            if($clase->fecha_clase>=$fecha)
                 return '<a href="'.$clase->link.'"  target="_blank" class="btn btn-dark">Entrar</a>';
             else
-                'No se puede entrar';
+                return 'Nulo';
         })->rawColumns(['action2' => 'action2', 'action1' => 'action1', ])->toJson();
 
     }

@@ -135,7 +135,7 @@ Crear Profesor | Escuela Chile España
                                                 {!!$errors->first('email', '<small style="color:red">:message</small>')!!}
                                                 <div class="input-group">
                                                     <div class="input-group-prepend"><span class="input-group-text"><i class="la la-at"></i></span></div>
-                                                    <input type="email" class="form-control" value="{{old('email')}}" placeholder="exampled@gmail.com" aria-describedby="basic-addon1" name="email">
+                                                    <input type="email" class="form-control" value="{{old('email')}}" placeholder="ejemplo@gmail.com" aria-describedby="basic-addon1" name="email">
                                                 </div>
                                             </div>
                                         </div>

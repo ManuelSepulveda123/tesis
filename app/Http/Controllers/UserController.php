@@ -191,6 +191,52 @@ class UserController extends Controller
                 ->where('id_curso', $curso->id_curso)->get();
         }
 
+        $id = Auth::user()->id;
+
+
+        $profesor = DB::table('users')->where('id', $id)->where('foto', '<>', null)->first();
+        if ($profesor != null && $profesor->id_tipo_usuario !=1) {
+            $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->get();
+
+            $aux = DB::table('profesores-materias')->where('id_profesor', $id)->first();
+            $aux = $aux->id_materia;
+            $flag = 0;
+            //PROFE ESPECIFICO DE UNA MATERIA
+            if ($aux != 1) {
+
+                $cursos_materia = DB::table('cursos-materias')->join('cursos', 'cursos.id_curso', '=', 'cursos-materias.id_curso')->where('id_materia', $aux)->get();
+
+                if (count($cursos) == 0) {
+                    $flag = 1;
+                    return view('users.perfil_usuario', compact('cursos', 'cursos_materia', 'aux', 'flag', 'usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante'));
+                }
+
+                $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+                return view('users.perfil_usuario', compact('cursos', 'cursos_materia', 'aux', 'flag', 'usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante'));
+            }
+            //PROFE JEFE
+            if ($profesor->id_tipo_usuario == 2) {
+
+                if (count($cursos) == 0) {
+                    $flag = 1;
+                    return view('users.perfil_usuario', compact('cursos', 'aux', 'flag', 'usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante'));
+                }
+                $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+                return view('users.perfil_usuario', compact('cursos', 'aux', 'flag', 'usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante'));
+            }
+            //PROFE AYUDANTE
+
+            if ($profesor->id_tipo_usuario == 3) {
+                if (count($cursos) == 0) {
+                    $flag = 1;
+                    return view('users.perfil_usuario', compact('cursos', 'aux', 'flag', 'usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante'));
+                }
+
+
+                return view('users.perfil_usuario', compact('cursos', 'aux', 'flag', 'usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante'));
+            }
+        }
+
 
         return view('users.perfil_usuario', compact('usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante'));
     }
@@ -200,13 +246,12 @@ class UserController extends Controller
         request()->validate([
             'nueva_password' => 'required',
         ]);
-        
-        DB::table('users')->where('id',$id)->update([
+
+        DB::table('users')->where('id', $id)->update([
             'password' => Hash::make($request->nueva_password)
         ]);
 
         flash('Contraseña actualizada con exito')->success();
         return redirect()->route('estudiantes_editar', $id);
-        
     }
 }

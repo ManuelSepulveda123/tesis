@@ -203,11 +203,6 @@ class ProfesoresController extends Controller
             ->where('users.id_tipo_usuario', 2)->where('users.id', $id)
             ->first();
 
-        if ($query != null) {
-            flash('No se logro cambiar el tipo de profesor, asegurese de que no sea profesor jefe de ningun curso')->error();
-            return redirect()->route('editar_profesor', $id);
-        }
-
         DB::table('users')->where("id", "=", $id)->update([
             'nombre' => $request->nombre,
             'apellido_p' => $request->apellido_p,
@@ -224,6 +219,13 @@ class ProfesoresController extends Controller
             'id_tipo_usuario' => $request->tipo_usuario
 
         ]);
+
+        if ($query != null) {
+            flash('No se logro cambiar el tipo de profesor, asegurese de que no sea profesor jefe de ningun curso')->error();
+            return redirect()->route('editar_profesor', $id);
+        }
+
+
 
 
 
