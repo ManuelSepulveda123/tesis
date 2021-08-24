@@ -79,7 +79,9 @@ class DashboardController extends Controller
                     return view('inicio.inicio_profe', compact('cursos', 'aux', 'flag'));
                 }
                 $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
-                return view('inicio.inicio_profe', compact('cursos','aux','flag'));
+                $estudiantes= DB::table('estudiantes-cursos')->where('id_curso',$cursos->id_curso)->get();
+                $tareas= DB::table('archivos')->where('id_user',$id)->where('id_tipo_archivo',2)->get();
+                return view('inicio.inicio_profe', compact('cursos','aux','flag','estudiantes','tareas'));
             }
             //PROFE AYUDANTE
             
