@@ -131,7 +131,8 @@ class DashboardController extends Controller
 
             $clases = DB::table('clases')->where('id_curso', $curso->id_curso)->where('fecha_clase', '>=', $fecha)->where('hora_fin', '>=', $hora)->get();
             $materias = DB::table('materias')->get();
-            return view('inicio.inicio_estudiante', compact('curso', 'clases', 'materias', 'materias_estudiante'));
+            $profesores = DB::table('users')->where('id_tipo_usuario',2)->get();
+            return view('inicio.inicio_estudiante', compact('curso', 'clases', 'materias', 'materias_estudiante','profesores'));
         }
     }
 

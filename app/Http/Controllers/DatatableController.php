@@ -540,7 +540,7 @@ class DatatableController extends Controller
                                             <div class="d-flex justify-content-between pt-10 mt-15" style="margin:20px">
                                             <div class="mr-2"></div>
                                             <div>
-                                                <button type="submit" class="btn btn-warning font-weight-bolder px-9 " style="margin:20px">Guardar</button>
+                                                <button type="submit" class="btn btn-success font-weight-bolder px-9 " style="margin:20px">Guardar</button>
                                             </div>
                                         </div>
                                         </form>

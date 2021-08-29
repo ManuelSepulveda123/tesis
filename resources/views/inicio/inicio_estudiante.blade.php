@@ -44,7 +44,7 @@ Escuela Chile España | Inicio
         <div class="kt-portlet__body">
             <div class="row">
                 <div class="col-xl-6 col-lg-6">
-                    <iframe  src="https://www.youtube.com/embed/KbNL9ZyB49c" allowfullscreen></iframe>
+                    <iframe  src="https://www.youtube.com/embed/h3Wy9_UYNnc" allowfullscreen></iframe>
                 </div>
                 <div class="col-xl-6 col-lg-6 " style="margin-top:5%" >
                     <a href="{{route('tareas_estudiante',auth()->user()->id)}}"  class="col-xl-3 col-lg-3  btn btn-warning  py-4"><h5><b>Tareas</b></h5></a>
@@ -67,8 +67,11 @@ Escuela Chile España | Inicio
             <div class="form-group row">
 
 
-
-                <label class="col-xl-3 col-lg-1 col-form-label">Fecha: {{\Carbon\Carbon::parse($clase->fecha_clase)->format('d/m')}}</label>
+                @foreach($profesores as $profe)
+                @if($profe->id == $clase->id_profesor)
+                    <label class="col-xl-3 col-lg-1 col-form-label">Profesor: {{$profe->nombre}} {{$profe->apellido_p}} {{$profe->apellido_m}} </label>
+                @endif
+                @endforeach
                 <label class="col-xl-3 col-lg-1 col-form-label">Fecha: {{\Carbon\Carbon::parse($clase->fecha_clase)->format('d/m')}}</label>
                 <label class="col-xl-3 col-lg-1 col-form-label">Horario: {{\Carbon\Carbon::parse($clase->hora_inicio)->format('H:i')}}-{{\Carbon\Carbon::parse($clase->hora_fin)->format('H:i')}}</label>
 
