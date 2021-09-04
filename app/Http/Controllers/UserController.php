@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Storage;
 
+//Enviar correo 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
 
 class UserController extends Controller
 {
@@ -195,7 +200,7 @@ class UserController extends Controller
 
 
         $profesor = DB::table('users')->where('id', $id)->where('foto', '<>', null)->first();
-        if ($profesor != null && $profesor->id_tipo_usuario !=1) {
+        if ($profesor != null && $profesor->id_tipo_usuario != 1) {
             $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->get();
 
             $aux = DB::table('profesores-materias')->where('id_profesor', $id)->first();
@@ -253,5 +258,180 @@ class UserController extends Controller
 
         flash('Contraseña actualizada con exito')->success();
         return redirect()->route('estudiantes_editar', $id);
+    }
+
+    public function perfil_admin($id)
+    {
+
+
+        if (auth()->user()->id != $id) {
+            return redirect()->route('inicio');
+        }
+
+        $usuario = DB::table('users')->where('users.id', $id)->first();
+
+        return view('users.perfil_admin', compact('usuario'));
+    }
+
+    public function correo_datos(Request $request,$id)
+    {
+        
+        if (auth()->user()->id != $id) {
+            return redirect()->route('inicio');
+        }
+        date_default_timezone_set('America/Santiago');
+        $hora = date_format(date_create(), 'Y-m-d G:i:s');
+        DB::table('users')->where('id', $id)->update([
+            'confi' => $hora
+        ]);
+        $usuario = DB::table('users')->where('users.id', $id)->first();
+
+        require './PHPMailer/src/Exception.php';
+        require './PHPMailer/src/PHPMailer.php';
+        require './PHPMailer/src/SMTP.php';
+        $mail = new PHPMailer(true);
+        $ruta = 'http://127.0.0.1:8000/cambio_datos_confi/'.$id;
+        try {
+            //Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $mail->isSMTP();                                            //Send using SMTP
+            $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+            $mail->Username   = 'manux.rayxxd@gmail.com';                     //SMTP username
+            $mail->Password   = 'mamertox890';                               //SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+            $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+            //Recipients
+            $mail->setFrom('manux.rayxxd@gmail.com', 'Escuela Chile Espana');
+            $mail->addAddress('manux.rayxxd@gmail.com', 'Administrador');     //Add a recipient
+
+            //Attachments
+            /* $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+            $mail->addAttachment('/tmp/image.jpg', 'new.jpg');  */   //Optional name
+            $foto = asset('assets/media/escuela/escuela-espana-228x300.png');
+
+            //Content
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Nuevo usuario';
+            $mail->Body    = '<table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td style="padding: 10px 0 30px 0;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="700" style="border: 1px solid #cccccc; border-collapse: collapse;">
+                        <tr>
+                            <td bgcolor="#ffffff" style="padding: 30px 30px 0px 30px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td style="color: #153643; font-family: Georgia, sans-serif; font-size: 20px;">
+                                            <center>
+                                                <b>Solicitud de cambio de datos</b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        
+                                        <td style="padding: 20px 0px 60px 0px; color: #153643; font-family: Georgia, cursive; font-size: 14px;">
+                                        <center><a href="'.$ruta.'" class="btn">Confirmar</a></center>
+                                            <center><i>Este link solo sera valido durante 1 hora</i></center>
+                                            
+                                        </td>
+                                        
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>        
+                    </table>
+                </td>
+            </tr>
+        </table>';
+
+
+            $mail->send();
+            echo 'El mensaje se enviot';
+        } catch (Exception $e) {
+            echo "ocurrio un error en el mensaje: {$mail->ErrorInfo}";
+        }
+    }
+
+    public function cambio_datos($id){
+        if (auth()->user()->id != $id) {
+            return redirect()->route('inicio');
+        }
+        date_default_timezone_set('America/Santiago');
+        $hora = date_format(date_create(), ' G:i:s');
+        $fecha = date_format(date_create(), 'Y-m-d');
+        
+        $usuario = DB::table('users')->where('users.id', $id)->first();
+        $hora_fin = \Carbon\Carbon::parse($usuario->confi)->addHours(1)->format('G:i:s');
+        $fecha_cam = \Carbon\Carbon::parse($usuario->confi)->format('Y-m-d');
+
+        $hora = strtotime($hora);
+        $hora_fin = strtotime($hora_fin);
+        if($fecha != $fecha_cam){
+            return redirect()->route('inicio');
+        }
+        if($hora > $hora_fin){
+            return redirect()->route('inicio');
+        }
+        return view('users.cambio_perfil',compact('usuario'));
+    }
+
+    public function admin_update(Request $request,$id){
+        
+
+        //cambio contraseña
+        if($request->contra2 != null && $request->contra == null){
+            flash('Porfavor rellene todos los campos de contraseña')->error();
+            return redirect()->route('cambio_datos_confi', $id);
+        }
+        if($request->contra2 == null && $request->contra != null){
+            flash('Porfavor rellene todos los campos de contraseña')->error();
+            return redirect()->route('cambio_datos_confi', $id);
+        }
+        if($request->contra2 != $request->contra ){
+            flash('Las contraseñas no coinciden')->error();
+            return redirect()->route('cambio_datos_confi', $id);
+        }
+        if($request->contra == $request->contra2){
+            if($request->contra != null){
+                DB::table('users')->where("id", "=", $id)->update([
+                    'password' => Hash::make($request->contra),
+                ]);
+            }
+        }
+        $foto = $request->file('foto');
+
+        if (isset($foto)) {
+            $foto = DB::table('users')->select('foto')->where('id', $id)->first()->foto;
+
+            $url = str_replace('storage', 'public', $foto);
+            Storage::delete($url);
+            $imagenes = $request->file('foto')->store('public/fotos_profesores');
+            $url = Storage::url($imagenes);
+            DB::table('users')->where("id", $id)->update([
+                'foto' => $url
+            ]);
+        }
+        request()->validate([
+            'nombre' => 'required|string',
+            'apellido_p' => 'required|string',
+            'apellido_m' => 'required|string',
+            'rut' => 'required|min:11|max:12|',
+            'telefono' => 'required',
+            'email' => 'required|email',
+            'fecha_nacimiento' => 'required|date',
+        ]);
+        DB::table('users')->where("id", "=", $id)->update([
+            'nombre' => $request->nombre,
+            'apellido_p' => $request->apellido_p,
+            'apellido_m' => $request->apellido_m,
+            'rut' => $request->rut,
+            'telefono' => $request->telefono,
+            'email' => $request->email,
+            'fecha_nacimiento' => $request->fecha_nacimiento,
+            'fecha_update' => date_format(date_create(), 'Y-m-d'),
+        ]);
+        flash('Datos actualizados')->success();
+        return redirect()->route('cambio_datos_confi', $id);
     }
 }

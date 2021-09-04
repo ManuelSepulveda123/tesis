@@ -145,7 +145,7 @@ class DashboardController extends Controller
         $hora = date_format(date_create(), 'G:i:s');
         $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
         $materias = DB::table('materias')->get();
-        $clases = DB::table('clases')->where('id_curso', $curso->id_curso)->where('fecha_clase', '>=', $fecha)->where('hora_fin', '>=', $hora)->get();
+        $clases = DB::table('clases')->where('id_curso', $curso->id_curso)->where('fecha_clase', '>=', $fecha)->get();
 
         $profesor = DB::table('users')->where('id', $id)->first();
         $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->get();
@@ -173,6 +173,7 @@ class DashboardController extends Controller
                 return view('profesores.cursos.clases_curso', compact('cursos',  'aux', 'flag','clases','materias','curso'));
             }
             $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+         
             return view('profesores.cursos.clases_curso', compact('cursos', 'aux', 'flag','clases','materias','curso'));
         }
         if ($profesor->id_tipo_usuario == 3) {
@@ -260,6 +261,11 @@ class DashboardController extends Controller
     public function tarea_curso($id_tarea)
     {
         $id = Auth::user()->id;
+
+        if(Auth::user()->id_tipo_usuario == 1){
+            $tarea = DB::table('archivos')->join('tareas', 'tareas.id_archivo', '=', 'archivos.id_archivo')->where('archivos.id_archivo', $id_tarea)->first();
+            $curso = DB::table('cursos')->where('id_curso', $tarea->id_curso)->first();
+        }
         $tarea = DB::table('archivos')->join('tareas', 'tareas.id_archivo', '=', 'archivos.id_archivo')->where('archivos.id_archivo', $id_tarea)->first();
         $curso = DB::table('cursos')->where('id_curso', $tarea->id_curso)->first();
 
@@ -373,5 +379,14 @@ class DashboardController extends Controller
         ->join('users','users.id','=','profesores-cursos.id_profesor')->where('id_tipo_usuario',3)->where('cursos.id_curso',$id)->first();
         
         return view('escuela.perfil_curso',compact('curso','ayudante'));
+    }
+
+    public function clases_escuela(){
+        return view('escuela.clases');
+    }
+
+    public function tareas_escuela(){
+
+        return view('escuela.tareas');
     }
 }

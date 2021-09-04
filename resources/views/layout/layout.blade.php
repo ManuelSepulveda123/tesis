@@ -165,30 +165,28 @@ License: You must have a valid license purchased only from themeforest(the above
                             <li id="inicio" class="kt-menu__item" aria-haspopup="true"><a href="{{route('inicio')}}" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-home"></i><span class="kt-menu__link-text">Inicio</span></a></li>
                             @if(auth()->user()->id_tipo_usuario == 1 )
                             <li class="kt-menu__section ">
-                                <h4 class="kt-menu__section-text">Administrador</h4>
+                                <h4 class="kt-menu__section-text">Escuela</h4>
                                 <i class="kt-menu__section-icon flaticon-more-v2"></i>
                             </li>
-                            <li id="administrador2_nav" class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-web"></i><span class="kt-menu__link-text">Escuela</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
-                                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
-                                    <ul class="kt-menu__subnav">
-                                        <li id="tabla_cursos2" class="kt-menu__item" aria-haspopup="true"><a href="{{route('cursos_escuela')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Cursos</span></a></li>
-                                        <li id="tabla_profesores" class="kt-menu__item " aria-haspopup="true"><a href="{{route('profesores')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Tareas</span></a></li>
-                                        <li id="tabla_estudiantes" class="kt-menu__item " aria-haspopup="true"><a href="{{route('estudiantes')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Clases</span></a></li>
-                                        <li id="tabla_materias" class="kt-menu__item " aria-haspopup="true"><a href="{{route('materias')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Planificaciones</span></a></li>
-                                    </ul>
-                                </div>
+                            <li id="tabla_cursos2" class="kt-menu__item" aria-haspopup="true"><a href="{{route('cursos_escuela')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Cursos</span></a></li>
+                            <li id="tabla_tareas" class="kt-menu__item " aria-haspopup="true"><a href="{{route('tareas_escuela')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Tareas</span></a></li>
+                            <li id="clases_escuela" class="kt-menu__item " aria-haspopup="true"><a href="{{route('clases_escuela')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Clases</span></a></li>
+                            <li class="kt-menu__section ">
+                                <h4 class="kt-menu__section-text">Administrar</h4>
+                                <i class="kt-menu__section-icon flaticon-more-v2"></i>
                             </li>
-                            <li id="administrador_nav" class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-web"></i><span class="kt-menu__link-text">Gestionar</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
-                                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
-                                    <ul class="kt-menu__subnav">
-                                        <li id="tabla_cursos" class="kt-menu__item" aria-haspopup="true"><a href="{{route('cursos')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Cursos</span></a></li>
-                                        <li id="tabla_profesores" class="kt-menu__item " aria-haspopup="true"><a href="{{route('profesores')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Profesores</span></a></li>
-                                        <li id="tabla_estudiantes" class="kt-menu__item " aria-haspopup="true"><a href="{{route('estudiantes')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Estudiantes</span></a></li>
-                                        <li id="tabla_materias" class="kt-menu__item " aria-haspopup="true"><a href="{{route('materias')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Materias</span></a></li>
-                                    </ul>
-                                </div>
+
+
+                            <li id="tabla_cursos" class="kt-menu__item" aria-haspopup="true"><a href="{{route('cursos')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Cursos</span></a></li>
+                            <li id="tabla_estudiantes" class="kt-menu__item " aria-haspopup="true"><a href="{{route('estudiantes')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Estudiantes</span></a></li>
+                            <li id="tabla_profesores" class="kt-menu__item " aria-haspopup="true"><a href="{{route('profesores')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Profesores</span></a></li>
+                            <li id="tabla_materias" class="kt-menu__item " aria-haspopup="true"><a href="{{route('materias')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Materias</span></a></li>
+
+                            <li class="kt-menu__section ">
+                                <h4 class="kt-menu__section-text">Usuario</h4>
+                                <i class="kt-menu__section-icon flaticon-more-v2"></i>
                             </li>
-                            
+                            <li id="perfil" class="kt-menu__item" aria-haspopup="true"><a href="{{route('perfil_admin',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-avatar "></i><span class="kt-menu__link-text">Perfil</span></a></li>
 
                             @elseif(auth()->user()->id_tipo_usuario == 2 || auth()->user()->id_tipo_usuario == 3 )
                             <li class="kt-menu__section ">
@@ -254,7 +252,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
                                     <ul class="kt-menu__subnav">
                                         @foreach($cursos as $curso)
-                                        
+
                                         <li id="curso_{{$curso->id_curso}}" class="kt-menu__item " aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-bullet kt-menu__link-bullet--line"><span></span></i><span class="kt-menu__link-text">{{$curso->curso}}</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
                                             <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
                                                 <ul class="kt-menu__subnav">
@@ -264,7 +262,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 </ul>
                                             </div>
                                         </li>
-                                      
+
                                         @endforeach
                                     </ul>
 
@@ -292,12 +290,14 @@ License: You must have a valid license purchased only from themeforest(the above
                             </li>
                             <li id="tareas" class="kt-menu__item" aria-haspopup="true"><a href="{{route('tareas_estudiante',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-web "></i><span class="kt-menu__link-text">Todas las tareas</span></a></li>
                             @endif
+                            @if(auth()->user()->id_tipo_usuario == 4 ||auth()->user()->id_tipo_usuario == 3 || auth()->user()->id_tipo_usuario == 2 )
                             <li class="kt-menu__section ">
                                 <h4 class="kt-menu__section-text">Usuario</h4>
                                 <i class="kt-menu__section-icon flaticon-more-v2"></i>
                             </li>
-                            <li id="perfil" class="kt-menu__item" aria-haspopup="true"><a href="{{route('perfil_usuario',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-avatar "></i><span class="kt-menu__link-text">Perfil</span></a></li>
 
+                            <li id="perfil" class="kt-menu__item" aria-haspopup="true"><a href="{{route('perfil_usuario',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-avatar "></i><span class="kt-menu__link-text">Perfil</span></a></li>
+                            @endif
 
                         </ul>
                     </div>
@@ -370,6 +370,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
                                     <!--  <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold">S</span> -->
                                     @if(isset(auth()->user()->foto))
+                                    <?php $foto = auth()->user()->foto; ?>
+
+
                                     <img class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success" alt="Pic" src="{{auth()->user()->foto}}" />
                                     @endif
                                 </div>
@@ -380,6 +383,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url({{asset('assets/media/escuela/footer-background.jpg')}})">
                                     <div class="kt-user-card__avatar">
                                         @if(isset(auth()->user()->foto))
+
                                         <img class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success" alt="Pic" src="{{auth()->user()->foto}}" />
                                         @endif
                                         <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->

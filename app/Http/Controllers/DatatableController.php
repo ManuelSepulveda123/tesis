@@ -123,92 +123,12 @@ class DatatableController extends Controller
                         ->where('id_tipo_archivo', 1)->first();
                     $ruta2 = route('planificacion_up', $estudiante->id);
 
-                    if ($planificacion != null) {
-                        $ruta = route('planificacion_descargar', $planificacion->id_archivo);
-                        $token =  csrf_field();
-                        return '
-                                    <a href="' . $ruta . '" type="submit" class="btn btn-warning"style="align: center;">Descargar</a>
-                                    <a href="" data-toggle="modal" data-target="#planificacion_' . $estudiante->id . '"type="submit" class="btn btn-dark" >+</a>
-                                    <div class="modal " id="planificacion_' . $estudiante->id . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Modificar Planificación</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
 
-                                            <div class="modal-body">
-                                                <div class="form-group ">
-
-                                                    <label class="" >Nueva planificacion</label>
-
-
-                                                    <form action="' . $ruta2 . '" method="post" enctype="multipart/form-data">
-                                                        ' . $token . '
-                                                        <input type="file" name="planificacion" accept="application/pdf, .doc, .docx, .odf" />
-                                                        <div class="d-flex pt-10 mt-15" style="margin:20px">
-                                                            <div class="mr-2"></div>
-                                                            <div>
-                                                                <button type="submit" class="btn btn-warning">Guardar</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                
-                                </div> ';
-                    } else {
-                        $token =  csrf_field();
-                        return '
-                                   
-                                    <a href="" data-toggle="modal" data-target="#planificacion_' . $estudiante->id . '"type="submit" class="btn btn-dark" >+</a>
-                                    <div class="modal " id="planificacion_' . $estudiante->id . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Modificar Planificación</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-
-                                            <div class="modal-body">
-                                                <div class="form-group ">
-
-                                                    <label class="" >Nueva planificacion</label>
-
-
-                                                    <form action="' . $ruta2 . '" method="post" enctype="multipart/form-data">
-                                                        ' . $token . '
-                                                        <input type="file" name="planificacion" accept="application/pdf, .doc, .docx, .odf" />
-                                                        <div class="d-flex pt-10 mt-15" style="margin:20px">
-                                                            <div class="mr-2"></div>
-                                                            <div>
-                                                                <button type="submit" class="btn btn-warning">Guardar</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                
-                                </div> ';
-                    }
+                    $ruta = route('planificacion_descargar',$estudiante->id);
+                    $ruta_editar = route('planificacion_estudiante',$estudiante->id);
+                    $token =  csrf_field();
+                    return '    <a href="' . $ruta_editar . '"type="submit" class="btn btn-dark" >Editar</a>
+                                <a href="' . $ruta . '" target="_blank" type="submit" class="btn btn-warning"style="align: center;">Descargar</a>';
                 })->rawColumns(['action2' => 'action2', 'action' => 'action'])
                 ->make(true);
         }
@@ -387,8 +307,8 @@ class DatatableController extends Controller
             })
             ->addColumn('action2', function ($id) {
                 $token =  csrf_field();
-
-                return ' <form action="deletprofesor" method="post"  class="delete">  ' . $token . ' <input type="hidden" name="id=' . $id->id . '"  value=' .  $id->id  . '>
+                $url = route('profesor_delet', $id->id);
+                return ' <form action="' . $url . '" method="post"  class="delete">  ' . $token . ' <input type="hidden" name="id=' . $id->id . '"  value=' .  $id->id  . '>
                                         <td><button type="submit" value="Eliminar"  class="btn btn-danger" onclick="return confirm(`¿Está seguro que desea eliminar ' .  $id->nombre  . '?`);" /><i class="fa fa-trash"></i></td>
                                         </form>
                                         ';
@@ -423,19 +343,18 @@ class DatatableController extends Controller
             ->addColumn('action', function ($estudiante) {
                 $name_url = route('planificacion_estudiante', $estudiante->id);
                 $id = Auth::user()->id;
-                if($id == 2 || $id ==3)
+                if ($id == 2 || $id == 3)
                     return '<a href="' . $name_url  . '" class="btn btn-dark"><i class="fa fa-edit"></i></a></button>';
-                else{
-                    $plani = DB::table('planificaciones')->where('id_estudiante',$estudiante->id)->first();
-                    $name_url = route('planificacion_descargar',$plani->id_archivo);
-                   
-                
-                    if($plani != null)
+                else {
+                    $plani = DB::table('planificaciones')->where('id_estudiante', $estudiante->id)->first();
+                    $name_url = route('planificacion_descargar', $plani->id_archivo);
+
+
+                    if ($plani != null)
                         return '<a href="' . $name_url  . '" class="btn btn-warning"><i class="fa flaticon-download"></i></a></button>';
-                    else    
+                    else
                         return 'No tiene';
                 }
-
             })->rawColumns(['action' => 'action'])
             ->toJson();
     }
@@ -610,7 +529,7 @@ class DatatableController extends Controller
 
     public function tabla_tareas_curso_especifico($id_curso, $id_materia)
     {
-      
+
         $tareas = DB::table('archivos')->where('id_curso', $id_curso)->where('id_materia', $id_materia)->where('id_tipo_archivo', 2)->get();
         return datatables()->of($tareas)->addColumn('action', function ($tarea) {
             $nombre = DB::table('tareas')->select('nombre_tarea')->where('id_archivo', $tarea->id_archivo)->first();
@@ -629,27 +548,28 @@ class DatatableController extends Controller
             })->rawColumns(['action2' => 'action2', 'action' => 'action', 'action3' => 'action3'])->toJson();
     }
 
-    public function tabla_cursos_clases($id){
+    public function tabla_cursos_clases($id)
+    {
 
-        $materias = DB::table('cursos-materias')->join('materias','materias.id_materia','=','cursos-materias.id_materia')->where('id_curso',$id)->get();
+        $materias = DB::table('cursos-materias')->join('materias', 'materias.id_materia', '=', 'cursos-materias.id_materia')->where('id_curso', $id)->get();
         return datatables()->of($materias)->addColumn('action', function ($materia) {
             $token =  csrf_field();
-            $ruta = route('clase_store',['id_materia' => $materia->id_materia, 'id_curso' => $materia->id_curso]);
-           
+            $ruta = route('clase_store', ['id_materia' => $materia->id_materia, 'id_curso' => $materia->id_curso]);
+
             return '<a href="#" data-toggle="modal" data-target="#materia_' . $materia->id_materia . '" class="btn btn-dark">+</a>
-            <div class="modal " id="materia_'.$materia->id_materia.'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal " id="materia_' . $materia->id_materia . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Nueva Clase | '.$materia->materia.'</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Nueva Clase | ' . $materia->materia . '</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
 
                         <div class="modal-body">
-                            <form action="'.$ruta.'" method="post" enctype="multipart/form-data">
-                                '.$token.'
+                            <form action="' . $ruta . '" method="post" enctype="multipart/form-data">
+                                ' . $token . '
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="kt_user_edit_tab_1" role="tabpanel">
                                         <div class="kt-form kt-form--label-right">
@@ -750,46 +670,94 @@ class DatatableController extends Controller
                     </div>
                 </div>
 
-            </div>';})->toJson();
+            </div>';
+        })->toJson();
     }
 
-    public function cursos_escuela(){
+    public function cursos_escuela()
+    {
 
-        $cursos = DB::table('cursos')->join('profesores-cursos','profesores-cursos.id_curso','=','cursos.id_curso')
-        ->join('users','users.id','=','profesores-cursos.id_profesor')->where('id_tipo_usuario',2)->get();
-        
+        $cursos = DB::table('cursos')->join('profesores-cursos', 'profesores-cursos.id_curso', '=', 'cursos.id_curso')
+            ->join('users', 'users.id', '=', 'profesores-cursos.id_profesor')->where('id_tipo_usuario', 2)->get();
+
         foreach ($cursos as $curso) {
             $curso->ano_curso = \Carbon\Carbon::parse($curso->ano_curso)->format('Y');
         }
         return datatables()->of($cursos)->addColumn('action1', function ($curso) {
-            $nombre = $curso->nombre.' '.$curso->apellido_p.' '.$curso->apellido_m;
-            
+            $nombre = $curso->nombre . ' ' . $curso->apellido_p . ' ' . $curso->apellido_m;
+
             return $nombre;
-        })->addColumn('action2', function ($curso){
-            $ruta = Route('ver_cursos',$curso->id_curso);
-            return '<a href="'.$ruta.'" class="btn btn-dark">ver</a>';
-        })->rawColumns(['action2' => 'action2', 'action1' => 'action1', ])->toJson();
-        
+        })->addColumn('action2', function ($curso) {
+            $ruta = Route('ver_cursos', $curso->id_curso);
+            return '<a href="' . $ruta . '" class="btn btn-dark">ver</a>';
+        })->rawColumns(['action2' => 'action2', 'action1' => 'action1',])->toJson();
     }
 
-    public function tabla_clases($id){
-        $clases = DB::table('clases')->where('id_clase',$id);
+    public function tabla_clases($id)
+    {
+        $clases = DB::table('clases')->where('id_clase', $id);
 
         return datatables()->of($clases)->addColumn('action1', function ($clase) {
             date_default_timezone_set('America/Santiago');
             $clase->hora_inicio = \Carbon\Carbon::parse($clase->hora_inicio)->format('h:i');
-            $clase->hora_inicio = \Carbon\Carbon::parse($clase->hora_fin)->format('h:i');
-            $horario = $clase->hora_inicio.'-'.$clase->hora_fin;
+            $clase->hora_fin = \Carbon\Carbon::parse($clase->hora_fin)->format('h:i');
+            $horario = $clase->hora_inicio . '-' . $clase->hora_fin;
             return $horario;
-        })->addColumn('action2', function ($clase){
+        })->addColumn('action2', function ($clase) {
             date_default_timezone_set('America/Santiago');
             $fecha = date_format(date_create(), 'Y-m-d');
-            
-            if($clase->fecha_clase>=$fecha)
-                return '<a href="'.$clase->link.'"  target="_blank" class="btn btn-dark">Entrar</a>';
+
+            if ($clase->fecha_clase >= $fecha)
+                return '<a href="' . $clase->link . '"  target="_blank" class="btn btn-dark">Entrar</a>';
             else
                 return 'Nulo';
-        })->rawColumns(['action2' => 'action2', 'action1' => 'action1', ])->toJson();
+        })->rawColumns(['action2' => 'action2', 'action1' => 'action1',])->toJson();
+    }
 
+    public function tabla_tareas()
+    {
+        $tareas = DB::table('archivos')->where('id_tipo_archivo', 2)->join('cursos', 'cursos.id_curso', '=', 'archivos.id_curso')
+            ->join('users', 'users.id', '=', 'archivos.id_user')->join('materias', 'materias.id_materia', '=', 'archivos.id_materia')->get();
+        return datatables()->of($tareas)->addColumn('action1', function ($tarea) {
+            $tarea->ano_curso = \Carbon\Carbon::parse($tarea->ano_curso)->format('Y');
+            $curso = $tarea->curso . '-' . $tarea->ano_curso;
+            return $curso;
+        })->addColumn('action2', function ($tarea) {
+
+            $ruta = route('tarea_curso', $tarea->id_archivo);
+            return '<a href="' . $ruta . '" class="btn btn-dark"><i class="flaticon-eye" style="aling-icon:center"></i></a>';;
+        })->addColumn('action3', function ($tarea) {
+            $nombre = $tarea->nombre . ' ' . $tarea->apellido_p . ' ' . $tarea->apellido_m;
+            return $nombre;
+        })->rawColumns(['action2' => 'action2', 'action1' => 'action1', 'action3' => 'action3',])->toJson();
+    }
+
+    public function tabla2_clases()
+    {
+        date_default_timezone_set('America/Santiago');
+        $fecha = date_format(date_create(), 'Y-m-d');
+        $hora = date_format(date_create(), 'G:i:s');
+
+        $clases = DB::table('clases')->join('users', 'users.id', '=', 'clases.id_profesor')
+            ->join('materias', 'materias.id_materia', '=', 'clases.id_materia')
+            ->join('cursos', 'cursos.id_curso', '=', 'clases.id_curso')->where('fecha_clase', '>=', $fecha)->where('hora_fin', '>=', $hora)->get();
+
+        return datatables()->of($clases)->addColumn('action1', function ($clase) {
+            $clase->ano_curso = \Carbon\Carbon::parse($clase->ano_curso)->format('Y');
+            $curso = $clase->curso . '-' . $clase->ano_curso;
+            return $curso;
+        })->addColumn('action2', function ($clase) {
+
+            return '<a href="' . $clase->link . '"  target="_blank" class="btn btn-warning">Entrar</a>';
+        })->addColumn('action3', function ($clase) {
+            $nombre = $clase->nombre . ' ' . $clase->apellido_p . ' ' . $clase->apellido_m;
+            return $nombre;
+        })->addColumn('action4', function ($clase) {
+            date_default_timezone_set('America/Santiago');
+            $clase->hora_inicio = \Carbon\Carbon::parse($clase->hora_inicio)->format('h:i');
+            $clase->hora_fin = \Carbon\Carbon::parse($clase->hora_fin)->format('h:i');
+            $horario = $clase->hora_inicio . '-' . $clase->hora_fin;
+            return $horario;
+        })->rawColumns(['action2' => 'action2', 'action1' => 'action1', 'action3' => 'action3', 'action4' => 'action4',])->toJson();
     }
 }

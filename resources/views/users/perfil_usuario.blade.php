@@ -122,7 +122,7 @@
 
                 <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>{{$curso->curso}}</b></label>
                 <div class="col-lg-6 col-xl-6" style="text-align: center;">
-                    <a href="" class="btn btn-warning">Planificación</a>
+                    <a href="{{route('planificacion_descargar',$usuario->id)}}" target="_blank" class="btn btn-warning">Planificación</a>
                 </div>
 
 

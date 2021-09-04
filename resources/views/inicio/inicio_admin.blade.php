@@ -174,8 +174,14 @@ Inicio Administrador | Escuela Chile España
 
     var chart = new ApexCharts(document.querySelector("#chart2"), options);
     chart.render();
+    
 </script>
-
+<script>
+    
+    $('#inicio').addClass('kt-menu__item--active');
+    /*  */
+    $('#atras').hide()
+</script>
 <script src="{{asset('assets/js/demo1/pages/dashboard.js')}}" type="text/javascript"></script>
 
 @endsection

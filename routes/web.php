@@ -33,6 +33,7 @@ Route::get('profesores/crear','App\Http\Controllers\ProfesoresController@profeso
 Route::post('profesores/store','App\Http\Controllers\ProfesoresController@profesor_store')->name('profesores_store')->middleware('admin');
 Route::get('profesor/{id}/editar', 'App\Http\Controllers\ProfesoresController@profesor_edit')->name('editar_profesor')->middleware('admin');
 Route::post('profesor/update/{id}', 'App\Http\Controllers\ProfesoresController@profesor_update')->name('profesor_update')->middleware('admin');
+Route::post('profesor/{id}/delet', 'App\Http\Controllers\ProfesoresController@profesor_delet')->name('profesor_delet')->middleware('admin');
 
 //ESTUDIANTES-CRUD
 Route::get('list/estudiantes','App\Http\Controllers\EstudianteController@list_estudiantes')->name('estudiantes')->middleware('admin');
@@ -104,7 +105,7 @@ Route::get('clases/{id}','App\Http\Controllers\DashboardController@curso_profeso
 Route::get('curso/{id_curso}/materia/{id_materia}','App\Http\Controllers\DashboardController@materia_curso')->name('materia_curso')->middleware('auth');
 
 Route::get('tareas/{id}','App\Http\Controllers\DashboardController@tareas_curso')->name('tareas_curso')->middleware('profesor');
-Route::get('tarea/{id_tarea}','App\Http\Controllers\DashboardController@tarea_curso')->name('tarea_curso')->middleware('profesor');
+Route::get('tarea/{id_tarea}','App\Http\Controllers\DashboardController@tarea_curso')->name('tarea_curso')->middleware('auth');
 
 //Planificaciones
 Route::get('estudiante/{id}/planificacion','App\Http\Controllers\PlanificacionController@planificacion_estudiante')->name('planificacion_estudiante')->middleware('auth');
@@ -132,6 +133,7 @@ Route::get('estudiante/{id}/materia/{id_materia}','App\Http\Controllers\Estudian
 //Perfil usuario
 Route::get('usuario/{id}','App\Http\Controllers\UserController@perfil_usuario')->name('perfil_usuario')->middleware('auth');
 
+Route::get('admin/{id}','App\Http\Controllers\UserController@perfil_admin')->name('perfil_admin')->middleware('admin');
 //Cursos materia especifica
 //MIDLEWARE PROFESOR ESPECIFICO (HACER)
 Route::get('clases/{id_curso}/materia/{id_materia}','App\Http\Controllers\DashboardController@clases_materia_especifica')->name('clases_materia_especifica')->middleware('profesor');
@@ -145,4 +147,16 @@ Route::get('cursos/{id}','App\Http\Controllers\DashboardController@ver_curso')->
 
 //clases
 Route::get('labla/clases/{id}','App\Http\Controllers\DatatableController@tabla_clases')->name('tabla.clases')->middleware('auth');
+Route::get('lista/clases','App\Http\Controllers\DashboardController@clases_escuela')->name('clases_escuela')->middleware('auth');
+Route::get('tabla/clases','App\Http\Controllers\DatatableController@tabla2_clases')->name('tabla2.clases')->middleware('admin');
 
+//Tarreas
+Route::get('lista/tareas','App\Http\Controllers\DashboardController@tareas_escuela')->name('tareas_escuela')->middleware('auth');
+Route::get('tabla/tareas','App\Http\Controllers\DatatableController@tabla_tareas')->name('tabla.tareas')->middleware('admin');
+
+//cambio de datos
+Route::get('usuario_cambio/{id}','App\Http\Controllers\UserController@correo_datos')->name('cambio_datos')->middleware('admin');
+
+Route::get('cambio_datos_confi/{id}','App\Http\Controllers\UserController@cambio_datos')->name('cambio_datos_confi')->middleware('admin');
+
+Route::post('admin/update/{id}','App\Http\Controllers\UserController@admin_update')->name('admin_update')->middleware('admin');

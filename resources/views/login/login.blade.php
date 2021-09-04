@@ -99,7 +99,7 @@ License: You must have a valid license purchased only from themeforest(the above
 					<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver">
 						<div class="kt-grid__item kt-grid__item--middle">
 							<h3 class="kt-login__title">Escuela Chile España</h3>
-							<h4 class="kt-login__subtitle">Somos una escuela que avanza hacia la inclusión educativa y social, por medio de procesos de construcción colectiva que fomenten la participación activa de las comunidades y del entorno local, en beneficio de los procesos educativos que se desarrollan en nuestra escuela.</h4>
+							<h4 class="kt-login__subtitle"><b>Somos una escuela que avanza hacia la inclusión educativa y social, por medio de procesos de construcción colectiva que fomenten la participación activa de las comunidades y del entorno local, en beneficio de los procesos educativos que se desarrollan en nuestra escuela.</b> </h4>
 						</div>
 					</div>
 					<div class="kt-grid__item">
