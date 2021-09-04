@@ -186,7 +186,7 @@ class PlanificacionController extends Controller
         $datos = DB::table('plani')->join('materias', 'materias.id_materia', '=', 'plani.id_materia')->where('id_estudiante', $id)->get();
         $usuario =  DB::table('users')->where('users.id', $id)->first();
         $curso = DB::table('estudiantes-cursos')->join('cursos', 'cursos.id_curso', '=', 'estudiantes-cursos.id_curso')->where('id_estudiante', $id)->first();
-
+       
         $jefe = DB::table('profesores-cursos')->join('users', 'users.id', '=', 'profesores-cursos.id_profesor')->where('id_curso', $curso->id_curso)->where('id_tipo_usuario', 2)->first();
         $ayudante = DB::table('profesores-cursos')->join('users', 'users.id', '=', 'profesores-cursos.id_profesor')->where('id_curso', $curso->id_curso)->where('id_tipo_usuario', 3)->first();
         $pdf = PDF::loadView('PDF.planificacion', compact('datos', 'usuario', 'curso', 'jefe', 'ayudante'));

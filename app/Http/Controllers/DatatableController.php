@@ -347,11 +347,11 @@ class DatatableController extends Controller
                     return '<a href="' . $name_url  . '" class="btn btn-dark"><i class="fa fa-edit"></i></a></button>';
                 else {
                     $plani = DB::table('planificaciones')->where('id_estudiante', $estudiante->id)->first();
-                    $name_url = route('planificacion_descargar', $plani->id_archivo);
+                    $name_url = route('planificacion_descargar', $estudiante->id);
 
 
                     if ($plani != null)
-                        return '<a href="' . $name_url  . '" class="btn btn-warning"><i class="fa flaticon-download"></i></a></button>';
+                        return '<a href="' . $name_url  . '" class="btn btn-warning" target="_blank">Descargar</a></button>';
                     else
                         return 'No tiene';
                 }
