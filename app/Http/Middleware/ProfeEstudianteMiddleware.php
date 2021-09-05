@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
 
-class EstudianteMiddleware
+class ProfeEstudianteMiddleware
 {
     /**
      * Handle an incoming request.
@@ -24,10 +24,10 @@ class EstudianteMiddleware
                     return redirect(RouteServiceProvider::HOME);
                     break;
                 case ('2'):
-                    return redirect(RouteServiceProvider::HOME);
+                    return $next($request);
                     break;
                 case ('3'):
-                    return redirect(RouteServiceProvider::HOME);
+                    return $next($request);
                     break;
                 case ('4'):
                     return $next($request);

@@ -23,55 +23,63 @@ class TareasController extends Controller
     {
         date_default_timezone_set('America/Santiago');
         $id_profesor = Auth::user()->id;
-        if($request->nombre == null || $request->fecha_fin == null || $request->tarea == null){
+        if ($request->nombre == null || $request->fecha_fin == null) {
             flash('Todos los campos son requeridos')->error();
             return redirect()->back();
         }
+
         $fecha = date_format(date_create(), 'Y-m-d');
-        if($fecha > $request->fecha_fin){
+        if ($fecha > $request->fecha_fin) {
             flash('La fecha de plazo es invalida')->error();
             return redirect()->back();
         }
         $id_profesor = Auth::user()->id;
-        
         $fecha = date_format(date_create(), 'Y-m-d H:i:s');
+        if ($request->tarea != null) {
+            $extension = $request->file('tarea')->getClientOriginalExtension();
 
-        $extension = $request->file('tarea')->getClientOriginalExtension();
+            $cont = DB::table('archivos')->where('id_user', $id_profesor)->where('id_curso', $id_curso)->where('id_materia', $id_materia)->get();
+            $cont = count($cont) + 1;
 
-        $cont = DB::table('archivos')->where('id_user', $id_profesor)->where('id_curso', $id_curso)->where('id_materia', $id_materia)->get();
-        $cont = count($cont) + 1;
+            $nombre = str_replace(' ', '_', $request->nombre);
+            $fecha = str_replace(' ', '_', $fecha);
+            $fecha = str_replace(':', '-', $fecha);
+            $file_name = $nombre . '_' . $fecha . '.' . $extension;
 
-        $nombre =str_replace(' ', '_', $request->nombre);
-        $fecha = str_replace(' ', '_', $fecha);
-        $fecha = str_replace(':', '-', $fecha);
-        $file_name = $nombre.'_'. $fecha . '.' . $extension;
-        
-        $ruta = "public/cursos/$id_curso/materias/$id_materia/tareas";
-        
-        $request->file('tarea')->storeAs($ruta, $file_name);
-        
-        $ruta = $ruta . '/' . $file_name;
+            $ruta = "public/cursos/$id_curso/materias/$id_materia/tareas";
 
-        DB::table('archivos')->insert([
-            'id_user' => $id_profesor,
-            'id_curso' => $id_curso,
-            'id_materia' => $id_materia,
-            'id_tipo_archivo' => 2,
-            'ruta_archivo' => $ruta,
-            'fecha_archivo' => $fecha
-        ]);
+            $request->file('tarea')->storeAs($ruta, $file_name);
 
-        $estudiantes = DB::table('estudiantes-cursos')->where('id_curso', $id_curso)->get();
+            $ruta = $ruta . '/' . $file_name;
 
-        $archivo = DB::table('archivos')->select('id_archivo')->get();
-        $archivo = MAX(end($archivo));
-        foreach ($estudiantes as $estudiante) {
+            DB::table('archivos')->insert([
+                'id_user' => $id_profesor,
+                'id_curso' => $id_curso,
+                'id_materia' => $id_materia,
+                'id_tipo_archivo' => 2,
+                'ruta_archivo' => $ruta,
+                'fecha_archivo' => $fecha
+            ]);
+            $archivo = DB::table('archivos')->select('id_archivo')->get();
+            $archivo = MAX(end($archivo));
             DB::table('tareas')->insert([
-                'id_estudiante' => $estudiante->id_estudiante,
-                'id_archivo' => $archivo->id_archivo,
-                'estado' => 0,
-                'nombre_tarea' => $request->nombre,
-                'fecha_fin' => $request->fecha_fin
+                'titulo' =>$request->nombre,
+                'actividad'=>$request->actividad,
+                'fecha_plazo'=>$request->fecha_fin,
+                'fecha_subida'=>$fecha,
+                'id_archivo'=>$archivo->id_archivo,
+                'id_curso'=>$id_curso,
+                'id_profesor'=>$id_profesor
+            ]);
+        }else{
+            DB::table('tareas')->insert([
+                'titulo' =>$request->nombre,
+                'actividad'=>$request->actividad,
+                'fecha_plazo'=>$request->fecha_fin,
+                'fecha_subida'=>$fecha,
+                'id_archivo'=>null,
+                'id_curso'=>$id_curso,
+                'id_profesor'=>$id_profesor
             ]);
         }
 
@@ -81,7 +89,7 @@ class TareasController extends Controller
 
     public function descargar_tarea($id)
     {
-
+        
         $file = DB::table('archivos')->where('id_archivo', $id)->first();
         $file->ruta_archivo = str_replace('public', 'storage', $file->ruta_archivo);
         $pathtoFile = public_path() . '/' . $file->ruta_archivo;
@@ -105,6 +113,10 @@ class TareasController extends Controller
 
     public function tareas_estudiante($id)
     {
+        $id_original = Auth::user()->id;
+        if($id_original != $id){
+            return redirect()->route('inicio');
+        }
         
         $curso = DB::table('estudiantes-cursos')->join('cursos', 'cursos.id_curso', '=', 'estudiantes-cursos.id_curso')->where('id_estudiante', $id)->first();
         $materias_estudiante = DB::table('cursos-materias')->join('materias', 'materias.id_materia', '=', 'cursos-materias.id_materia')
@@ -121,7 +133,7 @@ class TareasController extends Controller
         $curso = DB::table('cursos')->join('estudiantes-cursos', 'estudiantes-cursos.id_curso', '=', 'cursos.id_curso')->where('id_estudiante', $id)->first();
         $materias_estudiante = DB::table('cursos-materias')->join('materias', 'materias.id_materia', '=', 'cursos-materias.id_materia')
             ->where('id_curso', $curso->id_curso)->get();
-        return view('users.estudiantes.subir_tarea_estudiantes', compact('materia', 'curso', 'id', 'id_tarea','materias_estudiante'));
+        return view('users.estudiantes.subir_tarea_estudiantes', compact('materia', 'curso', 'id', 'id_tarea', 'materias_estudiante'));
         dd($id, $id_tarea);
     }
 
@@ -168,5 +180,26 @@ class TareasController extends Controller
 
         flash('Tarea entregada con exito')->success();
         return redirect()->route('tareas_estudiante', $tarea->id);
+    }
+
+    public function tarea_update(Request $request, $id){
+        date_default_timezone_set('America/Santiago');
+        
+        if ($request->nombre == null || $request->fecha_plazo == null) {
+            flash('Todos los campos son requeridos')->error();
+            return redirect()->back();
+        }
+        $fecha = date_format(date_create(), 'Y-m-d');
+        if ($fecha > $request->fecha_plazo) {
+            flash('La fecha de plazo es invalida')->error();
+            return redirect()->back();
+        }
+        DB::table('tareas')->where('id_tarea',$id)->update([
+            'titulo'=>$request->nombre,
+            'actividad'=>$request->actividad,
+            'fecha_plazo'=>$request->fecha_plazo,
+        ]);
+        flash('Tarea entregada con exito')->success();
+        return redirect()->back();
     }
 }

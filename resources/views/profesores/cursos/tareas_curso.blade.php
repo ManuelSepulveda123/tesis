@@ -134,19 +134,19 @@ Tareas | Escuela Chile España
         $('#tareas').DataTable({
             "ajax": "{{route('tabla.tareas.curso',$curso->id_curso)}}",
             "columns": [{
-                    data: 'action'
+                    data: 'titulo'
                 },
                 {
                     data: 'materia'
                 },
                 {
-                    data: 'fecha_archivo'
+                    data: 'fecha_subida'
                 },
                 {
-                    data: 'action2'
+                    data: 'fecha_plazo'
                 },
                 {
-                    data: 'action3'
+                    data: 'action'
                 }
             ],
             responsive: true,

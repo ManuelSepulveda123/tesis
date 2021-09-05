@@ -124,8 +124,8 @@ class DatatableController extends Controller
                     $ruta2 = route('planificacion_up', $estudiante->id);
 
 
-                    $ruta = route('planificacion_descargar',$estudiante->id);
-                    $ruta_editar = route('planificacion_estudiante',$estudiante->id);
+                    $ruta = route('planificacion_descargar', $estudiante->id);
+                    $ruta_editar = route('planificacion_estudiante', $estudiante->id);
                     $token =  csrf_field();
                     return '    <a href="' . $ruta_editar . '"type="submit" class="btn btn-dark" >Editar</a>
                                 <a href="' . $ruta . '" target="_blank" type="submit" class="btn btn-warning"style="align: center;">Descargar</a>';
@@ -363,48 +363,54 @@ class DatatableController extends Controller
     {
         $id = Auth::user()->id;
         $curso = DB::table('estudiantes-cursos')->where('id_estudiante', $id)->first();
-        $tareas_pendientes = DB::table('tareas')
-            ->join('archivos', 'archivos.id_archivo', '=', 'tareas.id_archivo')
-            ->join('materias', 'materias.id_materia', 'archivos.id_materia')
-            ->where('tareas.id_estudiante', $id)->where('archivos.id_curso', $curso->id_curso)->where('estado', 0)->get();
+
+
+        $tareas = DB::table('tareas')->where('id_curso', $curso->id_curso)->join('materias', 'materias.id_materia', '=', 'tareas.id_materia')->get();
+        $tarea_estudiante = DB::table('estudiantes-tareas')->where('id_estudiante', $id)->get();
+
+        $tareas_pendientes = [];
+        foreach ($tareas as $item) {
+            $flag = true;
+            foreach ($tarea_estudiante as $indexData) {
+                if ($indexData->id_tarea == $item->id_tarea)
+                    $flag = false;
+            }
+            if ($flag)
+                array_push($tareas_pendientes, $item);
+        }
+        foreach ($tareas_pendientes as $tarea) {
+            $tarea->fecha_plazo = \Carbon\Carbon::parse($tarea->fecha_plazo)->format('d-m-Y');
+        }
 
 
         return datatables()->of($tareas_pendientes)
             ->addColumn('action', function ($tarea) {
 
-                $ruta = route('tarea_descargar', $tarea->id_archivo);
-                return '<a href="' . $ruta . '" class="btn btn-success"><i class="flaticon-download"></i></a></button>';
-            })
-            ->addColumn('action2', function ($tarea) {
-
-                $ruta = route('tarea_estudiante_up', ['id' => $tarea->id_estudiante, 'id_tarea' => $tarea->id_archivo]);
-                return '<a href="' . $ruta . '" class="btn btn-primary"><i class="flaticon-upload"></i></a></button>';
-            })->rawColumns(['action2' => 'action2', 'action' => 'action'])->toJson();
+                $ruta = route('tarea_descargar', $tarea->id_tarea);
+                return '<center><a href="' . $ruta . '" class="btn btn-dark">Ver</a></button></center>';
+            })->toJson();
     }
 
     public function tabla_estudiantes_tareas()
     {
         $id = Auth::user()->id;
         $curso = DB::table('estudiantes-cursos')->where('id_estudiante', $id)->first();
-        $tareas_entregadas = DB::table('tareas')
-            ->join('archivos', 'archivos.id_archivo', '=', 'tareas.id_archivo')
-            ->join('materias', 'materias.id_materia', 'archivos.id_materia')
-            ->where('tareas.id_estudiante', $id)->where('archivos.id_curso', $curso->id_curso)->where('estado', 1)->get();
 
-        $tareas_estudiante = DB::table('archivos')
-            ->join('materias', 'materias.id_materia', '=', 'archivos.id_materia')->where('id_user', $id)->where('id_curso', $curso->id_curso)->get();
+        $tareas_estudiante = DB::table('estudiantes-tareas')->select('tareas.id_tarea', 'estudiantes-tareas.fecha_subida', 'materia', 'fecha_plazo')
+            ->join('tareas', 'tareas.id_tarea', '=', 'estudiantes-tareas.id_tarea')
+            ->join('materias', 'materias.id_materia', '=', 'tareas.id_materia')->where('id_estudiante', $id)->get();
 
-        return datatables()->of($tareas_estudiante)->addColumn('action', function ($tarea) {
+        foreach ($tareas_estudiante as $tarea) {
+            $tarea->fecha_plazo = \Carbon\Carbon::parse($tarea->fecha_plazo)->format('d-m-Y');
+            $tarea->fecha_subida = \Carbon\Carbon::parse($tarea->fecha_subida)->format('d-m-Y H:i:s');
+        }
 
-            $ruta = route('tarea_descargar', $tarea->id_archivo);
+        return datatables()->of($tareas_estudiante)
+            ->addColumn('action', function ($tarea) {
 
-            return '<a href="' . $ruta . '" class="btn btn-success"><i class="flaticon-download"></i></a></button>';
-        })
-            ->addColumn('action2', function ($tarea) {
-
-                $ruta = route('tarea_estudiante_up', ['id' => $tarea->id_user, 'id_tarea' => $tarea->id_archivo]);
-                return '<a href="' . $ruta . '" class="btn btn-primary"><i class="flaticon-upload"></i></a></button>';
-            })->rawColumns(['action2' => 'action2', 'action' => 'action'])->toJson();
+                $ruta = route('tarea_descargar', $tarea->id_tarea);
+                return '<center><a href="' . $ruta . '" class="btn btn-dark">Ver</a></button></center>';
+            })->toJson();
     }
 
     public function tabla_materias_tareas($id)
@@ -423,7 +429,8 @@ class DatatableController extends Controller
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">' . $materias->materia . ' | Agregar Tarea</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">' . $materias->materia . '</h5>
+                                    
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -432,15 +439,22 @@ class DatatableController extends Controller
                                 <div class="modal-body">
                                     <div class="form-group ">
 
-                                        <h4 ><b>Nueva Tarea<b></h4>
+                                       <center> <h4 >Nueva Tarea</h4></center><br><br>
 
 
                                         <form action="' . $url . '" method="post" enctype="multipart/form-data">
                                             ' . $token . '
+                                            <center>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Titulo</label>
                                                 <div class="col-lg-9 col-xl-6">
                                                     <input class="form-control" type="text" name="nombre">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label">Actividad</label>
+                                                <div class="col-lg-9 col-xl-6">
+                                                <textarea class="form-control" rows="5" cols="10" type="text" value="" name="actividad" style="resize: none;"></textarea>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -450,7 +464,7 @@ class DatatableController extends Controller
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label">Archivo</label>
+                                                <label class="col-xl-3 col-lg-3 col-form-label">Archivo adjunto</label>
                                                 <div class="col-lg-9 col-xl-6">
                                                     <input class="form-control" type="file" name="tarea" accept="application/pdf, .doc, .docx, .odf" />
                                                 </div>
@@ -459,9 +473,10 @@ class DatatableController extends Controller
                                             <div class="d-flex justify-content-between pt-10 mt-15" style="margin:20px">
                                             <div class="mr-2"></div>
                                             <div>
-                                                <button type="submit" class="btn btn-success font-weight-bolder px-9 " style="margin:20px">Guardar</button>
+                                                <button type="submit" class="btn btn-success  px-9 " style="margin:20px">Guardar</button>
                                             </div>
                                         </div>
+                                        </center>
                                         </form>
 
                                     </div>
@@ -478,40 +493,72 @@ class DatatableController extends Controller
 
     public function tabla_tareas_curso($id)
     {
-        $tareas = DB::table('archivos')->join('materias', 'materias.id_materia', '=', 'archivos.id_materia')->where('id_curso', $id)->where('id_tipo_archivo', 2)->get();
+
+        $tareas = DB::table('tareas')->where('id_curso', $id)->join('materias', 'materias.id_materia', '=', 'tareas.id_materia')->get();
+
+        foreach ($tareas as $tarea) {
+            $tarea->fecha_plazo = \Carbon\Carbon::parse($tarea->fecha_plazo)->format('d-m-Y');
+            $tarea->fecha_subida = \Carbon\Carbon::parse($tarea->fecha_subida)->format('d-m-Y H:i:s');
+        }
 
         return datatables()->of($tareas)->addColumn('action', function ($tarea) {
-            $nombre = DB::table('tareas')->select('nombre_tarea')->where('id_archivo', $tarea->id_archivo)->first();
 
-            $nombre = $nombre->nombre_tarea;
-            return $nombre;
-        })->addColumn('action2', function ($tarea) {
-            $fecha = DB::table('tareas')->select('fecha_fin')->where('id_archivo', $tarea->id_archivo)->first();
-
-            return $fecha->fecha_fin;
-        })
-            ->addColumn('action3', function ($tarea) {
-
-                $ruta = route('tarea_curso', $tarea->id_archivo);
-                return '<a href="' . $ruta . '" class="btn btn-dark"><i class="flaticon-eye" style="aling-icon:center"></i></a>';
-            })->rawColumns(['action2' => 'action2', 'action' => 'action', 'action3' => 'action3'])->toJson();
+            $ruta = route('tarea_curso', $tarea->id_tarea);
+            return '<center><a href="' . $ruta . '" class="btn btn-dark">ver</a></center>';
+        })->toJson();
     }
 
     public function tabla_tareas_estudiantes($id_tarea)
     {
 
-        $tareas = DB::table('tareas')->join('users', 'users.id', '=', 'tareas.id_estudiante')->where('id_archivo', $id_tarea)->get();
+        $tareas = DB::table('estudiantes-tareas')->join('users', 'users.id', '=', 'estudiantes-tareas.id_estudiante')->where('id_tarea', $id_tarea)->get();
+        foreach ($tareas as $tarea) {
+            $tarea->fecha_subida = \Carbon\Carbon::parse($tarea->fecha_subida)->format('d-m-Y H:i:s');
+        }
 
         return datatables()->of($tareas)->addColumn('action', function ($tarea) {
-            $tarea_estudiante = DB::table('archivos')->where('id_tarea', $tarea->id_archivo)->where('id_user', $tarea->id)->first();
+            $nombre = $tarea->nombre . ' ' . $tarea->apellido_p . ' ' . $tarea->apellido_m;
+            return $nombre;
+        })->addColumn('action2', function ($tarea) {
+            if ($tarea->comentario != null) {
 
-            if ($tarea_estudiante != null)
-                $ruta = route('tarea_descargar', $tarea_estudiante->id_archivo);
-            if ($tarea->estado == 1)
-                return '<a href="' . $ruta . '" class="btn btn-warning"><i class="flaticon-download" style="aling-icon:center"></i></a>';
+                return '<center><a href="#" data-toggle="modal" data-target="#tarea_' . $tarea->id . '" class="btn btn-warning">ver</a></center>
+                <div class="modal " id="tarea_' . $tarea->id . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog " role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">' . $tarea->nombre . ' ' . $tarea->apellido_p . ' ' . $tarea->apellido_m . '</h5>
+                                
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
 
-            return 'Nulo';
-        })->toJson();
+                            <div class="modal-body">
+                                <div class="form-group ">
+
+                                <center> <h4 >Comentario</h4></center><br><br>
+                                      
+                                        <div class="form-group">
+                                            ' . $tarea->comentario . '
+                                            
+                                        </div> 
+                                 
+                                   
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>';
+            }
+            return '';
+        })->addColumn('action3', function ($tarea) {
+
+            return '<center><a href="#" class="btn btn-dark">Descargar</a></center>';
+        })->rawColumns(['action2' => 'action2', 'action' => 'action', 'action3' => 'action3'])->toJson();
     }
 
     public function tabla_materias_agregar()

@@ -139,10 +139,10 @@
                     <table id="example2" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
+                                <th>Titulo</th>
                                 <th>Fecha de subida</th>
                                 <th>Fecha de fin</th>
-                                <th>Descargar</th>
+                                <th>Ver</th>
 
                             </tr>
                         </thead>
@@ -248,16 +248,16 @@
     $('#example2').DataTable({
         "ajax": "{{route('tabla.tareas.curso',$curso->id_curso)}}",
         "columns": [{
+                data: 'titulo'
+            },
+            {
+                data: 'fecha_subida'
+            },
+            {
+                data: 'fecha_plazo'
+            },
+            {
                 data: 'action'
-            },
-            {
-                data: 'fecha_archivo'
-            },
-            {
-                data: 'action2'
-            },
-            {
-                data: 'action3'
             },
         ],
         responsive: true,

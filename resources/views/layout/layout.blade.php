@@ -189,10 +189,7 @@ License: You must have a valid license purchased only from themeforest(the above
                             <li id="perfil" class="kt-menu__item" aria-haspopup="true"><a href="{{route('perfil_admin',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-avatar "></i><span class="kt-menu__link-text">Perfil</span></a></li>
 
                             @elseif(auth()->user()->id_tipo_usuario == 2 || auth()->user()->id_tipo_usuario == 3 )
-                            <li class="kt-menu__section ">
-                                <h4 class="kt-menu__section-text">Profesores</h4>
-                                <i class="kt-menu__section-icon flaticon-more-v2"></i>
-                            </li>
+                            
                             <!-- PROFE ESPECIFICO -->
                             @if($aux != 1)
                             <li id="profesores_nav" class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-layer"></i><span class="kt-menu__link-text">Mi Curso</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
@@ -231,21 +228,18 @@ License: You must have a valid license purchased only from themeforest(the above
                             </li>
                             <!-- PROFE JEFE -->
                             @elseif($aux == 1 && auth()->user()->id_tipo_usuario == 2)
-                            <li id="profesores_nav" class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-layer"></i><span class="kt-menu__link-text">Mi Curso</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
-                                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
-                                    @if($flag == 1)
-                                    <ul class="kt-menu__subnav">
-                                        <li id="clases_nav" class="kt-menu__item" aria-haspopup="true"><a class="kt-menu__link "><span></span></i><span class="kt-menu__link-text">No tiene un curso</span></a></li>
-                                    </ul>
-                                    @else
-                                    <ul class="kt-menu__subnav">
-                                        <li id="clases_nav" class="kt-menu__item" aria-haspopup="true"><a href="{{route('curso_profesor',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Clases</span></a></li>
-                                        <li id="estudiantes_nav" class="kt-menu__item " aria-haspopup="true"><a href="{{route('lista_estudiantes')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Estudiantes</span></a></li>
-                                        <li id="tareas_nav" class="kt-menu__item " aria-haspopup="true"><a href="{{route('tareas_curso',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Tareas</span></a></li>
-                                    </ul>
-                                    @endif
-                                </div>
+                            <li class="kt-menu__section ">
+                                <h4 class="kt-menu__section-text">Mi Curso</h4>
+                                <i class="kt-menu__section-icon flaticon-more-v2"></i>
                             </li>
+                            @if($flag == 1)
+                            <li id="clases_nav" class="kt-menu__item" aria-haspopup="true"><a class="kt-menu__link "><span></span></i><span class="kt-menu__link-text">No tiene un curso</span></a></li>
+                            @else
+                            <li id="clases_nav" class="kt-menu__item" aria-haspopup="true"><a href="{{route('curso_profesor',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Clases</span></a></li>
+                            <li id="estudiantes_nav" class="kt-menu__item " aria-haspopup="true"><a href="{{route('lista_estudiantes')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Estudiantes</span></a></li>
+                            <li id="tareas_nav" class="kt-menu__item " aria-haspopup="true"><a href="{{route('tareas_curso',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Tareas</span></a></li>
+                            @endif
+
                             <!--  PROFE AYUDANTE -->
                             @elseif($aux == 1 && auth()->user()->id_tipo_usuario == 3)
                             <li id="profesores_especifico_nav" class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon-squares"></i><span class="kt-menu__link-text">Mis Cursos</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
@@ -269,9 +263,12 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </div>
                             </li>
                             @endif
+                            <li class="kt-menu__section ">
+                                <h4 class="kt-menu__section-text">Escuela</h4>
+                                <i class="kt-menu__section-icon flaticon-more-v2"></i>
+                            </li>
 
-
-                            <li id="inicio" class="kt-menu__item" aria-haspopup="true"><a href="#" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-interface-3"></i><span class="kt-menu__link-text">Cursos</span></a></li>
+                            <li id="profes_cursos" class="kt-menu__item" aria-haspopup="true"><a href="{{route('cursos_escuela')}}" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-interface-3"></i><span class="kt-menu__link-text">Cursos</span></a></li>
                             @elseif(auth()->user()->id_tipo_usuario == 4)
                             <li class="kt-menu__section ">
                                 <h4 class="kt-menu__section-text">Estudiantes</h4>

@@ -85,8 +85,8 @@
         <table class="table table-bordered">
             <tbody>
                 <tr>
-                    <th>Asignatura: {{$item->materia}}</th>
-                    <th></th>
+                    <th>Asignatura:</th>
+                    <td>{{$item->materia}}</td>
                 </tr>
                 <tr>
                     <td style="width: 50%;"><b>Objetivo currículum:</b> <br>{{$item->objetivo}} </td>

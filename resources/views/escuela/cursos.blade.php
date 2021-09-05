@@ -106,6 +106,7 @@ Lista Cursos | Escuela Chile España
     });
     $('#administrador2_nav').addClass('kt-menu__item--open');
     $('#tabla_cursos2').addClass('kt-menu__item--active');
+    $('#profes_cursos').addClass('kt-menu__item--active');
     $('div.alert').not('.alert-important').delay(5000).fadeOut(350);
 </script>
 

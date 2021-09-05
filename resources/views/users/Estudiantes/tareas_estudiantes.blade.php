@@ -2,6 +2,9 @@
 
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css">
 @endsection
 
 @section('head')
@@ -46,9 +49,9 @@
                             <tr>
 
                                 <th>Materia</th>
-                                <th>Fecha Subida</th>
-                                <th>Descargar</th>
-                                <th>Entregar</th>
+                                <th>Fecha Plazo</th>
+                                <th>Ver</th>
+                          
                             </tr>
                         </thead>
 
@@ -74,9 +77,9 @@
                             <tr>
 
                                 <th>Materia</th>
-                                <th>Fecha Subida</th>
-                                <th>Descargar</th>
-                                <th>Modificar</th>
+                                <th>Fecha Plazo</th>
+                                <th>Fecha Entrega</th>
+                                <th>Ver</th>
                             </tr>
                         </thead>
 
@@ -109,12 +112,10 @@
             "columns": [{
                 data: 'materia'
             }, {
-                data: 'fecha_archivo'
+                data: 'fecha_plazo'
             }, {
                 data: 'action'
-            }, {
-                data: 'action2'
-            }],
+            },],
             responsive: true,
             autoWidth: false,
             "language": {
@@ -136,11 +137,11 @@
             "columns": [{
                 data: 'materia'
             },{
-                data: 'fecha_archivo'
+                data: 'fecha_plazo'
+            }, {
+                data: 'fecha_subida'
             }, {
                 data: 'action'
-            }, {
-                data: 'action2'
             }],
             responsive: true,
             autoWidth: false,
