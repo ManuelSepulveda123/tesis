@@ -291,7 +291,7 @@ class UserController extends Controller
         require './PHPMailer/src/SMTP.php';
         $mail = new PHPMailer(true);
         $ruta = route('cambio_datos_confi',$id);
-        dd($mail,$ruta);
+        
         try {
             //Server settings
             $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
@@ -346,7 +346,7 @@ class UserController extends Controller
             </tr>
         </table>';
 
-
+        dd($mail,$ruta);
             $mail->send();
             echo 'El mensaje se envio';
         } catch (Exception $e) {
