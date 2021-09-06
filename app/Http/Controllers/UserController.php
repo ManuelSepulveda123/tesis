@@ -346,8 +346,9 @@ class UserController extends Controller
             </tr>
         </table>';
 
-        dd($mail,$ruta);
+       
             $mail->send();
+            dd($mail->send());
             echo 'El mensaje se envio';
         } catch (Exception $e) {
             echo "ocurrio un error en el mensaje: {$mail->ErrorInfo}";
