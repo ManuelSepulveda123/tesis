@@ -127,11 +127,12 @@ Route::get('tarea/eliminar/{id}/','App\Http\Controllers\TareasController@elimina
 //Estudiantes-Tareas
 Route::get('estudiante/{id}/tarea','App\Http\Controllers\TareasController@tareas_estudiante')->name('tareas_estudiante')->middleware('estudiante');
 Route::get('estudiante/{id}/tarea/{id_tarea}','App\Http\Controllers\TareasController@tarea_estudiante_up')->name('tarea_estudiante_up')->middleware('estudiante');
-Route::post('estudiante/{id}/subir_tarea/{id_tarea}','App\Http\Controllers\TareasController@subir_tarea_estudiante_up')->name('subir_tarea_estudiante_up')->middleware('estudiante');
+Route::post('estudiante_up/subir_tarea/{id_tarea}','App\Http\Controllers\TareasController@subir_tarea_estudiante_up')->name('subir_tarea_estudiante_up')->middleware('estudiante');
 
 //Estudiantes
-Route::get('estudiante/{id}/materia/{id_materia}','App\Http\Controllers\EstudianteController@estudiante_materia')->name('estudiante_materia')->middleware('estudiante');
+Route::get('estudiante/materia/{id_materia}','App\Http\Controllers\EstudianteController@estudiante_materia')->name('estudiante_materia')->middleware('estudiante');
 Route::get('estudiante/tarea/{id}','App\Http\Controllers\DashboardController@estudiante_tarea')->name('estudiante_tarea')->middleware('estudiante');
+Route::get('estudiante/tarea/entregada/{id}','App\Http\Controllers\DashboardController@estudiante_tarea_entregada')->name('estudiante_tarea_entregada')->middleware('estudiante');
 //Perfil usuario
 Route::get('usuario/{id}','App\Http\Controllers\UserController@perfil_usuario')->name('perfil_usuario')->middleware('profeestudiante');
 

@@ -122,7 +122,9 @@
 
                 <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>{{$curso->curso}}</b></label>
                 <div class="col-lg-6 col-xl-6" style="text-align: center;">
+                    @if(isset($plani))
                     <a href="{{route('planificacion_descargar',$usuario->id)}}" target="_blank" class="btn btn-warning">Planificación</a>
+                    @endif
                 </div>
 
 
@@ -236,7 +238,6 @@
 <script src="{{asset('assets/js/demo1/pages/dashboard.js')}}" type="text/javascript"></script>
 <script src="{{asset('assets/js/demo1/pages/custom/user/profile.js')}}" type="text/javascript"></script>
 <script>
-    
     $('#perfil').addClass('kt-menu__item--active');
 </script>
 @endsection

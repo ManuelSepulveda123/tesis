@@ -242,8 +242,8 @@ class UserController extends Controller
             }
         }
 
-
-        return view('users.perfil_usuario', compact('usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante'));
+        $plani = DB::table('plani')->where('id_estudiante',$id)->first();
+        return view('users.perfil_usuario', compact('usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante','plani'));
     }
 
     public function admin_contras(Request $request, $id)
@@ -348,7 +348,7 @@ class UserController extends Controller
 
        
             $mail->send();
-            dd($mail->send());
+           
             echo 'El mensaje se envio';
         } catch (Exception $e) {
             echo "ocurrio un error en el mensaje: {$mail->ErrorInfo}";

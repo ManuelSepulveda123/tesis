@@ -346,15 +346,33 @@ class EstudianteController extends Controller
         return redirect()->route('estudiantes_editar', $id);
     }
 
-    public function estudiante_materia($id, $id_materia)
+    public function estudiante_materia($id_materia)
     {
 
+        $id = Auth::user()->id;
         $curso = DB::table('estudiantes-cursos')->where('estudiantes-cursos.id_estudiante', $id)->join('cursos', 'cursos.id_curso', '=', 'estudiantes-cursos.id_curso')->first();
         $materias_estudiante = DB::table('cursos-materias')->join('materias', 'materias.id_materia', '=', 'cursos-materias.id_materia')
             ->where('id_curso', $curso->id_curso)->get();
 
         $materia = DB::table('materias')->where('id_materia', $id_materia)->first();
-        $tareas_pendientes = DB::table('tareas')->join('archivos', 'archivos.id_archivo', '=', 'tareas.id_archivo')->where('id_estudiante', $id)->where('estado', 0)->where('id_materia', $id_materia)->get();
+        
+        $tareas = DB::table('tareas')->join('materias', 'materias.id_materia', '=', 'tareas.id_materia')->where('id_curso', $curso->id_curso)->where('tareas.id_materia',$id_materia)->get();
+        $tarea_estudiante = DB::table('estudiantes-tareas')->where('id_estudiante', $id)->get();
+
+        $tareas_pendientes = [];
+        foreach ($tareas as $item) {
+            $flag = true;
+            foreach ($tarea_estudiante as $indexData) {
+                if ($indexData->id_tarea == $item->id_tarea)
+                    $flag = false;
+            }
+            if ($flag)
+                array_push($tareas_pendientes, $item);
+        }
+        foreach ($tareas_pendientes as $tarea) {
+            $tarea->fecha_plazo = \Carbon\Carbon::parse($tarea->fecha_plazo)->format('d-m-Y');
+        }
+        
         return view('estudiantes.materias.estudiante_materia', compact('id', 'materias_estudiante', 'id_materia', 'materia', 'curso', 'tareas_pendientes'));
     }
 }

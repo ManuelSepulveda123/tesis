@@ -408,7 +408,7 @@ class DatatableController extends Controller
         return datatables()->of($tareas_estudiante)
             ->addColumn('action', function ($tarea) {
 
-                $ruta = route('estudiante_tarea', $tarea->id_tarea);
+                $ruta = route('estudiante_tarea_entregada', $tarea->id_tarea);
                 return '<center><a href="' . $ruta . '" class="btn btn-dark">Ver</a></button></center>';
         })->toJson();
     }
@@ -556,8 +556,8 @@ class DatatableController extends Controller
             }
             return '';
         })->addColumn('action3', function ($tarea) {
-
-            return '<center><a href="#" class="btn btn-dark">Descargar</a></center>';
+            $ruta = route('tarea_descargar',$tarea->id_archivo);
+            return '<center><a href="'.$ruta.'" class="btn btn-dark">Descargar</a></center>';
         })->rawColumns(['action2' => 'action2', 'action' => 'action', 'action3' => 'action3'])->toJson();
     }
 

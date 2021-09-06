@@ -19,7 +19,8 @@ Tarea | Escuela Chile España
             <span class="kt-subheader__desc" id="kt_subheader_total">
                 {{$tarea->materia}}
             </span>
-            
+
+
         </div>
     </div>
 
@@ -67,8 +68,8 @@ Tarea | Escuela Chile España
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="kt-portlet kt-portlet--mobile">
+        <div class="col-md-4" >
+            <div class="kt-portlet kt-portlet--mobile" style="height: responsive;">
                 <div class="kt-portlet__head">
                     <div class="kt-portlet__head-label">
                         <h3 class="kt-portlet__head-title">
@@ -125,7 +126,7 @@ Tarea | Escuela Chile España
         <div class="kt-portlet__head">
             <div class="kt-portlet__head-label">
                 <h3 class="kt-portlet__head-title">
-                    Subir Tarea
+                    Tarea
                 </h3>
             </div>
         </div>
@@ -137,31 +138,16 @@ Tarea | Escuela Chile España
                     <div class="kt-section kt-section--first">
                         <div class="kt-section__body">
                             <div class="form-group ">
-                                <form action="{{route('subir_tarea_estudiante_up',$tarea->id_tarea)}}" method="post" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label">Archivo</label>
-                                        <div class="col-lg-9 col-xl-6">
-
-                                            <input class="form-control" type="file" value="" name="archivo">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label">Comentario</label>
-
-                                        <div class="col-lg-9 col-xl-6">
-
-                                            <textarea class="form-control" name="comentario" id="" cols="30" rows="10" style="resize: none;"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between  pt-10 mt-15" style="margin:20px">
-                                        <div class="mr-2"></div>
-                                        <div>
-                                            <button type="submit" class="btn btn-success font-weight-bolder" style="margin:20px">Entregar</button>
-                                        </div>
-                                    </div>
-                                </form>
+                                <h4 class="col-xl-12 col-lg-12"><b>Fecha de entrega: </b>{{$tarea_estudiante->fecha_subida}}</h4>
+                                <br>
+                                <br>
+                                <br>
+                                <div class="container">
+                                <a href="{{route('tarea_descargar',$tarea_estudiante->id_archivo)}}"class="col-xl-12 col-lg-12 btn btn-warning">Mi tarea</a>
+                                </div>
+                                
                             </div>
+                             
                         </div>
                     </div>
                 </div>

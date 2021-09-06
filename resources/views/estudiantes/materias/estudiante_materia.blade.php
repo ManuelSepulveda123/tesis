@@ -43,9 +43,9 @@
 
             <div class="form-group row ">
 
-                <label class="col-xl-3 col-lg-3 col-form-label">Fecha: {{\Carbon\Carbon::parse($tarea->fecha_archivo)->format('d/m')}}</label>
-                <a href="{{route('tarea_descargar',$tarea->id_archivo)}}" class="col-xl-3 col-lg-4  btn btn-warning">Descargar tarea</a>
-                <a href="{{route('tarea_estudiante_up',['id' => $id, 'id_tarea' => $tarea->id_archivo])}}" class="col-xl-3 col-lg-4  btn btn-dark" style="margin-left:10%">Subir</a>
+                <label class="col-xl-3 col-lg-3 col-form-label">Fecha: {{\Carbon\Carbon::parse($tarea->fecha_subida)->format('d/m')}}</label>
+                <a href="{{route('estudiante_tarea',$tarea->id_tarea)}}" class="col-xl-3 col-lg-4  btn btn-warning">Ver Tarea</a>
+               
 
             </div>
             <div class="border-bottom"></div>
