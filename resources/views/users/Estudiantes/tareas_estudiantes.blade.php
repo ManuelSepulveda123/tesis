@@ -7,6 +7,10 @@
 <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css">
 @endsection
 
+@section('titulo')
+Tareas | Escuela Chile España
+@endsection
+
 @section('head')
 <div class="kt-container  kt-container--fluid ">
     <div class="kt-subheader__main">

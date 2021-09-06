@@ -87,8 +87,9 @@ Route::get('datatable/profesor/cursos/','App\Http\Controllers\DatatableControlle
 
 Route::get('datatable/estudiante/tareas_pendientes/','App\Http\Controllers\DatatableController@tabla_estudiantes_tareas_p')->name('tabla.estudiantes_tareas_p')->middleware('estudiante');
 Route::get('datatable/estudiante/tareas_entregadas/','App\Http\Controllers\DatatableController@tabla_estudiantes_tareas')->name('tabla.estudiantes_tareas')->middleware('estudiante');
-Route::get('datatable/curso_clases/{id}','App\Http\Controllers\DatatableController@tabla_cursos_clases')->name('tabla.materias.curso.clases')->middleware('adminprofe');
 
+
+Route::get('datatable/curso_clases/{id}','App\Http\Controllers\DatatableController@tabla_cursos_clases')->name('tabla.materias.curso.clases')->middleware('adminprofe');
 Route::get('datatable/{id_curso}/materia_especifica/{id_materia}','App\Http\Controllers\DatatableController@tabla_tareas_curso_especifico')->name('tabla.materia.tareas')->middleware('adminprofe');
 
 //Region-Provincia-Comuna
@@ -130,7 +131,7 @@ Route::post('estudiante/{id}/subir_tarea/{id_tarea}','App\Http\Controllers\Tarea
 
 //Estudiantes
 Route::get('estudiante/{id}/materia/{id_materia}','App\Http\Controllers\EstudianteController@estudiante_materia')->name('estudiante_materia')->middleware('estudiante');
-
+Route::get('estudiante/tarea/{id}','App\Http\Controllers\DashboardController@estudiante_tarea')->name('estudiante_tarea')->middleware('estudiante');
 //Perfil usuario
 Route::get('usuario/{id}','App\Http\Controllers\UserController@perfil_usuario')->name('perfil_usuario')->middleware('profeestudiante');
 

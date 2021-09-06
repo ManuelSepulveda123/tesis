@@ -488,4 +488,18 @@ class DashboardController extends Controller
 
         return view('escuela.tareas');
     }
+
+    public function estudiante_tarea($id_tarea){
+        $tarea = DB::table('tareas')->where('id_tarea',$id_tarea)
+            ->join('materias','materias.id_materia','=','tareas.id_materia')
+            ->join('cursos','cursos.id_curso','=','tareas.id_curso')
+            ->join('users','users.id','=','tareas.id_profesor')->first();
+        
+        $tarea->fecha_plazo = \Carbon\Carbon::parse($tarea->fecha_plazo)->format('d-m-Y');
+        $estudiante = DB::table('users')->where('id',Auth::user()->id)->first();
+        $materias_estudiante = DB::table('cursos-materias')->join('materias', 'materias.id_materia', '=', 'cursos-materias.id_materia')
+            ->where('id_curso', $tarea->id_curso)->get();
+       
+        return view('users.estudiantes.tarea_estudiante',compact('tarea','estudiante','materias_estudiante'));
+    }
 }
