@@ -290,7 +290,8 @@ class UserController extends Controller
         require './PHPMailer/src/PHPMailer.php';
         require './PHPMailer/src/SMTP.php';
         $mail = new PHPMailer(true);
-        $ruta = 'http://127.0.0.1:8000/cambio_datos_confi/'.$id;
+        $ruta = route('cambio_datos_confi',$id);
+        dd($mail,$ruta);
         try {
             //Server settings
             $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
@@ -347,7 +348,7 @@ class UserController extends Controller
 
 
             $mail->send();
-            echo 'El mensaje se enviot';
+            echo 'El mensaje se envio';
         } catch (Exception $e) {
             echo "ocurrio un error en el mensaje: {$mail->ErrorInfo}";
         }
@@ -357,17 +358,23 @@ class UserController extends Controller
         if (auth()->user()->id != $id) {
             return redirect()->route('inicio');
         }
+        
         date_default_timezone_set('America/Santiago');
         $hora = date_format(date_create(), ' G:i:s');
         $fecha = date_format(date_create(), 'Y-m-d');
-        
+        $dia = date_format(date_create(), 'd');
+
         $usuario = DB::table('users')->where('users.id', $id)->first();
         $hora_fin = \Carbon\Carbon::parse($usuario->confi)->addHours(1)->format('G:i:s');
         $fecha_cam = \Carbon\Carbon::parse($usuario->confi)->format('Y-m-d');
-
+        $dia_item = \Carbon\Carbon::parse($usuario->confi)->format('d');
+        
+       
         $hora = strtotime($hora);
         $hora_fin = strtotime($hora_fin);
+        
         if($fecha != $fecha_cam){
+     
             return redirect()->route('inicio');
         }
         if($hora > $hora_fin){
