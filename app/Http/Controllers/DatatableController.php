@@ -16,12 +16,12 @@ class DatatableController extends Controller
         return datatables()->of($regiones)->toJson();
     }
 
-    public function tabla_estudiantes()
+    public function tabla_estudiantes($id_curso)
     {
 
         $tipo_user = Auth::user()->id_tipo_usuario;
 
-        if ($tipo_user == 2 || $tipo_user == 3) {
+        if ($tipo_user == 2) {
             $id = Auth::user()->id;
             $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
 
@@ -38,7 +38,7 @@ class DatatableController extends Controller
                 $provincia = DB::table('provincias')->where('id', $estudiante->id_provincia)->first();
                 $diagnostico = DB::table('estudiantes')->join('diagnosticos', 'diagnosticos.id', '=', 'estudiantes.id_diagnostico')->where('estudiantes.id', $estudiante->id)->first();
 
-                return '<a href=""  data-toggle="modal" data-target="#estudiante_' . $estudiante->id . '" class="btn btn-dark"><i class="fa flaticon-eye"></i></a></button>
+                return '<center><a href=""  data-toggle="modal" data-target="#estudiante_' . $estudiante->id . '" class="btn btn-dark">Ver</a></center></button>
                 <div class="modal " id="estudiante_' . $estudiante->id . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
@@ -127,8 +127,125 @@ class DatatableController extends Controller
                     $ruta = route('planificacion_descargar', $estudiante->id);
                     $ruta_editar = route('planificacion_estudiante', $estudiante->id);
                     $token =  csrf_field();
-                    return '    <a href="' . $ruta_editar . '"type="submit" class="btn btn-dark" >Editar</a>
-                                <a href="' . $ruta . '" target="_blank" type="submit" class="btn btn-warning"style="align: center;">Descargar</a>';
+                    if ($planificacion != null) {
+                        return '  <a href="' . $ruta_editar . '"type="submit" class="btn btn-dark" >Editar</a>
+                        <a href="' . $ruta . '" target="_blank" type="submit" class="btn btn-warning"style="align: center;">Descargar</a>';
+                    }
+
+                    return '   <center>   <a href="' . $ruta_editar . '"type="submit" class="btn btn-warning" >Crear</a></center>';
+                })->rawColumns(['action2' => 'action2', 'action' => 'action'])
+                ->make(true);
+        } elseif ($tipo_user == 3) {
+            $id = Auth::user()->id;
+
+            $estudiantes = DB::table('estudiantes-cursos')->join('users', 'users.id', '=', 'estudiantes-cursos.id_estudiante')->where('id_curso', $id_curso)->get();
+
+            return datatables()->of($estudiantes)->addColumn('action', function ($estudiante) {
+
+                $apoderado = DB::table('estudiantes')->where('id', $estudiante->id)->first();
+                if ($apoderado != null) {
+                    $apoderado = DB::table('users')->where('id', $apoderado->id_apoderado)->first();
+                }
+                $region = DB::table('regiones')->where('id', $estudiante->id_region)->first();
+                $comuna = DB::table('comunas')->where('id', $estudiante->id_comuna)->first();
+                $provincia = DB::table('provincias')->where('id', $estudiante->id_provincia)->first();
+                $diagnostico = DB::table('estudiantes')->join('diagnosticos', 'diagnosticos.id', '=', 'estudiantes.id_diagnostico')->where('estudiantes.id', $estudiante->id)->first();
+
+                return '<center><a href=""  data-toggle="modal" data-target="#estudiante_' . $estudiante->id . '" class="btn btn-dark">Ver</i></a></center></button>
+                <div class="modal " id="estudiante_' . $estudiante->id . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Estudiante</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                                <div class="form-group">
+                                                    <label class="col-xl-12 col-lg-12 col-form-label" style="text-align: left;"> <b>Nombre: </b> ' . $estudiante->nombre . ' ' . $estudiante->apellido_p . ' ' . $estudiante->apellido_m . '</label>
+                                                </div>
+                                                <div class="form-group" style="margin-bottom:10%">
+
+                                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: left;"> <b>Correo:</b> ' . $estudiante->email . '</label>
+                                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: left;"> <b>Telefono:</b> ' . $estudiante->telefono . '</label>
+
+                                                </div>
+
+                                                <div class="form-group" style="margin-bottom:10%">
+
+                                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: left;"> <b>Diagnostico:</b> ' . $diagnostico->diagnostico . '</label>
+                                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: left;"> <b>Otro:</b> ' . $diagnostico->otro . '</label>
+
+                                                </div>
+
+                                                <div class="row ">
+
+                                                    <div class="col-lg-9 col-xl-6" style="margin-top:5px">
+                                                        <h5 class="kt-section__title kt-section__title-sm"><b>Apoderado:</b></h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+
+                                                    <label class="col-xl-12 col-lg-12 col-form-label" style="text-align: left;"> <b>Nombre: </b>' . $apoderado->nombre . ' ' . $apoderado->apellido_p . ' ' . $apoderado->apellido_m . '</label>
+
+                                                </div>
+
+                                                <div class="form-group" >
+
+                                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: left;"> <b>Correo:</b>' . $apoderado->email . '</label>
+                                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: left;"> <b>Telefono:</b>' . $apoderado->telefono . '</label>
+
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-lg-9 col-xl-6" style="margin-top:5px">
+                                                        <h5 class="kt-section__title kt-section__title-sm"><b>Dirección:</b></h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: left;"> <b>Dirección:</b>' . $estudiante->direccion . '</label>
+                                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: left;"> <b>Comuna:</b>' . $comuna->comuna . '</label>
+
+
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: left;"> <b>Region:</b>' . $region->region . '</label>
+                                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: left;"> <b>Provincia:</b>' . $provincia->provincia . '</label>
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+
+                                        </div>
+                                    </div>
+                                </div>';
+            })
+                ->addColumn('action2', function ($estudiante) {
+
+                    $curso = DB::table('estudiantes-cursos')->join('cursos', 'cursos.id_curso', '=', 'estudiantes-cursos.id_curso')->where('id_estudiante', $estudiante->id)->first();
+                    $planificacion = DB::table('archivos')->join('planificaciones', 'planificaciones.id_archivo', 'archivos.id_archivo')
+                        ->where('id_curso', $curso->id_curso)->where('id_estudiante', $estudiante->id)
+                        ->where('id_tipo_archivo', 1)->first();
+                    $ruta2 = route('planificacion_up', $estudiante->id);
+
+
+                    $ruta = route('planificacion_descargar', $estudiante->id);
+                    $ruta_editar = route('planificacion_estudiante', $estudiante->id);
+                    $token =  csrf_field();
+                    if ($planificacion != null) {
+                        return '  <a href="' . $ruta_editar . '"type="submit" class="btn btn-dark" >Editar</a>
+                        <a href="' . $ruta . '" target="_blank" type="submit" class="btn btn-warning"style="align: center;">Descargar</a>';
+                    }
+
+                    return '   <center>   <a href="' . $ruta_editar . '"type="submit" class="btn btn-warning" >Crear</a></center>';
                 })->rawColumns(['action2' => 'action2', 'action' => 'action'])
                 ->make(true);
         }
@@ -410,7 +527,7 @@ class DatatableController extends Controller
 
                 $ruta = route('estudiante_tarea_entregada', $tarea->id_tarea);
                 return '<center><a href="' . $ruta . '" class="btn btn-dark">Ver</a></button></center>';
-        })->toJson();
+            })->toJson();
     }
 
     public function tabla_materias_tareas($id)
@@ -556,8 +673,8 @@ class DatatableController extends Controller
             }
             return '';
         })->addColumn('action3', function ($tarea) {
-            $ruta = route('tarea_descargar',$tarea->id_archivo);
-            return '<center><a href="'.$ruta.'" class="btn btn-dark">Descargar</a></center>';
+            $ruta = route('tarea_descargar', $tarea->id_archivo);
+            return '<center><a href="' . $ruta . '" class="btn btn-dark">Descargar</a></center>';
         })->rawColumns(['action2' => 'action2', 'action' => 'action', 'action3' => 'action3'])->toJson();
     }
 
@@ -742,8 +859,8 @@ class DatatableController extends Controller
 
     public function tabla_clases($id)
     {
-        $clases = DB::table('clases')->where('id_clase', $id);
-
+        $clases = DB::table('clases')->where('id_curso', $id)->get();
+      
         return datatables()->of($clases)->addColumn('action1', function ($clase) {
             date_default_timezone_set('America/Santiago');
             $clase->hora_inicio = \Carbon\Carbon::parse($clase->hora_inicio)->format('h:i');

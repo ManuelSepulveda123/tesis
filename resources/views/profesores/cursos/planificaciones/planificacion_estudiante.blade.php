@@ -145,7 +145,7 @@
                                     <div class="kt-section kt-section--first">
                                         <div class="kt-section__body">
                                             <input type="hidden" value="{{$materia->id_materia}}" name="materia_{{$materia->id_materia}}">
-                                            {{$materia->materia}}
+                                      
                                             <div class="row">
                                                 <label class="col-xl-3"></label>
                                                 <div class="col-lg-9 col-xl-6">
@@ -223,6 +223,8 @@
 @endsection
 @section('js')
 
-
+<script>
+   
+</script>
 
 @endsection

@@ -187,9 +187,9 @@ class ProfesoresController extends Controller
 
 
             $mail->send();
-            echo 'El mensaje se enviot';
+            
         } catch (Exception $e) {
-            echo "ocurrio un error en el mensaje: {$mail->ErrorInfo}";
+           
         }
 
 

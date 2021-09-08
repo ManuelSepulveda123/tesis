@@ -37,7 +37,7 @@ Route::post('profesor/{id}/delet', 'App\Http\Controllers\ProfesoresController@pr
 
 //ESTUDIANTES-CRUD
 Route::get('list/estudiantes','App\Http\Controllers\EstudianteController@list_estudiantes')->name('estudiantes')->middleware('admin');
-Route::get('lista/estudiantes','App\Http\Controllers\EstudianteController@lista_estudiantes')->name('lista_estudiantes')->middleware('auth');
+Route::get('lista/estudiantes/{id}','App\Http\Controllers\EstudianteController@lista_estudiantes')->name('lista_estudiantes')->middleware('auth');
 Route::get('estudiantes/crear','App\Http\Controllers\EstudianteController@estudiante_crear')->name('estudiantes_crear')->middleware('admin');
 Route::post('estudiantes/store','App\Http\Controllers\EstudianteController@estudiante_store')->name('estudiantes_store')->middleware('admin');
 Route::get('estudiante/{id}/editar','App\Http\Controllers\EstudianteController@estudiante_editar')->name('estudiantes_editar')->middleware('admin');
@@ -81,7 +81,7 @@ Route::get('datatable/profesores/tareas/{id}','App\Http\Controllers\DatatableCon
 Route::get('datatable/tareas/curso/{id}','App\Http\Controllers\DatatableController@tabla_tareas_curso')->name('tabla.tareas.curso')->middleware('auth');
 Route::get('datatable/tareas_estudiantes/{id_tarea}','App\Http\Controllers\DatatableController@tabla_tareas_estudiantes')->name('tabla.tareas.estudiantes')->middleware('adminprofe');
 
-Route::get('datatable/list/estudiantes','App\Http\Controllers\DatatableController@tabla_estudiantes')->name('tabla.estudiantes')->middleware('adminprofe');
+Route::get('datatable/list/estudiantes/{id}','App\Http\Controllers\DatatableController@tabla_estudiantes')->name('tabla.estudiantes')->middleware('adminprofe');
 Route::get('datatable/estudiantes/curso/{id}/','App\Http\Controllers\DatatableController@tabla_estudiantes_curso')->name('tabla.estudiantes.curso')->middleware('adminprofe');
 Route::get('datatable/profesor/cursos/','App\Http\Controllers\DatatableController@tabla_profesor_cursos')->name('tabla.cursos_profesor')->middleware('adminprofe');
 

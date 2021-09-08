@@ -75,7 +75,7 @@ Lista Estudiantes | Escuela Chile España
 <script>
     $(document).ready(function() {
         $('#profesores').DataTable({
-            "ajax": "{{route('tabla.estudiantes')}}",
+            "ajax": "{{route('tabla.estudiantes',$curso->id_curso)}}",
             "columns": [{data: 'rut'},
                 {data: 'nombre'},
                 {data: 'apellido_p'},
@@ -106,6 +106,8 @@ Lista Estudiantes | Escuela Chile España
     
     $('#profesores_nav').addClass('kt-menu__item--open');
     $('#estudiantes_nav').addClass('kt-menu__item--active');
+    $('#curso_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--open');
+    $('#estudiantes_nav2_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--active');
 </script>
 
 @endsection

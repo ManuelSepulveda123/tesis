@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class EstudianteController extends Controller
 {
     //LASTA DEL CURSO
-    public function lista_estudiantes()
+    public function lista_estudiantes($id_curso)
     {
         $id = Auth::user()->id;
         $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
@@ -46,7 +46,11 @@ class EstudianteController extends Controller
             return view('estudiantes.listar_estudiantes_curso', compact('cursos', 'aux', 'flag','curso'));
         }
         if ($profesor->id_tipo_usuario == 3) {
-
+            $query = DB::table('profesores-cursos')->where('id_profesor',$id)->where('id_curso',$id_curso)->first();
+            if($query == null){
+                return redirect()->route('inicio');
+            }
+            $curso = DB::table('cursos')->where('id_curso',$id_curso)->first();
             if (count($cursos) == 0) {
                 $flag = 1;
                 return view('estudiantes.listar_estudiantes_curso', compact('cursos',  'aux', 'flag','curso'));

@@ -167,6 +167,8 @@ Tareas | Escuela Chile España
     });
     $('#profesores_nav').addClass('kt-menu__item--open');
     $('#tareas_nav').addClass('kt-menu__item--active');
+    $('#curso_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--open');
+    $('#tareas_nav2_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--active');
 </script>
 
 @endsection
