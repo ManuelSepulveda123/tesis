@@ -49,11 +49,9 @@ Tareas | Escuela Chile España
 
         <div class="kt-portlet__body">
             @include('flash::message')
-            <div class="d-flex justify-content-between  pt-10 mt-15">
-                <div class="mr-2"></div>
-                <div>
-                    <a href="" data-toggle="modal" data-target="#agregar_clase" type="submit" class="btn btn-warning font-weight-bolder px-9 py-4" style="margin:20px">Nueva Tarea</a>
-                </div>
+            <div class="mr-2"></div>
+            <div>
+                <a href="" data-toggle="modal" data-target="#agregar_clase" type="submit" class="btn btn-dark font-weight-bolder" style="margin-bottom: 20px">Nueva Tarea</a>
             </div>
             <table id="tareas" class="table table-striped table-bordered" style="width:100%">
                 <thead>
@@ -91,31 +89,39 @@ Tareas | Escuela Chile España
                                 <div class="kt-form__body">
                                     <div class="kt-section kt-section--first">
                                         <div class="kt-section__body">
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label">Titulo</label>
-                                                <div class="col-lg-9 col-xl-6">
-                                                    <input class="form-control" type="text" name="nombre">
+                                            <center>
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">Titulo</label>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                        <input class="form-control" type="text" name="nombre">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label">Plazo</label>
-                                                <div class="col-lg-9 col-xl-6">
-                                                    <input class="form-control" type="date" name="fecha_fin">
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">Actividad</label>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                        <textarea class="form-control" rows="5" cols="10" type="text" value="" name="actividad" style="resize: none;"></textarea>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label">Archivo</label>
-                                                <div class="col-lg-9 col-xl-6">
-                                                    <input class="form-control" type="file" name="tarea" accept="application/pdf, .doc, .docx, .odf" />
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">Plazo</label>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                        <input class="form-control" type="date" name="fecha_fin">
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                <div class="form-group row">
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">Archivo adjunto</label>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                        <input class="form-control" type="file" name="tarea" accept="application/pdf, .doc, .docx, .odf" />
+                                                    </div>
+                                                </div>
 
-                                            <div class="d-flex justify-content-between pt-10 mt-15" style="margin:20px">
-                                                <div class="mr-2"></div>
-                                                <div>
-                                                    <button type="submit" class="btn btn-warning font-weight-bolder px-9 " style="margin:20px">Guardar</button>
+                                                <div class="d-flex justify-content-between pt-10 mt-15" style="margin:20px">
+                                                    <div class="mr-2"></div>
+                                                    <div>
+                                                        <button type="submit" class="btn btn-success  px-9 " style="margin:20px">Guardar</button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </center>
                                         </div>
                                     </div>
                                 </div>
@@ -150,13 +156,13 @@ Tareas | Escuela Chile España
         $('#tareas').DataTable({
             "ajax": "{{route('tabla.materia.tareas',['id_curso' => $curso_1->id_curso, 'id_materia' => $materia_1->id_materia])}}",
             "columns": [{
+                data: 'titulo'
+            }, {
+                data: 'fecha_subida'
+            }, {
+                data: 'fecha_plazo'
+            }, {
                 data: 'action'
-            }, {
-                data: 'fecha_archivo'
-            }, {
-                data: 'action2'
-            }, {
-                data: 'action3'
             }, ],
             responsive: true,
             autoWidth: false,

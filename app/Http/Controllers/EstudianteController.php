@@ -27,13 +27,15 @@ class EstudianteController extends Controller
         if ($aux != 1) {
 
             $cursos_materia = DB::table('cursos-materias')->join('cursos', 'cursos.id_curso', '=', 'cursos-materias.id_curso')->where('id_materia', $aux)->get();
-
+            
+            $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('profesores-cursos.id_curso', $id_curso)->first();
             if (count($cursos) == 0) {
                 $flag = 1;
                 return view('estudiantes.listar_estudiantes_curso', compact('cursos', 'cursos_materia', 'aux', 'flag','curso'));
             }
 
             $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
+            
             return view('estudiantes.listar_estudiantes_curso', compact('cursos', 'cursos_materia', 'aux', 'flag','curso'));
         }
         if ($profesor->id_tipo_usuario == 2) {
@@ -51,6 +53,7 @@ class EstudianteController extends Controller
                 return redirect()->route('inicio');
             }
             $curso = DB::table('cursos')->where('id_curso',$id_curso)->first();
+           
             if (count($cursos) == 0) {
                 $flag = 1;
                 return view('estudiantes.listar_estudiantes_curso', compact('cursos',  'aux', 'flag','curso'));
@@ -64,7 +67,9 @@ class EstudianteController extends Controller
     //LISTA DE TODOS LOS ESTUDIANTES
     public function list_estudiantes()
     {
-        return view('estudiantes.listar_estudiantes');
+        $curso = (object) ['id_curso' => 1];
+    
+        return view('estudiantes.listar_estudiantes',compact('curso'));
     }
 
     public function estudiante_crear()
@@ -380,3 +385,4 @@ class EstudianteController extends Controller
         return view('estudiantes.materias.estudiante_materia', compact('id', 'materias_estudiante', 'id_materia', 'materia', 'curso', 'tareas_pendientes'));
     }
 }
+

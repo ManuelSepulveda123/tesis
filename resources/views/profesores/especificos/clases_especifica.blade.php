@@ -47,37 +47,58 @@ Clases | Escuela Chile España
 
         <div class="kt-portlet__body">
             @include('flash::message')
-            <div class="d-flex justify-content-between  pt-10 mt-15">
-                <div class="mr-2"></div>
-                <div>
-                    <a href="" data-toggle="modal" data-target="#agregar_clase" type="submit" class="btn btn-warning font-weight-bolder px-9 py-4" style="margin:20px">Nueva Clase</a>
-                </div>
+            <div class="mr-2"></div>
+            <div>
+                <a href="" data-toggle="modal" data-target="#agregar_clase" type="submit" class="btn btn-dark font-weight-bolder" style="margin-bottom: 20px">Nueva Clase</a>
             </div>
-
-
 
             <?php $cont = 1; ?>
             @foreach($clases as $clase)
-            <div class="">
+            <?php date_default_timezone_set('America/Santiago');
+            $fecha = date_format(date_create(), 'Y-m-d'); ?>
+            <div class="border-top">
 
                 @if($clase->detalle != null)
-                <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">Clase {{$cont}}: "{{$clase->detalle}}"</h5>
+                <b>
+                    <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">{{$materia->materia}}:
+                </b> {{$clase->detalle}}</h5>
                 @else
-                <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">Clase {{$cont}}: "Sin detalle"</h5>
+                <b>
+                    <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">{{$materia->materia}}:
+                </b> Sin titulo</h5>
                 @endif
             </div>
             <div class="form-group row">
 
 
 
-                <label class="col-xl-4 col-lg-4 col-form-label">Fecha: {{\Carbon\Carbon::parse($clase->fecha_clase)->format('d/m')}}</label>
-                <label class="col-xl-4 col-lg-4 col-form-label">Horario: {{\Carbon\Carbon::parse($clase->hora_inicio)->format('H:i')}}-{{\Carbon\Carbon::parse($clase->hora_fin)->format('H:i')}}</label>
+                <label class="col-xl-3 col-lg-3 col-form-label">Fecha: {{\Carbon\Carbon::parse($clase->fecha_clase)->format('d/m')}}</label>
+                <label class="col-xl-3 col-lg-3 col-form-label">Horario: {{\Carbon\Carbon::parse($clase->hora_inicio)->format('H:i')}}-{{\Carbon\Carbon::parse($clase->hora_fin)->format('H:i')}}</label>
+                @if($fecha == $clase->fecha_clase)
+                <div class="col-xl-3 col-lg-12" style="align-content: center;" width="100%">
+                    <a href="{{$clase->link}}" target="_Blank" class="col-xl-12 col-lg-12  btn btn-warning">Unirse a la clase</a>
+                </div>
+                <div class="col-xl-2 col-lg-12" style="align-content: center;" width="100%">
+                    <form action="{{route('clase_eliminar',$clase->id_clase)}}" method="post">
+                        @csrf
+                        <button class="col-xl-12 col-lg-12  btn btn-danger">Eliminar</button>
 
-                <a href="{{$clase->link}}" target="_Blank" class="col-xl-4 col-lg-4  btn btn-warning">Unirse a la clase</a>
+                    </form>
+                </div>
+                @else
+                <div class="col-xl-2 col-lg-12" style="align-content: center;" width="100%">
+                    <form action="{{route('clase_eliminar',$clase->id_clase)}}" method="post">
+                        @csrf
+                        <button class="col-xl-12 col-lg-12  btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+
+                @endif
+
 
             </div>
             <?php $cont++; ?>
-            <div class="border-bottom" style="margin-bottom:10px"></div>
+
 
             @endforeach
         </div>
@@ -112,7 +133,7 @@ Clases | Escuela Chile España
                                                 </div>
                                             </div>
 
-                                            <input type="hidden" name ="redirect" value="1">
+                                            <input type="hidden" name="redirect" value="1">
                                             <div class="form-group form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">fecha</label>
                                                 <div class="col-lg-9 col-xl-3">
@@ -149,6 +170,14 @@ Clases | Escuela Chile España
                                                     <h3 class="kt-section__title kt-section__title-sm">Información:</h3>
                                                 </div>
                                             </div>
+                                            <div class="form-group row">
+                                                <label class="col-xl-3 col-lg-3 col-form-label">Titulo</label>
+                                                <div class="col-lg-9 col-xl-6">
+                                                    {!!$errors->first('curso', '<small style="color:red">:message</small>')!!}
+                                                    <input class="form-control" type="text" value="{{old('detalle')}}" name="detalle">
+
+                                                </div>
+                                            </div>
 
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Link</label>
@@ -158,21 +187,8 @@ Clases | Escuela Chile España
                                                 </div>
                                             </div>
 
-                                            <!-- <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label">contraseña</label>
-                                                <div class="col-lg-9 col-xl-6">
-                                                    {!!$errors->first('password', '<small style="color:red">:message</small>')!!}
-                                                    <input class="form-control" type="text" value="{{old('password')}}" name="password">
-                                                </div>
-                                            </div> -->
 
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-3 col-form-label">Detalle</label>
-                                                <div class="col-lg-9 col-xl-6">
-                                                    {!!$errors->first('curso', '<small style="color:red">:message</small>')!!}
-                                                    <textarea class="form-control" name="detalle" rows="6" cols="50" style="resize: none"></textarea>
-                                                </div>
-                                            </div>
+
 
 
                                             <div class="d-flex justify-content-between  pt-10 mt-15" style="margin:20px">
@@ -214,6 +230,7 @@ Clases | Escuela Chile España
     $('#profesores_especifico_nav').addClass('kt-menu__item--open');
     $('#curso_{{$curso_1->id_curso}}').addClass('kt-menu__item--open');
     $('#clase_{{$curso_1->id_curso}}').addClass('kt-menu__item--active');
+    $('div.alert').not('.alert-important').delay(5000).fadeOut(350);
 </script>
 
 @endsection

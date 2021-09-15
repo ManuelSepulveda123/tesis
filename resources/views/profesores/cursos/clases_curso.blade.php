@@ -25,7 +25,6 @@ Clases | Escuela Chile España
 @section('content')
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="row">
-
         <div class="col-md-6">
             <div class="kt-portlet">
                 <div class="kt-portlet__head">
@@ -45,23 +44,47 @@ Clases | Escuela Chile España
                         @foreach($materias as $materia)
                         @if($materia->id_materia == $clase->id_materia)
                         @if($clase->detalle != null)
-                        <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">{{$materia->materia}} {{$cont}}: "{{$clase->detalle}}"</h5>
+                        <b>
+                            <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">{{$materia->materia}}:
+                        </b> {{$clase->detalle}}</h5>
                         @else
-                        <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">{{$materia->materia}} {{$cont}}: "Sin detalle"</h5>
+                        <b>
+                            <h5 class="kt-section__title kt-section__title-sm" style="margin-top:10px; color: black;">{{$materia->materia}}:
+                        </b> Sin titulo</h5>
                         @endif
-                        
+
 
                         @endif
                         @endforeach
                     </div>
                     <div class="form-group row">
 
+                        <?php date_default_timezone_set('America/Santiago');
+                        $fecha = date_format(date_create(), 'Y-m-d'); ?>
 
+                        <label class="col-xl-3 col-lg-3 col-form-label">Fecha: {{\Carbon\Carbon::parse($clase->fecha_clase)->format('d/m')}}</label>
+                        <label class="col-xl-3 col-lg-3 col-form-label">Horario: {{\Carbon\Carbon::parse($clase->hora_inicio)->format('H:i')}}-{{\Carbon\Carbon::parse($clase->hora_fin)->format('H:i')}}</label>
+                        @if($fecha == $clase->fecha_clase)
+                        <div class="col-xl-3 col-lg-12" style="align-content: center;" width="100%">
+                            <a href="{{$clase->link}}" target="_Blank" class="col-xl-12 col-lg-12  btn btn-warning">Unirse a la clase</a>
+                        </div>
+                    
+                        <div class="col-xl-2 col-lg-12" style="align-content: center;" width="100%">
+                            <form action="{{route('clase_eliminar',$clase->id_clase)}}" method="post">
+                                @csrf
+                                <button class="col-xl-12 col-lg-12  btn btn-danger">Eliminar</button>
 
-                        <label class="col-xl-4 col-lg-4 col-form-label">Fecha: {{\Carbon\Carbon::parse($clase->fecha_clase)->format('d/m')}}</label>
-                        <label class="col-xl-4 col-lg-4 col-form-label">Horario: {{\Carbon\Carbon::parse($clase->hora_inicio)->format('H:i')}}-{{\Carbon\Carbon::parse($clase->hora_fin)->format('H:i')}}</label>
+                            </form>
+                        </div>
+                        @else
+                        <div class="col-xl-2 col-lg-12" style="align-content: center;" width="100%">
+                            <form action="{{route('clase_eliminar',$clase->id_clase)}}" method="post">
+                                @csrf
+                                <button class="col-xl-12 col-lg-12  btn btn-danger">Eliminar</button>
+                            </form>
+                        </div>
 
-                        <a href="{{$clase->link}}" target="_Blank" class="col-xl-4 col-lg-4  btn btn-warning">Unirse a la clase</a>
+                        @endif
 
                     </div>
                     <?php $cont++; ?>
@@ -143,12 +166,11 @@ Clases | Escuela Chile España
             }
         });
     });
-   
+
     $('#profesores_nav').addClass('kt-menu__item--open');
     $('#clases_nav').addClass('kt-menu__item--active');
     $('#curso_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--open');
     $('#clases_nav2_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--active');
-    
 </script>
 
 @endsection

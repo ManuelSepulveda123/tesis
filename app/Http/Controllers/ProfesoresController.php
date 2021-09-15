@@ -123,74 +123,75 @@ class ProfesoresController extends Controller
             'telefono' => $request->telefono
         ]);
 
+        //Correo
         require './PHPMailer/src/Exception.php';
         require './PHPMailer/src/PHPMailer.php';
         require './PHPMailer/src/SMTP.php';
         $mail = new PHPMailer(true);
 
-        try {
-            //Server settings
-            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = 'manux.rayxxd@gmail.com';                     //SMTP username
-            $mail->Password   = 'mamertox890';                               //SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-            $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        //Server settings
+        $mail->SMTPDebug = 0;                      //Enable verbose debug output
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host       = 'mail.dynamiteteam.cl';                //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = 'chile-espana@dynamiteteam.cl';                     //SMTP username
+        $mail->Password   = 'ZWk!9~y^ygba';                               //SMTP password
+        $mail->SMTPSecure = 'ssl';            //Enable implicit TLS encryption
+        $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-            //Recipients
-            $mail->setFrom('manux.rayxxd@gmail.com', 'Manuel');
-            $mail->addAddress('manux.rayxxd@gmail.com', 'estudiante');     //Add a recipient
+        //Recipients
+        $mail->setFrom('chile-espana@dynamiteteam.cl', 'Escuela Chile España');
+        $mail->addAddress('manux.rayxxd@gmail.com', 'estudiante');     //Add a recipient
+        //Content
+        $mail->CharSet = 'UTF-8';
+        $mail->isHTML(true);                                  //Set email format to HTML
+        $mail->Subject = 'Nuevo usuario';
+        $mail->Body =
+            '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td style="padding: 10px 0 30px 0;">
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" width="700" style="border: 1px solid #cccccc; border-collapse: collapse;">
+                            <tr>
+                                <td bgcolor="#ffffff" style="padding: 30px 30px 0px 30px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td style="color: #153643; font-family: Georgia, sans-serif; font-size: 20px;">
+                                                <center>
+                                                    <b>Escuela Chile España</b>
+                                                </center>
+                                                <center>
+                                                    <b>Nuevo profesor registrado ' . $request->nombre . ' ' . $request->apellido_p . ' ' . $request->apellido_m . '</b>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 20px 0px 60px 0px; color: #153643; font-family: Georgia, cursive; font-size: 14px;">
+                                                <center><i>Recuerde iniciar sesion con sesion con los 5 primeros numero de su Rut</i></center>
+                                                <center><a href="http://127.0.0.1:8000/login" class="btn">Entrar a la plataforma</a></center>
+                                            </td>
+                                        
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>        
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </body>';
+       
+        $mail->send();
 
-            //Attachments
-            /* $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-            $mail->addAttachment('/tmp/image.jpg', 'new.jpg');  */   //Optional name
-            $foto = asset('assets/media/escuela/escuela-espana-228x300.png');
 
-            //Content
-            $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->Subject = 'Nuevo usuario';
-            $mail->Body    = '<table border="0" cellpadding="0" cellspacing="0" width="100%">
-            <tr>
-                <td style="padding: 10px 0 30px 0;">
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="700" style="border: 1px solid #cccccc; border-collapse: collapse;">
-                        <tr>
-                            <td align="center" bgcolor="white" style="color: #153643; font-size: 28px; font-weight: bold; font-family: Georgia, sans-serif;">
-                                <img src="' . $foto . '" width="100%" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td bgcolor="#ffffff" style="padding: 30px 30px 0px 30px;">
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                    <tr>
-                                        <td style="color: #153643; font-family: Georgia, sans-serif; font-size: 20px;">
-                                            <center>
-                                                <b>Nuevo usuario registrado ' . $request->nombre . ' ' . $request->apellido_p . ' ' . $request->apellido_m . '</b>
-                                            </center>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 20px 0px 60px 0px; color: #153643; font-family: Georgia, cursive; font-size: 14px;">
-                                            <center><i>Recuerde iniciar sesion con sesion con los 5 primeros numero de su Rut</i></center>
-                                            <center><a href="http://127.0.0.1:8000/login" class="btn">Entrar a la plataforma</a></center>
-                                        </td>
-                                      
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>        
-                    </table>
-                </td>
-            </tr>
-        </table>';
-
-
-            $mail->send();
-            
-        } catch (Exception $e) {
-           
-        }
 
 
         $id = DB::table('users')->select('id')->get();
@@ -207,9 +208,6 @@ class ProfesoresController extends Controller
             'id_profesor' => $id->id,
             'id_materia' => $request->tipo_profesor
         ]);
-
-        //Enviar correo al profesor
-
 
         flash('Profesor registrado correctamente')->success();
         return redirect()->route('editar_profesor', $id->id);
@@ -327,7 +325,7 @@ class ProfesoresController extends Controller
     {
 
         $query = DB::table('profesores-cursos')->where('id_profesor', $id)->first();
-     
+
         if ($query != null) {
             flash('No se pudo eliminar al profesor, asegurese que no este este en ningun curso')->error();
             return redirect()->back();
@@ -339,31 +337,31 @@ class ProfesoresController extends Controller
         Storage::delete($url);
 
         //Eliminar archivos planificaciones
-        $plani = DB::table('archivos')->where('id_user',$id)->where('id_tipo_archivo',1)->get();
-        foreach($plani as $item){
-            DB::table('planificaciones')->where('id_archivo',$item->id_archivo)->delete();
+        $plani = DB::table('archivos')->where('id_user', $id)->where('id_tipo_archivo', 1)->get();
+        foreach ($plani as $item) {
+            DB::table('planificaciones')->where('id_archivo', $item->id_archivo)->delete();
             Storage::delete($item->ruta_archivo);
-            DB::table('archivos')->where('id_archivo',$item->id_archivo)->delete();
+            DB::table('archivos')->where('id_archivo', $item->id_archivo)->delete();
         }
 
         //Eliminar tareas
-        $tarea = DB::table('archivos')->where('id_user',$id)->where('id_tipo_archivo',2)->get();
-        
-        foreach($tarea as $item){
-            $tareas_estudiante = DB::table('archivos')->where('id_tarea',$item->id_archivo)->where('id_tipo_archivo',3)->get();
-            foreach($tareas_estudiante as $x){
+        $tarea = DB::table('archivos')->where('id_user', $id)->where('id_tipo_archivo', 2)->get();
+
+        foreach ($tarea as $item) {
+            $tareas_estudiante = DB::table('archivos')->where('id_tarea', $item->id_archivo)->where('id_tipo_archivo', 3)->get();
+            foreach ($tareas_estudiante as $x) {
                 Storage::delete($x->ruta_archivo);
-                DB::table('archivos')->where('id_archivo',$x->id_archivo)->delete();
+                DB::table('archivos')->where('id_archivo', $x->id_archivo)->delete();
             }
-            DB::table('tareas')->where('id_archivo',$item->id_archivo)->delete();
+            DB::table('tareas')->where('id_archivo', $item->id_archivo)->delete();
             Storage::delete($item->ruta_archivo);
-            DB::table('archivos')->where('id_archivo',$item->id_archivo)->delete();
+            DB::table('archivos')->where('id_archivo', $item->id_archivo)->delete();
         }
         //Eliminiar clases 
-        DB::table('clases')->where('id_profesor',$id)->delete();
-        DB::table('profesores-materias')->where('id_profesor',$id)->delete();
+        DB::table('clases')->where('id_profesor', $id)->delete();
+        DB::table('profesores-materias')->where('id_profesor', $id)->delete();
         //Elimniar profesor
-        DB::table('users')->where('id',$id)->delete();
+        DB::table('users')->where('id', $id)->delete();
         flash('Profesor eliminado')->success();
         return redirect()->back();
     }

@@ -62,7 +62,8 @@ class ClasesController extends Controller
     public function clase_store(Request $request, $id_curso, $id_materia)
     {
 
-        
+        $profesor = DB::table('users')->where('id',Auth::user()->id)->first();
+        $nombre = $profesor->nombre.' '.$profesor->apellido_p.' '.$profesor->apellido_m;
         request()->validate([
             'fecha' => 'required|date',
             'hora_inicio' => 'required',
@@ -92,42 +93,65 @@ class ClasesController extends Controller
                 /* validaciones de clases */
             }
         }
-
+        
         require './PHPMailer/src/Exception.php';
         require './PHPMailer/src/PHPMailer.php';
         require './PHPMailer/src/SMTP.php';
         $mail = new PHPMailer(true);
 
-        try {
-            //Server settings
-            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = 'manux.rayxxd@gmail.com';                     //SMTP username
-            $mail->Password   = 'mamertox890';                               //SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-            $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        //Server settings
+        $mail->SMTPDebug = 0;                      //Enable verbose debug output
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host       = 'mail.dynamiteteam.cl';                //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = 'chile-espana@dynamiteteam.cl';                     //SMTP username
+        $mail->Password   = 'ZWk!9~y^ygba';                               //SMTP password
+        $mail->SMTPSecure = 'ssl';            //Enable implicit TLS encryption
+        $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-            //Recipients
-            $mail->setFrom('manux.rayxxd@gmail.com', 'Manuel');
-            $mail->addAddress('manux.rayxxd@gmail.com', 'estudiante');     //Add a recipient
-
-            //Attachments
-            /* $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-            $mail->addAttachment('/tmp/image.jpg', 'new.jpg');  */   //Optional name
-
-            //Content
-            $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->Subject = 'Clase';
-            $mail->Body    = 'Hola este es un correo <b>kasjdhsajk!</b>';
-
-
-            $mail->send();
-            echo 'El mensaje se enviot';
-        } catch (Exception $e) {
-            echo "ocurrio un error en el mensaje: {$mail->ErrorInfo}";
-        }
+        //Recipients
+        $mail->setFrom('chile-espana@dynamiteteam.cl', 'Escuela Chile España');
+        $mail->addAddress('manux.rayxxd@gmail.com', 'estudiante');     //Add a recipient
+        //Content
+        $mail->CharSet = 'UTF-8';
+        $mail->isHTML(true);                                  //Set email format to HTML
+        $mail->Subject = 'Nuevo usuario';
+        $mail->Body =
+            ' <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td style="padding: 10px 0 30px 0;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="700" style="border: 1px solid #cccccc; border-collapse: collapse;">
+                        <tr>
+                            <td bgcolor="#ffffff" style="padding: 30px 30px 0px 30px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td style="color: #153643; font-family: Georgia, sans-serif; font-size: 20px;">
+                                            <center>
+                                                <b>Escuela Chile España</b>
+                                            </center>
+                                            <center>
+                                                <b>Nueva clase</b>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 20px 0px 60px 0px; color: #153643; font-family: Georgia, cursive; font-size: 14px;">
+                                            <center><b>Profesor: </b><i>'.$nombre.'</i></center>
+                                            <center><b>Titulo: </b><i>'.$request->detalle.'</i></center>
+                                            <center><b>Fecha: </b><i>'.$request->fecha.'</i></center>
+                                            <center><b>Hora inicio: </b><i>'.$request->hora_inicio.'</i></center>
+                                            <center><b>Hora fin: </b><i>'.$request->hora_fin.'</i></center>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>        
+                    </table>
+                </td>
+            </tr>
+        </table>';
+       
+        $mail->send();
 
         DB::table('clases')->insert([
             'link' => $request->link,
@@ -143,6 +167,13 @@ class ClasesController extends Controller
         ]);
 
         flash('Clase agregada con exito')->success();
+        return redirect()->back();
+    }
+
+    public function clase_eliminar($id_clase)
+    {
+        DB::table('clases')->where('id_clase', $id_clase)->delete();
+        flash('Clase eliminada con exito')->success();
         return redirect()->back();
     }
 }

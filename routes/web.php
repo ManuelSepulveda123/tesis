@@ -116,6 +116,7 @@ Route::get('planificacion/descargar/{id}/','App\Http\Controllers\PlanificacionCo
 //Clases
 Route::get('{id_curso}/{id_materia}/crear/clase','App\Http\Controllers\ClasesController@clase_crear')->name('clase_crear')->middleware('profesor');
 Route::post('{id_curso}/{id_materia}/store/clase','App\Http\Controllers\ClasesController@clase_store')->name('clase_store')->middleware('profesor');
+Route::post('eliminar/clase/{id_clase}','App\Http\Controllers\ClasesController@clase_eliminar')->name('clase_eliminar')->middleware('profesor');
 
 //Tareas
 Route::get('{id_curso}/{id_materia}/crear/tarea','App\Http\Controllers\TareasController@tarea_crear')->name('tarea_crear')->middleware('profesor');

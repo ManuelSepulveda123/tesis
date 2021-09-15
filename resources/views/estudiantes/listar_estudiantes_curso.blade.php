@@ -41,7 +41,7 @@ Lista Estudiantes | Escuela Chile España
     </div>
     @endif
     <div class="kt-portlet__body">
-    @include('flash::message')
+        @include('flash::message')
         <table id="profesores" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
@@ -76,15 +76,29 @@ Lista Estudiantes | Escuela Chile España
     $(document).ready(function() {
         $('#profesores').DataTable({
             "ajax": "{{route('tabla.estudiantes',$curso->id_curso)}}",
-            "columns": [{data: 'rut'},
-                {data: 'nombre'},
-                {data: 'apellido_p'},
-                {data: 'apellido_m'},
-                {data: 'email'}, 
-                {data:'action'},
-                {data:'action2'},
-                
-                
+            "columns": [{
+                    data: 'rut'
+                },
+                {
+                    data: 'nombre'
+                },
+                {
+                    data: 'apellido_p'
+                },
+                {
+                    data: 'apellido_m'
+                },
+                {
+                    data: 'email'
+                },
+                {
+                    data: 'action'
+                },
+                {
+                    data: 'action2'
+                },
+
+
             ],
             responsive: true,
             autoWidth: false,
@@ -103,11 +117,18 @@ Lista Estudiantes | Escuela Chile España
         });
     });
 
-    
+
+
     $('#profesores_nav').addClass('kt-menu__item--open');
-    $('#estudiantes_nav').addClass('kt-menu__item--active');
-    $('#curso_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--open');
-    $('#estudiantes_nav2_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--active');
+
+    if (<?php isset($xasda) ?> ) {
+        if (<?php echo $curso->id_curso ?> == <?php echo $cursos->id_curso ?>) {
+            $('#estudiantes_nav').addClass('kt-menu__item--active');
+        } else {
+            $('#curso_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--open');
+            $('#estudiantes_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--active');
+        }
+    }
 </script>
 
 @endsection

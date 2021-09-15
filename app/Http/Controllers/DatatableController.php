@@ -22,11 +22,12 @@ class DatatableController extends Controller
         $tipo_user = Auth::user()->id_tipo_usuario;
 
         if ($tipo_user == 2) {
+          
             $id = Auth::user()->id;
             $curso = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
 
-            $estudiantes = DB::table('estudiantes-cursos')->join('users', 'users.id', '=', 'estudiantes-cursos.id_estudiante')->where('id_curso', $curso->id_curso)->get();
-
+            $estudiantes = DB::table('estudiantes-cursos')->join('users', 'users.id', '=', 'estudiantes-cursos.id_estudiante')->where('id_curso', $id_curso)->get();
+     
             return datatables()->of($estudiantes)->addColumn('action', function ($estudiante) {
 
                 $apoderado = DB::table('estudiantes')->where('id', $estudiante->id)->first();
@@ -694,22 +695,18 @@ class DatatableController extends Controller
     public function tabla_tareas_curso_especifico($id_curso, $id_materia)
     {
 
-        $tareas = DB::table('archivos')->where('id_curso', $id_curso)->where('id_materia', $id_materia)->where('id_tipo_archivo', 2)->get();
+        $tareas = DB::table('tareas')->where('id_curso', $id_curso)->where('tareas.id_materia',$id_materia)->join('materias', 'materias.id_materia', '=', 'tareas.id_materia')->get();
+
+        foreach ($tareas as $tarea) {
+            $tarea->fecha_plazo = \Carbon\Carbon::parse($tarea->fecha_plazo)->format('d-m-Y');
+            $tarea->fecha_subida = \Carbon\Carbon::parse($tarea->fecha_subida)->format('d-m-Y H:i:s');
+        }
+
         return datatables()->of($tareas)->addColumn('action', function ($tarea) {
-            $nombre = DB::table('tareas')->select('nombre_tarea')->where('id_archivo', $tarea->id_archivo)->first();
 
-            $nombre = $nombre->nombre_tarea;
-            return $nombre;
-        })->addColumn('action2', function ($tarea) {
-            $fecha = DB::table('tareas')->select('fecha_fin')->where('id_archivo', $tarea->id_archivo)->first();
-
-            return $fecha->fecha_fin;
-        })
-            ->addColumn('action3', function ($tarea) {
-
-                $ruta = route('tarea_curso', $tarea->id_archivo);
-                return '<a href="' . $ruta . '" class="btn btn-dark"><i class="flaticon-eye" style="aling-icon:center"></i></a>';
-            })->rawColumns(['action2' => 'action2', 'action' => 'action', 'action3' => 'action3'])->toJson();
+            $ruta = route('tarea_curso', $tarea->id_tarea);
+            return '<center><a href="' . $ruta . '" class="btn btn-dark">ver</a></center>';
+        })->toJson();
     }
 
     public function tabla_cursos_clases($id)
@@ -802,7 +799,7 @@ class DatatableController extends Controller
                                                 </div> -->
     
                                                 <div class="form-group row">
-                                                    <label class="col-xl-3 col-lg-3 col-form-label">Detalle</label>
+                                                    <label class="col-xl-3 col-lg-3 col-form-label">Detalle2</label>
                                                     <div class="col-lg-9 col-xl-6">
                                                        
                                                         <textarea class="form-control" name="detalle" rows="6" cols="50" style="resize: none"></textarea>

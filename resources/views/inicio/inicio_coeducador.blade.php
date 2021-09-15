@@ -179,12 +179,12 @@ Inicio | Escuela Chile España
         <div class="kt-portlet__head">
             <div class="kt-portlet__head-label">
                 <h3 class="kt-portlet__head-title">
-                    No tine curso
+                    Sin Curso
                 </h3>
             </div>
         </div>
         <div class="kt-portlet__body">
-
+            No tiene cursos acargo.
         </div>
         @endif
         @endif

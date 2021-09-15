@@ -203,23 +203,24 @@ License: You must have a valid license purchased only from themeforest(the above
 
                             @else
 
-                            <li id="clases_nav" class="kt-menu__item" aria-haspopup="true"><a href="{{route('curso_profesor',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Clases</span></a></li>
-                            <li id="estudiantes_nav" class="kt-menu__item " aria-haspopup="true"><a href="{{route('lista_estudiantes')}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Estudiantes</span></a></li>
-                            <li id="tareas_nav" class="kt-menu__item " aria-haspopup="true"><a href="{{route('tareas_curso',auth()->user()->id)}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Tareas</span></a></li>
+                            <li id="clases_nav" class="kt-menu__item" aria-haspopup="true"><a href="{{route('curso_profesor',$cursos->id_curso)}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Clases</span></a></li>
+                            <li id="estudiantes_nav" class="kt-menu__item " aria-haspopup="true"><a href="{{route('lista_estudiantes',$cursos->id_curso)}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Estudiantes</span></a></li>
+                            <li id="tareas_nav" class="kt-menu__item " aria-haspopup="true"><a href="{{route('tareas_curso',$cursos->id_curso)}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Tareas</span></a></li>
 
                             @endif
                             <li class="kt-menu__section ">
                                 <h4 class="kt-menu__section-text">Cursos materia</h4>
                                 <i class="kt-menu__section-icon flaticon-more-v2"></i>
                             </li>
-
+                           
                             @foreach($cursos_materia as $curso)
-                            @if(count($cursos) != 0)
+                            @if($cursos != null)
                             @if($curso->id_curso != $cursos->id_curso)
                             <li id="curso_{{$curso->id_curso}}" class="kt-menu__item " aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><span class="kt-menu__link-text">{{$curso->curso}}</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
                                 <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
                                     <ul class="kt-menu__subnav">
                                         <li id="clase_{{$curso->id_curso}}" class="kt-menu__item " aria-haspopup="true"><a href="{{route('clases_materia_especifica',['id_curso' => $curso->id_curso, 'id_materia' => $curso->id_materia])}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Clases</span></a></li>
+                                        <li id="estudiantes_{{$curso->id_curso}}" class="kt-menu__item " aria-haspopup="true"><a href="{{route('lista_estudiantes',$curso->id_curso)}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Estudiantes</span></a></li>
                                         <li id="tarea_{{$curso->id_curso}}" class="kt-menu__item " aria-haspopup="true"><a href="{{route('tareas_materia_especifica',['id_curso' => $curso->id_curso, 'id_materia' => $curso->id_materia])}}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Tareas</span></a></li>
                                     </ul>
                                 </div>
@@ -272,6 +273,9 @@ License: You must have a valid license purchased only from themeforest(the above
 
                             @endforeach
 
+                            @if($flag == 1)
+                            <li id="clases_nav" class="kt-menu__item" aria-haspopup="true"><a class="kt-menu__link "><span></span></i><span class="kt-menu__link-text">No tiene cursos</span></a></li>
+                            @endif
 
 
                             @endif

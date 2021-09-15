@@ -79,7 +79,7 @@
                                 <div class="kt-form__body">
                                     <div class="kt-section kt-section--first">
                                         <div class="kt-section__body">
-                                            {{$materia->materia}}
+                                            
                                             <input type="hidden" value="{{$materia->id_materia}}" name="materia_{{$materia->id_materia}}">
                                             <div class="row">
                                                 <label class="col-xl-3"></label>
