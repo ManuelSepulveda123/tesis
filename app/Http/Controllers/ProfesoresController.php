@@ -124,7 +124,7 @@ class ProfesoresController extends Controller
         ]);
 
         //Correo
-        require './PHPMailer/src/Exception.php';
+       /*  require './PHPMailer/src/Exception.php';
         require './PHPMailer/src/PHPMailer.php';
         require './PHPMailer/src/SMTP.php';
         $mail = new PHPMailer(true);
@@ -189,7 +189,7 @@ class ProfesoresController extends Controller
             </table>
         </body>';
        
-        $mail->send();
+        $mail->send(); */
 
 
 

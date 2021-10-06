@@ -285,6 +285,12 @@ class CursosController extends Controller
         if ($curso == null) {
             return redirect()->back();
         }
+        $query = DB::table('estudiantes-cursos')->where('id_curso',$id)->first();
+        if($query != null){
+            flash('Existen estudiantes en el curso')->error();
+            return redirect()->back();
+        }
+        
         $archivo = $curso->curso . $curso->ano_curso;
         $archivo = str_replace('0', '', $archivo);
         $archivo = str_replace(':', '', $archivo);

@@ -42,6 +42,8 @@ Route::get('estudiantes/crear','App\Http\Controllers\EstudianteController@estudi
 Route::post('estudiantes/store','App\Http\Controllers\EstudianteController@estudiante_store')->name('estudiantes_store')->middleware('admin');
 Route::get('estudiante/{id}/editar','App\Http\Controllers\EstudianteController@estudiante_editar')->name('estudiantes_editar')->middleware('admin');
 Route::post('estudiantes/{id}/update','App\Http\Controllers\EstudianteController@estudiante_update')->name('estudiantes_update')->middleware('admin');
+Route::post('estudiantes/{id}/delete','App\Http\Controllers\EstudianteController@estudiante_delet')->name('estudiante_delet')->middleware('admin');
+
 
 //Cambiar-contra-admin
 Route::post('password/{id}/editar','App\Http\Controllers\UserController@admin_contras')->name('password_update')->middleware('admin');
@@ -162,3 +164,9 @@ Route::get('tabla/tareas','App\Http\Controllers\DatatableController@tabla_tareas
 Route::get('usuario_cambio/{id}','App\Http\Controllers\UserController@correo_datos')->name('cambio_datos')->middleware('admin');
 Route::get('cambio_datos_confi/{id}','App\Http\Controllers\UserController@cambio_datos')->name('cambio_datos_confi')->middleware('admin');
 Route::post('admin/update/{id}','App\Http\Controllers\UserController@admin_update')->name('admin_update')->middleware('admin');
+
+Route::post('cambio_contra','App\Http\Controllers\UserController@password')->name('password')->middleware('auth');
+
+//cambio contra
+Route::post('cambio','App\Http\Controllers\UserController@cambio_contra')->name('cambio_contra')->middleware('guest');
+Route::get('reset/{id}','App\Http\Controllers\UserController@reset_contra')->name('reset_contra')->middleware('guest');

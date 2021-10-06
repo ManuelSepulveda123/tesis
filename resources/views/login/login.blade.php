@@ -260,6 +260,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
 							<form class="kt-form" action="{{route('login_validar')}}" method="post" novalidate="novalidate" id="kt_login_form">
 								@csrf
+								@include('flash::message')
 								<div class="form-group">
 									<input class="form-control" type="email" placeholder="Correo" name="email" value="{{old('email')}}">
 									{!!$errors->first('email', '<small>:message</small>')!!}
@@ -270,15 +271,51 @@ License: You must have a valid license purchased only from themeforest(the above
 								</div>
 								<!--begin::Action-->
 								<div class="kt-login__actions">
-									<a href="#" class="kt-link kt-login__link-forgot">
+
+									<a href="" data-toggle="modal" data-target="#password" class="kt-link kt-login__link-forgot">
 										¿Olvido su contraseña?
 									</a>
-									<button id="kt_login_signin_submit" class="btn btn-warning btn-elevate kt-login__btn-primary"><h4>iniciar sesión</h4></button>
-									
-								</div>
-								<!--end::Action-->
-							</form>
 
+									<button id="kt_login_signin_submit" class="btn btn-warning btn-elevate kt-login__btn-primary">
+										<h4>iniciar sesión</h4>
+									</button>
+
+
+									<!--end::Action-->
+							</form>
+							<div class="modal " id="password" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog modal-lg" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">Estudiante</h5>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+
+										<div class="modal-body">
+											<form action="{{route('cambio_contra')}}" class="kt-form" method="POST">
+												@csrf
+												<div class="form-group">
+													<input class="form-control" type="email" placeholder="Correo" name="email" value="">
+
+												</div>
+												<div class="kt-login__actions">
+													<button class="btn btn-success" style="width: 100%;">
+														<h4>Enviar Correo</h4>
+													</button>
+												</div>
+											</form>
+
+											<div class="modal-footer">
+												<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						<!--end::Signin-->
 					</div>

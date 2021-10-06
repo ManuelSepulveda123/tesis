@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
+use Illuminate\Support\Facades\Crypt;
 
 
 class UserController extends Controller
@@ -242,8 +243,8 @@ class UserController extends Controller
             }
         }
 
-        $plani = DB::table('plani')->where('id_estudiante',$id)->first();
-        return view('users.perfil_usuario', compact('usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante','plani'));
+        $plani = DB::table('plani')->where('id_estudiante', $id)->first();
+        return view('users.perfil_usuario', compact('usuario', 'region', 'comuna', 'provincia', 'curso', 'apoderado', 'materias_estudiante', 'plani'));
     }
 
     public function admin_contras(Request $request, $id)
@@ -273,9 +274,9 @@ class UserController extends Controller
         return view('users.perfil_admin', compact('usuario'));
     }
 
-    public function correo_datos(Request $request,$id)
+    public function correo_datos(Request $request, $id)
     {
-        
+
         if (auth()->user()->id != $id) {
             return redirect()->route('inicio');
         }
@@ -290,8 +291,8 @@ class UserController extends Controller
         require './PHPMailer/src/PHPMailer.php';
         require './PHPMailer/src/SMTP.php';
         $mail = new PHPMailer(true);
-        $ruta = route('cambio_datos_confi',$id);
-        
+        $ruta = route('cambio_datos_confi', $id);
+
         try {
             //Server settings
             $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
@@ -332,7 +333,7 @@ class UserController extends Controller
                                     <tr>
                                         
                                         <td style="padding: 20px 0px 60px 0px; color: #153643; font-family: Georgia, cursive; font-size: 14px;">
-                                        <center><a href="'.$ruta.'" class="btn">Confirmar</a></center>
+                                        <center><a href="' . $ruta . '" class="btn">Confirmar</a></center>
                                             <center><i>Este link solo sera valido durante 1 hora</i></center>
                                             
                                         </td>
@@ -346,20 +347,21 @@ class UserController extends Controller
             </tr>
         </table>';
 
-       
+
             $mail->send();
-           
+
             echo 'El mensaje se envio';
         } catch (Exception $e) {
             echo "ocurrio un error en el mensaje: {$mail->ErrorInfo}";
         }
     }
 
-    public function cambio_datos($id){
+    public function cambio_datos($id)
+    {
         if (auth()->user()->id != $id) {
             return redirect()->route('inicio');
         }
-        
+
         date_default_timezone_set('America/Santiago');
         $hora = date_format(date_create(), ' G:i:s');
         $fecha = date_format(date_create(), 'Y-m-d');
@@ -369,39 +371,40 @@ class UserController extends Controller
         $hora_fin = \Carbon\Carbon::parse($usuario->confi)->addHours(1)->format('G:i:s');
         $fecha_cam = \Carbon\Carbon::parse($usuario->confi)->format('Y-m-d');
         $dia_item = \Carbon\Carbon::parse($usuario->confi)->format('d');
-        
-       
+
+
         $hora = strtotime($hora);
         $hora_fin = strtotime($hora_fin);
-        
-        if($fecha != $fecha_cam){
-     
+
+        if ($fecha != $fecha_cam) {
+
             return redirect()->route('inicio');
         }
-        if($hora > $hora_fin){
+        if ($hora > $hora_fin) {
             return redirect()->route('inicio');
         }
-        return view('users.cambio_perfil',compact('usuario'));
+        return view('users.cambio_perfil', compact('usuario'));
     }
 
-    public function admin_update(Request $request,$id){
-        
+    public function admin_update(Request $request, $id)
+    {
+
 
         //cambio contraseña
-        if($request->contra2 != null && $request->contra == null){
+        if ($request->contra2 != null && $request->contra == null) {
             flash('Porfavor rellene todos los campos de contraseña')->error();
             return redirect()->route('cambio_datos_confi', $id);
         }
-        if($request->contra2 == null && $request->contra != null){
+        if ($request->contra2 == null && $request->contra != null) {
             flash('Porfavor rellene todos los campos de contraseña')->error();
             return redirect()->route('cambio_datos_confi', $id);
         }
-        if($request->contra2 != $request->contra ){
+        if ($request->contra2 != $request->contra) {
             flash('Las contraseñas no coinciden')->error();
             return redirect()->route('cambio_datos_confi', $id);
         }
-        if($request->contra == $request->contra2){
-            if($request->contra != null){
+        if ($request->contra == $request->contra2) {
+            if ($request->contra != null) {
                 DB::table('users')->where("id", "=", $id)->update([
                     'password' => Hash::make($request->contra),
                 ]);
@@ -441,5 +444,206 @@ class UserController extends Controller
         ]);
         flash('Datos actualizados')->success();
         return redirect()->route('cambio_datos_confi', $id);
+    }
+
+    public function cambio_contra(Request $request)
+    {
+
+        $user = DB::table('users')->where('email', $request->email)->first();
+        if ($user != null) {
+
+
+            $ruta = route('reset_contra', Crypt::encrypt($user->id));
+            //Correo
+            require './PHPMailer/src/Exception.php';
+            require './PHPMailer/src/PHPMailer.php';
+            require './PHPMailer/src/SMTP.php';
+            $mail = new PHPMailer(true);
+
+            //Server settings
+            $mail->SMTPDebug = 0;                      //Enable verbose debug output
+            $mail->isSMTP();                                            //Send using SMTP
+            $mail->Host       = 'mail.dynamiteteam.cl';                //Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+            $mail->Username   = 'chile-espana@dynamiteteam.cl';                     //SMTP username
+            $mail->Password   = 'ZWk!9~y^ygba';                               //SMTP password
+            $mail->SMTPSecure = 'ssl';            //Enable implicit TLS encryption
+            $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+            //Recipients
+            $mail->setFrom('chile-espana@dynamiteteam.cl', 'Escuela Chile España');
+            $mail->addAddress('manux.rayxxd@gmail.com', 'estudiante');     //Add a recipient
+            //Content
+            $mail->CharSet = 'UTF-8';
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Nuevo usuario';
+            $mail->Body =
+                '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td style="padding: 10px 0 30px 0;">
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" width="700" style="border: 1px solid #cccccc; border-collapse: collapse;">
+                            <tr>
+                                <td bgcolor="#ffffff" style="padding: 30px 30px 0px 30px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td style="color: #153643; font-family: Georgia, sans-serif; font-size: 20px;">
+                                                <center>
+                                                    <b>Escuela Chile España</b>
+                                                </center>
+                                                <center>
+                                                    <b>Cambio de contraseña</b>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 20px 0px 60px 0px; color: #153643; font-family: Georgia, cursive; font-size: 14px;">
+                                                <center><a href="' . $ruta . '" class="btn">Cambiar la contraseña</a></center>
+                                            </td>
+                                        
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>        
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </body>';
+
+            $mail->send();
+
+            flash('Se ha enviado un correo a "' . $request->email . '"')->success();
+            return redirect()->back();
+        }
+        flash('No existe "' . $request->email . '" en nuestros registros')->error();
+        return redirect()->back();
+    }
+
+    public function reset_contra($id)
+    {
+
+        $id =  Crypt::decrypt($id);
+
+        $contra = substr(md5(time()), 0, 5);
+        date_default_timezone_set('America/Santiago');
+
+        $fecha = date_format(date_create(), 'Y-m-d ');
+
+        $user = DB::table('users')->where('id', $id)->first();
+
+        $user_fecha = \Carbon\Carbon::parse($user->fecha_update)->format('d-m-Y');
+
+        if ($user_fecha != $fecha) {
+
+
+            DB::table('users')->where('id', $id)->update([
+                'password' => Hash::make($contra),
+                'fecha_update' => date_format(date_create(), 'Y-m-d H:i:s'),
+            ]);
+
+            $ruta = route('login');
+            //Correo
+            require './PHPMailer/src/Exception.php';
+            require './PHPMailer/src/PHPMailer.php';
+            require './PHPMailer/src/SMTP.php';
+            $mail = new PHPMailer(true);
+
+            //Server settings
+            $mail->SMTPDebug = 0;                      //Enable verbose debug output
+            $mail->isSMTP();                                            //Send using SMTP
+            $mail->Host       = 'mail.dynamiteteam.cl';                //Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+            $mail->Username   = 'chile-espana@dynamiteteam.cl';                     //SMTP username
+            $mail->Password   = 'ZWk!9~y^ygba';                               //SMTP password
+            $mail->SMTPSecure = 'ssl';            //Enable implicit TLS encryption
+            $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+            //Recipients
+            $mail->setFrom('chile-espana@dynamiteteam.cl', 'Escuela Chile España');
+            $mail->addAddress($user->email, 'Usuario');     //Add a recipient
+            //Content
+            $mail->CharSet = 'UTF-8';
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Nuevo usuario';
+            $mail->Body =
+                '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td style="padding: 10px 0 30px 0;">
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" width="700" style="border: 1px solid #cccccc; border-collapse: collapse;">
+                            <tr>
+                                <td bgcolor="#ffffff" style="padding: 30px 30px 0px 30px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td style="color: #153643; font-family: Georgia, sans-serif; font-size: 20px;">
+                                                <center>
+                                                    <b>Escuela Chile España</b>
+                                                </center>
+                                                <center>
+                                                    <b>Nueva contraseña: ' . $contra . '</b>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 20px 0px 60px 0px; color: #153643; font-family: Georgia, cursive; font-size: 14px;">
+                                                <center><a href="' . $ruta . '" class="btn">Ingresar a la plataforma</a></center>
+                                            </td>
+                                        
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>        
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </body>';
+            $mail->send();
+
+            return redirect()->route('inicio');
+        }
+        return redirect()->route('inicio');
+    }
+
+    public function password(Request $request)
+    {
+        request()->validate([
+            'password' => 'required|string',
+            'password2' => 'required|string',
+
+        ]);
+        date_default_timezone_set('America/Santiago');
+
+        $fecha = date_format(date_create(), 'Y-m-d ');
+
+        if ($request->password != $request->password2) {
+            flash('Las contraseñas tienen que ser iguales')->error();
+            return redirect()->back();
+        }
+        $user = DB::table('users')->where('id', auth()->user()->id)->first();
+        DB::table('users')->where('id', auth()->user()->id)->update([
+            'password' => Hash::make($request->password),
+            'fecha_update' => date_format(date_create(), 'Y-m-d H:i:s'),
+        ]);
+        flash('Contraseña cambiada correctamente')->success();
+        return redirect()->back();
+        dd($user);
     }
 }

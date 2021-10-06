@@ -89,7 +89,7 @@ class DashboardController extends Controller
                 $cursos = DB::table('profesores-cursos')->join('cursos', 'cursos.id_curso', '=', 'profesores-cursos.id_curso')->where('id_profesor', $id)->first();
                 $clases = DB::table('clases')->join('materias', 'materias.id_materia', '=', 'clases.id_materia')->join('users', 'users.id', '=', 'clases.id_profesor')->where('id_curso', $cursos->id_curso)->where('fecha_clase', '>=', $fecha)->get();
                 $materias = DB::table('materias')->get();
-
+               
                 $estudiantes = DB::table('estudiantes-cursos')->where('id_curso', $cursos->id_curso)->get();
                 $tareas = DB::table('archivos')->where('id_user', $id)->where('id_tipo_archivo', 2)->get();
 
@@ -104,7 +104,7 @@ class DashboardController extends Controller
                 $hora = date_format(date_create(), 'G:i:s');
                 $clases = array();
                 foreach ($cursos as $item) {
-                    $x  = DB::table('clases')->where('id_curso', $item->id_curso)->join('materias', 'materias.id_materia', '=', 'clases.id_materia')->join('users', 'users.id', '=', 'clases.id_profesor')->orderBy('fecha_clase')->orderBy('hora_inicio')->get();
+                    $x  = DB::table('clases')->where('id_curso', $item->id_curso)->join('materias', 'materias.id_materia', '=', 'clases.id_materia')->join('users', 'users.id', '=', 'clases.id_profesor')->where('fecha_clase', '>=', $fecha)->orderBy('fecha_clase')->orderBy('hora_inicio')->get();
                     array_push($clases, $x);
                 }
                 $materias = DB::table('materias')->get();

@@ -414,6 +414,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                 <!--begin: Navigation -->
                                 <div class="kt-notification">
+                                    @if(auth()->user()->id_tipo_usuario != 1)
                                     <a href="{{route('perfil_usuario',auth()->user()->id)}}" class="kt-notification__item">
                                         <div class="kt-notification__item-icon">
                                             <i class="flaticon2-calendar-3 kt-font-dark"></i>
@@ -423,10 +424,25 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 Mi perfil
                                             </div>
                                             <div class="kt-notification__item-time">
-                                                Configuracion y mas
+                                                Configuración y mas
                                             </div>
                                         </div>
                                     </a>
+                                    @else
+                                    <a href="{{route('perfil_admin',auth()->user()->id)}}" class="kt-notification__item">
+                                        <div class="kt-notification__item-icon">
+                                            <i class="flaticon2-calendar-3 kt-font-dark"></i>
+                                        </div>
+                                        <div class="kt-notification__item-details">
+                                            <div class="kt-notification__item-title kt-font-bold">
+                                                Mi perfil
+                                            </div>
+                                            <div class="kt-notification__item-time">
+                                                Configuración y mas
+                                            </div>
+                                        </div>
+                                    </a>
+                                    @endif
                                     <form method="post" action="{{route('logout')}}">
                                         @csrf
                                         <div class="kt-notification__custom kt-space-between">
@@ -455,7 +471,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
                         <div id="atras" class="kt-subheader__toolbar">
                             <div class="kt-subheader__wrapper">
-                                <a href="javascript:history.back()" class="btn btn-dark" style="margin-right:50px">Atras</a>
+                                <a href="javascript:history.back()" class="btn btn-dark" style="margin-right:50px">Atrás</a>
 
 
                             </div>

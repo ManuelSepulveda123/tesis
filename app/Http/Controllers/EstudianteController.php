@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class EstudianteController extends Controller
 {
@@ -383,6 +384,24 @@ class EstudianteController extends Controller
         }
         
         return view('estudiantes.materias.estudiante_materia', compact('id', 'materias_estudiante', 'id_materia', 'materia', 'curso', 'tareas_pendientes'));
+    }
+
+    public function estudiante_delet($id){
+
+        $archivos = DB::table('archivos')->where('id_user',$id)->get();
+        foreach ($archivos as $item) {
+            DB::table('estudiantes-tareas')->where('id_estudiante',$id)->where('id_archivo',$item->id_archivo)->delete();
+            Storage::delete($item->ruta_archivo);
+            DB::table('archivos')->where('id_archivo', $item->id_archivo)->delete();
+        }
+        DB::table('plani')->where('id_estudiante',$id)->delete();
+        DB::table('estudiantes-cursos')->where('id_estudiante',$id)->delete();
+        $apoderado = DB::table('estudiantes')->where('id',$id)->first();
+        DB::table('estudiantes')->where('id',$id)->delete();
+        DB::table('users')->where('id',$apoderado->id_apoderado)->delete();
+        DB::table('users')->where('id',$id)->delete();
+        flash('Estudiante eliminado con exito')->success();
+        return redirect()->back();
     }
 }
 

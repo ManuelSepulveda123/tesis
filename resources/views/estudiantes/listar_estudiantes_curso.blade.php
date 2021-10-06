@@ -52,7 +52,7 @@ Lista Estudiantes | Escuela Chile España
                     <th>Correo</th>
                     @if($curso != null)
                     <th>Datos</th>
-                    <th>Planificacion</th>
+                    <th>Planificación</th>
                     @endif
                     @if($curso == null)
                     <th>Editar</th>
@@ -64,6 +64,7 @@ Lista Estudiantes | Escuela Chile España
         </table>
     </div>
 </div>
+{{auth()->user()->id_tipo_usuario}}
 @endsection
 
 @section('js')
@@ -120,15 +121,23 @@ Lista Estudiantes | Escuela Chile España
 
 
     $('#profesores_nav').addClass('kt-menu__item--open');
-
-    if (<?php isset($xasda) ?> ) {
-        if (<?php echo $curso->id_curso ?> == <?php echo $cursos->id_curso ?>) {
-            $('#estudiantes_nav').addClass('kt-menu__item--active');
-        } else {
-            $('#curso_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--open');
-            $('#estudiantes_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--active');
-        }
-    }
 </script>
 
+@if(auth()->user()->id_tipo_usuario == 3)
+<script>
+    console.log('<?php echo $curso->id_curso ?>')
+    $('#curso_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--open');
+    $('#estudiantes_nav2_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--active');
+</script>
+@elseif(auth()->user()->id_tipo_usuario == 2 || auth()->user()->id_tipo_usuario == 1)
+<script>
+    if (<?php echo $curso->id_curso ?> == <?php echo $cursos->id_curso ?>) {
+        $('#estudiantes_nav').addClass('kt-menu__item--active');
+    } else {
+        $('#curso_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--open');
+        $('#estudiantes_<?php echo $curso->id_curso ?>').addClass('kt-menu__item--active');
+
+    }
+</script>
+@endif
 @endsection

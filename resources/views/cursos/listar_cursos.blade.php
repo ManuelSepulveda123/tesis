@@ -51,8 +51,8 @@ Lista Cursos | Escuela Chile España
                     <th>Apellido paterno</th>
                     <th>Apellido materno</th>
                     <th>Correo</th>
-                    <th>editar</th>
-                    <th>eliminar</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
 

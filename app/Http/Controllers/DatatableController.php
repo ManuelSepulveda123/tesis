@@ -259,7 +259,7 @@ class DatatableController extends Controller
         })
             ->addColumn('action2', function ($estudiante) {
                 $token =  csrf_field();
-                $url = "#";
+                $url = route('estudiante_delet',$estudiante->id);
                 return ' <form action="' . $url . '" method="post"  class="delete">  ' . $token . ' <input type="hidden" name="id_curso"  value=' .  $estudiante->id . '>
                         <td><button type="submit" value="Eliminar"  class="btn btn-danger" onclick="return confirm(`¿Está seguro que desea eliminar ' .  $estudiante->nombre  . '?`);" /><i class="fa fa-trash"></i></td>
                         </form>';
@@ -732,93 +732,88 @@ class DatatableController extends Controller
                             <form action="' . $ruta . '" method="post" enctype="multipart/form-data">
                                 ' . $token . '
                                 <div class="tab-content">
-                                    <div class="tab-pane active" id="kt_user_edit_tab_1" role="tabpanel">
-                                        <div class="kt-form kt-form--label-right">
-                                            <div class="kt-form__body">
+                                <div class="tab-pane active" id="kt_user_edit_tab_1" role="tabpanel">
+                                    <div class="kt-form kt-form--label-right">
+                                        <div class="kt-form__body">
                                             <div class="kt-section kt-section--first">
-                                            <div class="kt-section__body">
-                                                <div class="row">
-                                                    <label class="col-xl-3"></label>
-                                                    <div class="col-lg-9 col-xl-6">
-                                                        <h3 class="kt-section__title kt-section__title-sm">Agendar Clase:</h3>
+                                                <div class="kt-section__body">
+                                                    <div class="row">
+                                                        <label class="col-xl-3"></label>
+                                                        <div class="col-lg-9 col-xl-6">
+                                                            <h3 class="kt-section__title kt-section__title-sm">Agendar Clase:</h3>
+                                                        </div>
                                                     </div>
-                                                </div>
-    
-                                                <input type="hidden" name ="redirect" value="1">
-                                                <div class="form-group form-group row">
-                                                    <label class="col-xl-3 col-lg-3 col-form-label">fecha</label>
-                                                    <div class="col-lg-9 col-xl-3">
+        
+                                                    <input type="hidden" name="redirect" value="1">
+                                                    <div class="form-group form-group row">
+                                                        <label class="col-xl-3 col-lg-3 col-form-label">fecha</label>
+                                                        <div class="col-lg-9 col-xl-3">
+                                                            
+                                                            <input class="form-control" type="date"  name="fecha">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <label class="col-xl-3"></label>
+                                                        <div class="col-lg-9 col-xl-6">
+                                                            <h3 class="kt-section__title kt-section__title-sm">Horario:</h3>
+                                                        </div>
+                                                    </div>
+        
+                                                    <div class="form-group row">
+                                                        <label class="col-xl-3 col-lg-3 col-form-label">Inicio</label>
+                                                        <div class="col-lg-2 col-xl-2">
                                                         
-                                                        <input class="form-control" type="date" value="" name="fecha">
+                                                            <input class="form-control" type="time"  name="hora_inicio">
+                                                        </div>
+                                                    </div>
+        
+                                                    <div class="form-group row">
+                                                        <label class="col-xl-3 col-lg-3 col-form-label">Fin</label>
+                                                        <div class="col-lg-2 col-xl-2">
+                                                            
+                                                            <input class="form-control" type="time"  name="hora_fin">
+                                                        </div>
+                                                    </div>
+        
+                                                    <div class="row">
+                                                        <label class="col-xl-3"></label>
+                                                        <div class="col-lg-9 col-xl-6">
+                                                            <h3 class="kt-section__title kt-section__title-sm">Información:</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-xl-3 col-lg-3 col-form-label">Titulo</label>
+                                                        <div class="col-lg-9 col-xl-6">
+                                                           
+                                                            <input class="form-control" type="text"  name="detalle">
+        
+                                                        </div>
+                                                    </div>
+        
+                                                    <div class="form-group row">
+                                                        <label class="col-xl-3 col-lg-3 col-form-label">Link</label>
+                                                        <div class="col-lg-9 col-xl-6">
+                                                            
+                                                            <input class="form-control" type="text"  name="link">
+                                                        </div>
+                                                    </div>
+        
+        
+        
+        
+        
+                                                    <div class="d-flex justify-content-between  pt-10 mt-15" style="margin:20px">
+                                                        <div class="mr-2"></div>
+                                                        <div>
+                                                            <button type="submit" class="btn btn-success font-weight-bolder px-9 py-4" style="margin:20px">Crear clase</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <label class="col-xl-3"></label>
-                                                    <div class="col-lg-9 col-xl-6">
-                                                        <h3 class="kt-section__title kt-section__title-sm">Horario:</h3>
-                                                    </div>
-                                                </div>
-    
-                                                <div class="form-group row">
-                                                    <label class="col-xl-3 col-lg-3 col-form-label">Inicio</label>
-                                                    <div class="col-lg-2 col-xl-2">
-                                                        
-                                                        <input class="form-control" type="time" value="" name="hora_inicio">
-                                                    </div>
-                                                </div>
-    
-                                                <div class="form-group row">
-                                                    <label class="col-xl-3 col-lg-3 col-form-label">Fin</label>
-                                                    <div class="col-lg-2 col-xl-2">
-                                                        
-                                                        <input class="form-control" type="time" value="" name="hora_fin">
-                                                    </div>
-                                                </div>
-    
-                                                <div class="row">
-                                                    <label class="col-xl-3"></label>
-                                                    <div class="col-lg-9 col-xl-6">
-                                                        <h3 class="kt-section__title kt-section__title-sm">Información:</h3>
-                                                    </div>
-                                                </div>
-    
-                                                <div class="form-group row">
-                                                    <label class="col-xl-3 col-lg-3 col-form-label">Link</label>
-                                                    <div class="col-lg-9 col-xl-6">
-                                                       
-                                                        <input class="form-control" type="text" value="" name="link">
-                                                    </div>
-                                                </div>
-    
-                                                <!-- <div class="form-group row">
-                                                    <label class="col-xl-3 col-lg-3 col-form-label">contraseña</label>
-                                                    <div class="col-lg-9 col-xl-6">
-                                                        
-                                                        <input class="form-control" type="text" value="" name="password">
-                                                    </div>
-                                                </div> -->
-    
-                                                <div class="form-group row">
-                                                    <label class="col-xl-3 col-lg-3 col-form-label">Detalle2</label>
-                                                    <div class="col-lg-9 col-xl-6">
-                                                       
-                                                        <textarea class="form-control" name="detalle" rows="6" cols="50" style="resize: none"></textarea>
-                                                    </div>
-                                                </div>
-    
-    
-                                                <div class="d-flex justify-content-between  pt-10 mt-15" style="margin:20px">
-                                                    <div class="mr-2"></div>
-                                                    <div>
-                                                        <button type="submit" class="btn btn-success font-weight-bolder px-9 py-4" style="margin:20px">Crear clase</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             </form>
 
                         </div>

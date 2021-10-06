@@ -94,7 +94,7 @@ class ClasesController extends Controller
             }
         }
         
-        require './PHPMailer/src/Exception.php';
+       /*  require './PHPMailer/src/Exception.php';
         require './PHPMailer/src/PHPMailer.php';
         require './PHPMailer/src/SMTP.php';
         $mail = new PHPMailer(true);
@@ -151,7 +151,7 @@ class ClasesController extends Controller
             </tr>
         </table>';
        
-        $mail->send();
+        $mail->send(); */
 
         DB::table('clases')->insert([
             'link' => $request->link,

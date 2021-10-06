@@ -98,146 +98,201 @@
                                     <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>Region:</b> {{$region->region}}</label>
                                     <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>Provincia:</b> {{$provincia->provincia}}</label>
                                 </div>
+                                <br>
+                                <br>
+                                <br>
 
+                                <br>
+                                <div class="row border-top">
+                                    <br>
+                                    <br>
+                                    <br>
+
+                                    <br>
+                                    <div class="form-group " style="margin-top:20px">
+                                        <a id="cambio_datos" data-toggle="modal" data-target="#datos" class="btn btn-dark">Cambiar contraseña</a>
+                                    </div>
+                                    <div class="modal" id="datos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Cambio de contraseña</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{route('password')}}" method="post">
+                                                        @csrf
+                                                        <div class="form-group row">
+                                                            <label class="col-xl-3 col-lg-3 col-form-label">Nueva contraseña</label>
+                                                            <div class="col-lg-9 col-xl-6">
+                                                                <input class="form-control" type="password" name="password" placeholder="***" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-xl-3 col-lg-3 col-form-label">Repita contraseña</label>
+                                                            <div class="col-lg-9 col-xl-6">
+                                                                <input class="form-control" type="password" name="password2" placeholder="***" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="d-flex justify-content-between pt-10 mt-15" style="margin:20px">
+                                                            <div class="mr-2"></div>
+                                                            <div>
+                                                                <button type="submit" class="btn btn-success  px-9 " style="margin:20px">Guardar</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+
+                                                        </div>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    @if($usuario->id_tipo_usuario == 4)
-    <div class="kt-portlet kt-portlet--tabs">
-        <div class="kt-portlet__head">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title">
-                    Curso
-                </h3>
+        @if($usuario->id_tipo_usuario == 4)
+        <div class="kt-portlet kt-portlet--tabs">
+            <div class="kt-portlet__head">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title">
+                        Curso
+                    </h3>
+                </div>
             </div>
-        </div>
-        <div class="kt-portlet__body">
-            @include('flash::message')
+            <div class="kt-portlet__body">
+                @include('flash::message')
 
-            <div class="form-group row">
+                <div class="form-group row">
 
-                <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>{{$curso->curso}}</b></label>
-                <div class="col-lg-6 col-xl-6" style="text-align: center;">
-                    @if(isset($plani))
-                    <a href="{{route('planificacion_descargar',$usuario->id)}}" target="_blank" class="btn btn-warning">Planificación</a>
-                    @endif
+                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>{{$curso->curso}}</b></label>
+                    <div class="col-lg-6 col-xl-6" style="text-align: center;">
+                        @if(isset($plani))
+                        <a href="{{route('planificacion_descargar',$usuario->id)}}" target="_blank" class="btn btn-warning">Planificación</a>
+                        @endif
+                    </div>
+
+
                 </div>
 
-
-            </div>
-
-        </div>
-    </div>
-
-    <div class="kt-portlet kt-portlet--tabs">
-        <div class="kt-portlet__head">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title">
-                    Datos del Apoderado
-                </h3>
             </div>
         </div>
-        <div class="kt-portlet__body">
-            @include('flash::message')
-            <div class="tab-pane active" id="kt_user_edit_tab_1" role="tabpanel">
-                <div class="kt-form kt-form--label-right">
-                    <div class="kt-form__body">
-                        <div class="kt-section kt-section--first">
-                            <div class="kt-section__body">
 
-                                <div class="form-group row">
+        <div class="kt-portlet kt-portlet--tabs">
+            <div class="kt-portlet__head">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title">
+                        Datos del Apoderado
+                    </h3>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                @include('flash::message')
+                <div class="tab-pane active" id="kt_user_edit_tab_1" role="tabpanel">
+                    <div class="kt-form kt-form--label-right">
+                        <div class="kt-form__body">
+                            <div class="kt-section kt-section--first">
+                                <div class="kt-section__body">
 
-                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>Nombre: </b>{{$apoderado->nombre}} {{$apoderado->apellido_p}} {{$apoderado->apellido_m}}</label>
+                                    <div class="form-group row">
+
+                                        <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>Nombre: </b>{{$apoderado->nombre}} {{$apoderado->apellido_p}} {{$apoderado->apellido_m}}</label>
+
+                                    </div>
+
+                                    <div class="form-group" style="margin-bottom:10%">
+
+                                        <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>Correo:</b> {{$apoderado->email}}</label>
+                                        <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>Telefono:</b> {{$apoderado->telefono}}</label>
+
+                                    </div>
 
                                 </div>
-
-                                <div class="form-group" style="margin-bottom:10%">
-
-                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>Correo:</b> {{$apoderado->email}}</label>
-                                    <label class="col-xl-6 col-lg-6 col-form-label" style="text-align: center;"> <b>Telefono:</b> {{$apoderado->telefono}}</label>
-
-                                </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        @endif
     </div>
-    @endif
-</div>
-@endsection
+    @endsection
 
-@section('js')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<!-- <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
-<script>
-    $(document).ready(function() {
+    <!-- <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
+    <script>
+        $(document).ready(function() {
 
-        document.getElementById("rut").oninput = function isValidRUT(rut) {
-            var rut = document.getElementById("rut");
-            console.log(rut.value);
+            document.getElementById("rut").oninput = function isValidRUT(rut) {
+                var rut = document.getElementById("rut");
+                console.log(rut.value);
 
-            rut.value = rut.value.replace(/[.-]/g, '').replace(/^(\d{1,2})(\d{3})(\d{3})(\w{1})$/, '$1.$2.$3-$4');
-        }
+                rut.value = rut.value.replace(/[.-]/g, '').replace(/^(\d{1,2})(\d{3})(\d{3})(\w{1})$/, '$1.$2.$3-$4');
+            }
 
 
-        $('.select2').select2();
-        $('#region').change(function() {
-            var id_region = $("#region").val();
-            $.ajax({
-                data: {
-                    id_region,
-                    _token: $('input[name="_token"]').val()
-                },
-                url: "{{route('region.provincia')}}",
-                type: "POST",
-                beforeSend: function() {},
-                success: function(response) {
-                    $("#provincia").html(response);
-                },
-                error: function() {
-                    alert("error")
-                }
+            $('.select2').select2();
+            $('#region').change(function() {
+                var id_region = $("#region").val();
+                $.ajax({
+                    data: {
+                        id_region,
+                        _token: $('input[name="_token"]').val()
+                    },
+                    url: "{{route('region.provincia')}}",
+                    type: "POST",
+                    beforeSend: function() {},
+                    success: function(response) {
+                        $("#provincia").html(response);
+                    },
+                    error: function() {
+                        alert("error")
+                    }
+                });
+                $('#comuna').empty();
             });
-            $('#comuna').empty();
-        });
 
-        $('#provincia').change(function() {
-            var id_provincia = $("#provincia").val();
-            $.ajax({
-                data: {
-                    id_provincia,
-                    _token: $('input[name="_token"]').val()
-                },
-                url: "{{route('provincia.comuna')}}",
-                type: "POST",
-                beforeSend: function() {},
-                success: function(response) {
-                    $("#comuna").html(response);
-                },
-                error: function() {
-                    alert("error")
-                }
+            $('#provincia').change(function() {
+                var id_provincia = $("#provincia").val();
+                $.ajax({
+                    data: {
+                        id_provincia,
+                        _token: $('input[name="_token"]').val()
+                    },
+                    url: "{{route('provincia.comuna')}}",
+                    type: "POST",
+                    beforeSend: function() {},
+                    success: function(response) {
+                        $("#comuna").html(response);
+                    },
+                    error: function() {
+                        alert("error")
+                    }
+                });
             });
         });
-    });
-</script>
-<script src="{{asset('assets/js/demo1/scripts.bundle.js')}}" type="text/javascript"></script>
+    </script>
+    <script src="{{asset('assets/js/demo1/scripts.bundle.js')}}" type="text/javascript"></script>
 
-<script src="{{asset('assets/js/demo1/pages/custom/user/edit-user.js')}}" type="text/javascript"></script>
-<script>
-    $('div.alert').not('.alert-important').delay(5000).fadeOut(350);
-</script>
-<script src="{{asset('assets/js/demo1/pages/dashboard.js')}}" type="text/javascript"></script>
-<script src="{{asset('assets/js/demo1/pages/custom/user/profile.js')}}" type="text/javascript"></script>
-<script>
-    $('#perfil').addClass('kt-menu__item--active');
-</script>
-@endsection
+    <script src="{{asset('assets/js/demo1/pages/custom/user/edit-user.js')}}" type="text/javascript"></script>
+    <script>
+        $('div.alert').not('.alert-important').delay(5000).fadeOut(350);
+    </script>
+    <script src="{{asset('assets/js/demo1/pages/dashboard.js')}}" type="text/javascript"></script>
+    <script src="{{asset('assets/js/demo1/pages/custom/user/profile.js')}}" type="text/javascript"></script>
+    <script>
+        $('#perfil').addClass('kt-menu__item--active');
+    </script>
+    @endsection
